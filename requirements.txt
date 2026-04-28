@@ -1,0 +1,8 @@
+google-generativeai
+pdfplumber
+pandas
+openpyxl
+requests
+beautifulsoup4
+tqdm
+python-dotenv
