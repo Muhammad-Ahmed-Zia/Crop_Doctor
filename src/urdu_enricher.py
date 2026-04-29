@@ -11,6 +11,7 @@ Usage:
 
 import os, sys, json, time, argparse
 from pathlib import Path
+from dotenv import load_dotenv
 from colorama import Fore, Style, init
 
 import google.generativeai as genai
@@ -132,6 +133,7 @@ def main():
     parser.add_argument("--out",    default="")
     args = parser.parse_args()
 
+    load_dotenv()
     api_key = os.getenv("GEMINI_API_KEY")
     if not api_key:
         print(f"{Fore.RED}Set GEMINI_API_KEY first{Style.RESET_ALL}")

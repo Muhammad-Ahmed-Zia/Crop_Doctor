@@ -12,6 +12,7 @@ Usage:
 
 import os, sys, json, time, hashlib, argparse, logging
 from pathlib import Path
+from dotenv import load_dotenv
 from datetime import datetime
 from typing import Optional
 
@@ -233,10 +234,11 @@ def main():
     parser.add_argument("--append", action="store_true")
     args = parser.parse_args()
 
+    load_dotenv()
     api_key = os.getenv("GEMINI_API_KEY")
     if not api_key:
         print(f"{Fore.RED}ERROR: Set GEMINI_API_KEY environment variable{Style.RESET_ALL}")
-        print("  export GEMINI_API_KEY='your_key_here'")
+        print("  export GEMINI_API_KEY='AIzaSyD4yXd0v96IMjzkiPDJizJP661RfpkxYSc'")
         sys.exit(1)
 
     Path("logs").mkdir(exist_ok=True)
