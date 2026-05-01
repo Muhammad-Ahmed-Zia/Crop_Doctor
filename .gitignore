@@ -2,6 +2,7 @@
 __pycache__/
 *.py[codz]
 *$py.class
+.envgit log --all --full-history -- .env
 
 # C extensions
 *.so
@@ -216,3 +217,11 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Datasets and processed files
+data/processed/*.json
+data/processed/*.csv
+data/raw/
+data/output/
+data/chroma_db/
+.env

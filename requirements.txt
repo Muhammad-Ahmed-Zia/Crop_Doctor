@@ -1,9 +1,23 @@
-google-generativeai
+# Core AI — NEW SDK (use 'from google import genai')
+google-genai
+
+# PDF extraction
 pdfplumber
+PyMuPDF
+
+# Data processing
 pandas
 openpyxl
+
+# Web scraping
 requests
 beautifulsoup4
+
+# RAG pipeline
+chromadb
+sentence-transformers
+
+# Utilities
 tqdm
 python-dotenv
-PyMuPDF
+colorama

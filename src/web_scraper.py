@@ -89,7 +89,7 @@ WEB PAGE TEXT:
 class WebScraper:
     def __init__(self, api_key: str):
         genai.configure(api_key=api_key)
-        self.model = genai.GenerativeModel("gemini-1.5-flash")
+        self.model = genai.GenerativeModel("gemini-2.5-flash-lite")
 
     def fetch_page(self, url: str) -> str:
         try:
@@ -147,7 +147,7 @@ class WebScraper:
             recs = self.extract_from_text(text, url)
             print(f"{Fore.GREEN}+{len(recs)} records{Style.RESET_ALL}")
             all_records.extend(recs)
-            time.sleep(2)
+            time.sleep(6)
 
         return all_records
 

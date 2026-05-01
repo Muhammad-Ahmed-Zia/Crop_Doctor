@@ -32,7 +32,7 @@ logging.basicConfig(
 )
 log = logging.getLogger(__name__)
 
-GEMINI_MODEL   = "gemini-1.5-flash"
+GEMINI_MODEL   = "gemini-2.5-flash-lite"
 MAX_CHARS_PAGE = 3000
 CHUNK_PAGES    = 4
 RETRY_LIMIT    = 3

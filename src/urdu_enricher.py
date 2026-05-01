@@ -14,7 +14,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 from colorama import Fore, Style, init
 
-import google.generativeai as genai
+from google import genai
 
 init(autoreset=True)
 
@@ -80,7 +80,7 @@ def lookup_brands(spray_text: str) -> str:
             found.append(brand)
     return " / ".join(found) if found else ""
 
-def enrich_urdu(rec: dict, model) -> dict:
+def enrich_urdu(rec: dict, client, model: str) -> dict:
     # Fill crop Urdu name from lookup table
     if not rec.get("crop_name_ur"):
         crop_lower = rec.get("crop_name_en", "").lower()
@@ -98,17 +98,25 @@ def enrich_urdu(rec: dict, model) -> dict:
         not rec.get("symptoms_ur") or
         not rec.get("safety_precautions_ur")
     )
-    if needs_translation and rec.get("disease_name_en") and rec.get("symptoms_en"):
+    # Only call API if symptoms are meaningful (not just 'Consult agronomist')
+    symptoms = rec.get("symptoms_en", "")
+    junk = {"not specified", "not mentioned", "consult agronomist", "n/a", ""}
+    symptoms_useful = symptoms and symptoms.lower().strip() not in junk
+
+    if needs_translation and rec.get("disease_name_en") and symptoms_useful:
         prompt = TRANSLATE_PROMPT.format(
             disease_name = rec.get("disease_name_en", ""),
             crop_name    = rec.get("crop_name_en", ""),
-            symptoms     = rec.get("symptoms_en", ""),
+            symptoms     = symptoms,
             spray        = rec.get("spray_chemical_en", ""),
         )
         for attempt in range(3):
             try:
-                resp = model.generate_content(prompt)
-                raw  = resp.text.strip()
+                resp = client.models.generate_content(
+                    model=model,
+                    contents=prompt
+                )
+                raw = resp.text.strip()
                 if raw.startswith("```"):
                     raw = raw.split("```")[1]
                     if raw.startswith("json"): raw = raw[4:]
@@ -139,25 +147,28 @@ def main():
         print(f"{Fore.RED}Set GEMINI_API_KEY first{Style.RESET_ALL}")
         sys.exit(1)
 
-    genai.configure(api_key=api_key)
-    model = genai.GenerativeModel("gemini-1.5-flash")
+    client = genai.Client(api_key=api_key)
+    model = "gemini-2.0-flash"
 
     with open(args.input, encoding="utf-8") as f:
         records = json.load(f)
 
     print(f"\n{Fore.CYAN}Enriching {len(records)} records with Urdu + Pakistan brands...{Style.RESET_ALL}")
+    skipped = 0
 
     for i, rec in enumerate(records):
-        print(f"  [{i+1}/{len(records)}] {rec.get('crop_name_en')} — {rec.get('disease_name_en')[:40]}...", end=" ", flush=True)
-        records[i] = enrich_urdu(rec, model)
+        disease_short = (rec.get('disease_name_en') or '?')[:35]
+        print(f"  [{i+1}/{len(records)}] {rec.get('crop_name_en','?'):<12} — {disease_short:<35}", end=" ", flush=True)
+        records[i] = enrich_urdu(rec, client, model)
         print(f"{Fore.GREEN}done{Style.RESET_ALL}")
-        time.sleep(0.8)
+        time.sleep(0.6)   # stay within free-tier rate limits
 
     out_path = args.out or args.input
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(records, f, ensure_ascii=False, indent=2)
 
-    print(f"\n{Fore.GREEN}Saved enriched records → {out_path}{Style.RESET_ALL}")
+    print(f"\n{Fore.GREEN}✓ Saved enriched records → {out_path}{Style.RESET_ALL}")
+    print(f"{Fore.GREEN}✓ Total records: {len(records)}{Style.RESET_ALL}")
 
 
 if __name__ == "__main__":
