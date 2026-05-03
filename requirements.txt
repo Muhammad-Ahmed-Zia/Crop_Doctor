@@ -17,6 +17,14 @@ beautifulsoup4
 chromadb
 sentence-transformers
 
+# Web UI (Streamlit — alternative interface)
+streamlit>=1.32.0
+
+# FastAPI server (HTML frontend backend)
+fastapi>=0.110.0
+uvicorn[standard]>=0.29.0
+python-multipart>=0.0.9
+
 # Utilities
 tqdm
 python-dotenv

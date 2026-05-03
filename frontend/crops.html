@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Crops | Fasal Doctor فصل ڈاکٹر</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <style>
+    .search-wrap{max-width:500px;margin:28px auto 0;position:relative;}
+    .search-input{width:100%;padding:14px 20px 14px 48px;border:2px solid rgba(255,255,255,.3);border-radius:999px;background:rgba(255,255,255,.12);color:white;font-family:'DM Sans',sans-serif;font-size:.95rem;outline:none;backdrop-filter:blur(8px);}
+    .search-input::placeholder{color:rgba(255,255,255,.55);}
+    .search-input:focus{border-color:rgba(255,255,255,.6);}
+    .search-icon{position:absolute;left:16px;top:50%;transform:translateY(-50%);font-size:1.1rem;pointer-events:none;}
+    .modal-overlay{position:fixed;inset:0;background:rgba(5,46,22,.75);backdrop-filter:blur(6px);z-index:2000;display:flex;align-items:center;justify-content:center;padding:24px;opacity:0;pointer-events:none;transition:opacity .3s;}
+    .modal-overlay.open{opacity:1;pointer-events:all;}
+    .modal{background:white;border-radius:24px;max-width:780px;width:100%;max-height:90vh;overflow-y:auto;transform:scale(.92) translateY(24px);transition:transform .3s;}
+    .modal-overlay.open .modal{transform:scale(1) translateY(0);}
+    .modal-header{background:linear-gradient(135deg,var(--g950),var(--g600));padding:32px;color:white;position:relative;border-radius:24px 24px 0 0;}
+    .modal-close{position:absolute;top:20px;right:20px;width:36px;height:36px;background:rgba(255,255,255,.15);border:none;border-radius:50%;color:white;font-size:1.1rem;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .2s;}
+    .modal-close:hover{background:rgba(255,255,255,.28);}
+    .modal-body{padding:32px;}
+    .msec{margin-bottom:26px;}
+    .msec-title{font-family:'Syne',sans-serif;font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--g600);margin-bottom:12px;padding-bottom:8px;border-bottom:1.5px solid var(--g100);}
+    .dis-list{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    .dis-item{background:var(--g50);border:1px solid var(--g100);border-radius:10px;padding:10px 14px;font-size:.85rem;color:var(--tx2);display:flex;align-items:center;gap:8px;}
+    .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+    .icard{background:var(--g50);border-radius:12px;padding:14px 16px;}
+    .icard-lbl{font-size:.72rem;color:var(--tm);text-transform:uppercase;letter-spacing:.06em;}
+    .icard-val{font-size:.95rem;font-weight:600;color:var(--tx);margin-top:4px;}
+    .s-chip{padding:5px 14px;border-radius:999px;font-size:.78rem;font-weight:600;display:inline-block;}
+    .s-rabi{background:#dbeafe;color:#1e40af;}
+    .s-kharif{background:#fef9c3;color:#854d0e;}
+    .s-both{background:#dcfce7;color:#166534;}
+    .no-results{text-align:center;padding:80px 20px;color:var(--tm);}
+    .no-results-icon{font-size:3rem;margin-bottom:16px;}
+    @media(max-width:768px){.dis-list,.info-grid{grid-template-columns:1fr;}}
+  </style>
+</head>
+<body>
+
+<nav id="main-nav">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">🌾</div>
+    <div class="nav-logo-text">
+      <span class="nav-logo-en">Fasal Doctor</span>
+      <span class="nav-logo-ur">فصل ڈاکٹر</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="crops.html" class="active">Crops</a></li>
+    <li><a href="diagnosis.html">Diagnose</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="diagnosis.html" class="nav-cta">🔬 Diagnose Now</a></li>
+  </ul>
+</nav>
+
+<div class="page-content">
+
+<div class="crops-hero">
+  <div class="section-label" style="color:var(--g300);display:flex;justify-content:center;">✦ PARC Pakistan Database</div>
+  <h1>All Crops &amp; Diseases</h1>
+  <div style="font-family:'Noto Nastaliq Urdu',serif;font-size:1.8rem;color:var(--g200);text-align:center;margin-bottom:16px;line-height:2;">تمام فصلیں اور بیماریاں</div>
+  <p>Explore detailed disease profiles for 14 major Pakistani crops — symptoms, treatments &amp; local brand recommendations.</p>
+  <div class="search-wrap">
+    <span class="search-icon">🔍</span>
+    <input type="text" class="search-input" id="cropSearch" placeholder="Search crops or diseases..."/>
+  </div>
+</div>
+
+<div class="crops-filter-bar">
+  <button class="filter-btn active" data-filter="all">🌍 All Crops</button>
+  <button class="filter-btn" data-filter="rabi">❄️ Rabi (Winter)</button>
+  <button class="filter-btn" data-filter="kharif">☀️ Kharif (Summer)</button>
+  <button class="filter-btn" data-filter="cereal">🌾 Cereals</button>
+  <button class="filter-btn" data-filter="cash">💰 Cash Crops</button>
+  <button class="filter-btn" data-filter="legume">🫘 Legumes</button>
+</div>
+
+<div class="crops-grid" id="cropsGrid"></div>
+<div class="no-results hidden" id="noResults">
+  <div class="no-results-icon">🌱</div>
+  <div style="font-family:'Syne',sans-serif;font-size:1.1rem;font-weight:700;color:var(--tx);margin-bottom:8px;">No crops found</div>
+  <div>Try a different search or filter.</div>
+</div>
+
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <div class="modal-header" id="modalHeader">
+      <button class="modal-close" id="modalClose">✕</button>
+      <div id="modalTitle"></div>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+  </div>
+</div>
+
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;"><div style="width:36px;height:36px;background:linear-gradient(135deg,var(--g700),var(--g500));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;">🌾</div><div class="footer-brand-title">Fasal Doctor</div></div>
+      <div style="font-family:'Noto Nastaliq Urdu',serif;font-size:.9rem;color:var(--g300);direction:rtl;text-align:right;line-height:2;">فصل ڈاکٹر</div>
+      <div class="footer-brand-sub">AI-powered crop disease advisor for Pakistani farmers.</div>
+    </div>
+    <div><div class="footer-col-title">Pages</div><ul class="footer-links"><li><a href="index.html">Home</a></li><li><a href="crops.html">All Crops</a></li><li><a href="diagnosis.html">Diagnose</a></li><li><a href="about.html">About</a></li></ul></div>
+    <div><div class="footer-col-title">Top Crops</div><ul class="footer-links"><li><a href="#">Wheat — گندم</a></li><li><a href="#">Cotton — کپاس</a></li><li><a href="#">Rice — چاول</a></li><li><a href="#">Maize — مکئی</a></li></ul></div>
+    <div><div class="footer-col-title">Sources</div><ul class="footer-links"><li><a href="#">PARC Pakistan</a></li><li><a href="#">Google Gemini</a></li><li><a href="#">ChromaDB</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><span>© 2026 Fasal Doctor 🇵🇰</span><span>Data: PARC | AI: Gemini 2.0 Flash</span></div>
+</footer>
+</div>
+
+<script>
+const CROPS=[
+  {id:'wheat',emoji:'🌾',en:'Wheat',ur:'گندم',season:'rabi',cat:'cereal',sci:'Triticum aestivum',fam:'Poaceae',region:'Punjab, KPK, Sindh',sow:'Oct–Dec',harv:'Apr–May',cnt:85,loss:'15–70%',color:'#854d0e',bg:'#fef9c3',diseases:['Yellow Rust','Brown Rust','Loose Smut','Karnal Bunt','Powdery Mildew','Septoria Leaf Blotch','Root Rot','Flag Smut','Black Rust','Take-All'],desc:"Pakistan's most important food crop grown on 8.7M hectares. Susceptible to rust diseases especially during humid winters.",tips:'Monitor weekly Feb–Mar for rust. Apply Tilt 250 EC at first symptoms for best results.'},
+  {id:'cotton',emoji:'🌿',en:'Cotton',ur:'کپاس',season:'kharif',cat:'cash',sci:'Gossypium hirsutum',fam:'Malvaceae',region:'Punjab, Sindh',sow:'Apr–May',harv:'Sep–Nov',cnt:62,loss:'20–80%',color:'#166534',bg:'#dcfce7',diseases:['Cotton Leaf Curl Virus','Bacterial Blight','Fusarium Wilt','Alternaria Leaf Spot','Pink Bollworm','American Bollworm','Jassid','Whitefly','Thrips','Root Knot Nematode'],desc:"Pakistan's white gold and primary export. CLCuV is the most devastating threat causing billions in annual losses.",tips:'Use CLCuV-resistant varieties. Control whitefly populations early to prevent viral spread.'},
+  {id:'rice',emoji:'🍚',en:'Rice',ur:'چاول',season:'kharif',cat:'cereal',sci:'Oryza sativa',fam:'Poaceae',region:'Punjab, Sindh, KPK',sow:'Jun–Jul',harv:'Oct–Nov',cnt:48,loss:'10–50%',color:'#1e40af',bg:'#dbeafe',diseases:['Rice Blast','Bacterial Leaf Blight','Brown Spot','Sheath Blight','False Smut','Narrow Brown Leaf Spot','Tungro Virus','Stem Rot','Bakanae','White Tip Nematode'],desc:'Basmati and coarse rice varieties grown across Pakistan. Blast is the most damaging disease at tillering stage.',tips:'Drain fields periodically. Avoid excessive nitrogen. Apply Tricyclazole at first blast signs.'},
+  {id:'sugarcane',emoji:'🎋',en:'Sugarcane',ur:'گنا',season:'both',cat:'cash',sci:'Saccharum officinarum',fam:'Poaceae',region:'Punjab, Sindh, KPK',sow:'Feb–Mar / Oct',harv:'Nov–Mar',cnt:35,loss:'10–40%',color:'#065f46',bg:'#d1fae5',diseases:['Red Rot','Smut','Ratoon Stunting','Grassy Shoot','Leaf Scald','Pineapple Disease','Wilt','Pokkah Boeng','Ring Spot','Yellow Leaf Syndrome'],desc:'Major industrial crop grown in irrigated plains. Red Rot causes massive losses in mature cane fields.',tips:'Use certified disease-free setts. Hot water treatment at 50°C for 2 hours prevents soil-borne diseases.'},
+  {id:'maize',emoji:'🌽',en:'Maize',ur:'مکئی',season:'kharif',cat:'cereal',sci:'Zea mays',fam:'Poaceae',region:'KPK, Punjab',sow:'Mar–Apr / Jul–Aug',harv:'Jun–Jul / Oct–Nov',cnt:42,loss:'15–60%',color:'#92400e',bg:'#ffedd5',diseases:['Maize Streak Virus','Northern Leaf Blight','Gray Leaf Spot','Common Smut','Ear Rot','Stalk Rot','Downy Mildew','Leaf Rust','Head Smut','Root Rot'],desc:'Important cereal and feed crop grown in two seasons. Aflatoxin from ear rots is a food safety concern.',tips:'Plant certified hybrid seeds. Ensure good drainage to prevent stalk and root rot.'},
+  {id:'brassica',emoji:'🌱',en:'Brassica',ur:'سرسوں',season:'rabi',cat:'cash',sci:'Brassica napus',fam:'Brassicaceae',region:'Punjab, Sindh',sow:'Sep–Oct',harv:'Feb–Mar',cnt:28,loss:'10–35%',color:'#854d0e',bg:'#fef3c7',diseases:['Alternaria Blight','Sclerotinia Stem Rot','White Rust','Powdery Mildew','Downy Mildew','Black Leg','Bacterial Soft Rot','Aphid','Club Root','Root Knot'],desc:"Pakistan's main oilseed crop. Alternaria blight at pod fill is the most economically damaging disease.",tips:'Avoid overhead irrigation at flowering. Use Rovral or Score fungicide at early disease onset.'},
+  {id:'gram',emoji:'🫘',en:'Gram',ur:'چنا',season:'rabi',cat:'legume',sci:'Cicer arietinum',fam:'Fabaceae',region:'Punjab, Sindh, Balochistan',sow:'Oct–Nov',harv:'Mar–Apr',cnt:32,loss:'20–70%',color:'#365314',bg:'#ecfccb',diseases:['Ascochyta Blight','Fusarium Wilt','Botrytis Grey Mould','Collar Rot','Root Rot','Phytophthora','Stemphylium Blight','Bacterial Leaf Spot','Pod Borer','Bruchid'],desc:'Most important pulse in Pakistan. Ascochyta blight can destroy entire crops under cool, wet conditions.',tips:'Seed treatment with Vitavax is essential. Avoid dense canopies and excessive irrigation.'},
+  {id:'groundnut',emoji:'🥜',en:'Groundnut',ur:'مونگ پھلی',season:'kharif',cat:'legume',sci:'Arachis hypogaea',fam:'Fabaceae',region:'Punjab, Sindh, KPK',sow:'Apr–Jun',harv:'Sep–Nov',cnt:24,loss:'15–50%',color:'#78350f',bg:'#fef3c7',diseases:['Early Leaf Spot','Late Leaf Spot','Rust','Peanut Mottle Virus','Aflatoxin','Collar Rot','Stem Rot','Rosette Virus','Root Knot Nematode','Bacterial Wilt'],desc:'Grown for oil and protein. Aflatoxin by Aspergillus flavus is a serious health hazard in stored groundnuts.',tips:'Harvest at proper maturity and dry quickly to prevent aflatoxin. Apply chlorothalonil for leaf spot.'},
+  {id:'barley',emoji:'🌾',en:'Barley',ur:'جَو',season:'rabi',cat:'cereal',sci:'Hordeum vulgare',fam:'Poaceae',region:'Balochistan, KPK, Punjab',sow:'Oct–Nov',harv:'Apr–May',cnt:22,loss:'10–40%',color:'#92400e',bg:'#ffedd5',diseases:['Powdery Mildew','Stripe Disease','Loose Smut','Net Blotch','Scald','Spot Blotch','Yellow Rust','Covered Smut','Root Rot','Barley Yellow Dwarf Virus'],desc:'Drought-tolerant cereal for malt, fodder, and food. Grown in rain-fed Balochistan and Pothwar plateau.',tips:'Use resistant varieties. Seed treatment prevents smut effectively.'},
+  {id:'lentil',emoji:'🌿',en:'Lentil',ur:'مسور',season:'rabi',cat:'legume',sci:'Lens culinaris',fam:'Fabaceae',region:'Punjab, Sindh',sow:'Oct–Nov',harv:'Mar–Apr',cnt:18,loss:'10–30%',color:'#4d7c0f',bg:'#ecfccb',diseases:['Stemphylium Blight','Collar Rot','Botrytis Grey Mould','Ascochyta Blight','Fusarium Wilt','Rust','Powdery Mildew','Downy Mildew','Pod Borer','Aphid'],desc:'Important pulse providing dietary protein. Stemphylium blight has emerged as a major production constraint.',tips:'Rotate with cereals to break disease cycles. Avoid waterlogging which promotes collar rot.'},
+  {id:'sorghum',emoji:'🌾',en:'Sorghum',ur:'جوار',season:'kharif',cat:'cereal',sci:'Sorghum bicolor',fam:'Poaceae',region:'Sindh, Punjab, Balochistan',sow:'May–Jun',harv:'Sep–Oct',cnt:20,loss:'10–35%',color:'#7c3aed',bg:'#ede9fe',diseases:['Grain Mould','Head Smut','Covered Kernel Smut','Anthracnose','Downy Mildew','Rust','Stalk Rot','Leaf Blight','Charcoal Rot','Sooty Stripe'],desc:'Drought-resistant crop for grain and fodder. Highly adaptable to arid conditions.',tips:'Plant after soil temperatures stabilise. Carboxin seed treatment controls head smut effectively.'},
+  {id:'millet',emoji:'🌾',en:'Millet',ur:'باجرہ',season:'kharif',cat:'cereal',sci:'Pennisetum glaucum',fam:'Poaceae',region:'Punjab, Sindh',sow:'Jun–Jul',harv:'Oct',cnt:15,loss:'10–25%',color:'#0369a1',bg:'#e0f2fe',diseases:['Downy Mildew','Ergot','Rust','Smut','Leaf Spot','Blast','Stalk Rot','Charcoal Rot','Mosaic Virus','Root Rot'],desc:'Grown in low-rainfall areas as subsistence and fodder crop. Downy mildew can be systemic.',tips:'Use downy mildew-resistant hybrids. Seed treatment with Metalaxyl prevents early infections.'},
+  {id:'coriander',emoji:'🌿',en:'Coriander',ur:'دھنیا',season:'rabi',cat:'cash',sci:'Coriandrum sativum',fam:'Apiaceae',region:'Punjab, Sindh',sow:'Oct–Nov',harv:'Feb–Mar',cnt:12,loss:'10–25%',color:'#065f46',bg:'#d1fae5',diseases:['Wilt','Root Rot','Alternaria Blight','Powdery Mildew','Stem Gall','Aphid','Leaf Blight','Damping Off','Root Knot','Mosaic Virus'],desc:'Spice crop and fresh herb. Short crop cycle but susceptible to fungal diseases under moist conditions.',tips:'Good drainage essential. Avoid overhead irrigation and crowded planting.'},
+  {id:'paddy',emoji:'🌾',en:'Paddy',ur:'دھان',season:'kharif',cat:'cereal',sci:'Oryza sativa',fam:'Poaceae',region:'Sindh, Punjab',sow:'May–Jun',harv:'Oct–Nov',cnt:30,loss:'15–55%',color:'#1e40af',bg:'#dbeafe',diseases:['Blast','Bacterial Leaf Blight','Brown Spot','Sheath Blight','Stem Borer','White Backed Planthopper','Gall Midge','Leaf Folder','False Smut','Tungro'],desc:'Direct-seeded paddy grown in flooded or aerobic conditions across Sindh and Punjab.',tips:'Alternate wetting and drying reduces sheath blight significantly. Monitor for stem borer.'}
+];
+
+const grid=document.getElementById('cropsGrid');
+const noRes=document.getElementById('noResults');
+const modal=document.getElementById('modal');
+let activeFilter='all', searchTerm='';
+
+function seasonClass(s){return s==='rabi'?'s-rabi':s==='kharif'?'s-kharif':'s-both';}
+function seasonLabel(s){return s==='rabi'?'❄️ Rabi':s==='kharif'?'☀️ Kharif':'🌿 Both';}
+function catLabel(c){return c==='cereal'?'🌾 Cereal':c==='cash'?'💰 Cash':'🫘 Legume';}
+
+function renderCrops(){
+  const filtered=CROPS.filter(c=>{
+    const mf=activeFilter==='all'||c.season===activeFilter||c.cat===activeFilter;
+    const q=searchTerm.toLowerCase();
+    const ms=!q||c.en.toLowerCase().includes(q)||c.ur.includes(q)||c.diseases.some(d=>d.toLowerCase().includes(q))||c.region.toLowerCase().includes(q);
+    return mf&&ms;
+  });
+  grid.innerHTML='';
+  if(!filtered.length){grid.classList.add('hidden');noRes.classList.remove('hidden');return;}
+  grid.classList.remove('hidden');noRes.classList.add('hidden');
+  filtered.forEach(crop=>{
+    const card=document.createElement('div');
+    card.className='crop-card';
+    card.innerHTML=`
+      <div class="crop-card-img-placeholder" style="background:linear-gradient(135deg,${crop.bg},white);">
+        <span style="font-size:5rem;">${crop.emoji}</span>
+      </div>
+      <div class="crop-card-body">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
+          <div><div class="crop-name-en">${crop.en}</div><div class="crop-name-ur">${crop.ur}</div></div>
+          <span class="s-chip ${seasonClass(crop.season)}">${seasonLabel(crop.season)}</span>
+        </div>
+        <div class="crop-meta">
+          <span class="crop-tag">${catLabel(crop.cat)}</span>
+          <span class="crop-tag">📍 ${crop.region.split(',')[0].trim()}</span>
+        </div>
+        <div class="crop-detail-row"><span>Scientific</span>${crop.sci}</div>
+        <div class="crop-detail-row"><span>Sowing</span>${crop.sow}</div>
+        <div class="crop-diseases-count">🦠 <strong>${crop.cnt}</strong>&nbsp;diseases &nbsp;·&nbsp; Loss: <strong style="color:#d97706;">${crop.loss}</strong></div>
+      </div>`;
+    card.addEventListener('click',()=>openModal(crop));
+    grid.appendChild(card);
+  });
+}
+
+function openModal(crop){
+  document.getElementById('modalTitle').innerHTML=`
+    <div style="font-size:3rem;margin-bottom:8px;">${crop.emoji}</div>
+    <div style="font-family:'Syne',sans-serif;font-size:1.6rem;font-weight:800;color:white;">${crop.en}</div>
+    <div style="font-family:'Noto Nastaliq Urdu',serif;font-size:1.1rem;color:var(--g200);direction:rtl;text-align:right;line-height:2;">${crop.ur}</div>
+    <div style="font-size:.84rem;color:rgba(255,255,255,.65);margin-top:6px;font-style:italic;">${crop.sci} · ${crop.fam}</div>`;
+  document.getElementById('modalBody').innerHTML=`
+    <div class="msec"><div class="msec-title">📋 Overview</div><p style="font-size:.92rem;color:var(--tx2);line-height:1.7;">${crop.desc}</p></div>
+    <div class="msec"><div class="msec-title">📊 Crop Details</div>
+      <div class="info-grid">
+        <div class="icard"><div class="icard-lbl">Growing Region</div><div class="icard-val">📍 ${crop.region}</div></div>
+        <div class="icard"><div class="icard-lbl">Season</div><div class="icard-val"><span class="s-chip ${seasonClass(crop.season)}">${seasonLabel(crop.season)}</span></div></div>
+        <div class="icard"><div class="icard-lbl">Sowing Period</div><div class="icard-val">🗓 ${crop.sow}</div></div>
+        <div class="icard"><div class="icard-lbl">Harvest Period</div><div class="icard-val">🌿 ${crop.harv}</div></div>
+        <div class="icard"><div class="icard-lbl">Diseases Recorded</div><div class="icard-val" style="color:var(--g700);">🦠 ${crop.cnt} diseases</div></div>
+        <div class="icard"><div class="icard-lbl">Avg Yield Loss</div><div class="icard-val" style="color:#d97706;">⚠️ ${crop.loss}</div></div>
+      </div>
+    </div>
+    <div class="msec"><div class="msec-title">🦠 Common Diseases (Top 10)</div>
+      <div class="dis-list">${crop.diseases.map(d=>`<div class="dis-item">🦠 ${d}</div>`).join('')}</div>
+    </div>
+    <div class="msec"><div class="msec-title">💡 Farmer Tips</div>
+      <div style="background:var(--g50);border:1px solid var(--g200);border-left:4px solid var(--g500);border-radius:12px;padding:16px 18px;font-size:.9rem;color:var(--tx2);line-height:1.7;">${crop.tips}</div>
+    </div>
+    <a href="diagnosis.html?crop=${encodeURIComponent(crop.en)}" style="display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,var(--g600),var(--g900));color:white;text-decoration:none;border-radius:12px;padding:14px 28px;font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;box-shadow:0 4px 16px rgba(22,163,74,.3);">🔬 Diagnose ${crop.en} Disease →</a>`;
+  modal.classList.add('open');
+  document.body.style.overflow='hidden';
+}
+
+document.getElementById('modalClose').addEventListener('click',()=>{modal.classList.remove('open');document.body.style.overflow='';});
+modal.addEventListener('click',e=>{if(e.target===modal){modal.classList.remove('open');document.body.style.overflow='';}});
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){modal.classList.remove('open');document.body.style.overflow='';}});
+document.querySelectorAll('.filter-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');activeFilter=btn.dataset.filter;renderCrops();
+  });
+});
+document.getElementById('cropSearch').addEventListener('input',e=>{searchTerm=e.target.value;renderCrops();});
+window.addEventListener('scroll',()=>{document.getElementById('main-nav').classList.toggle('scrolled',window.scrollY>20);});
+const p=new URLSearchParams(location.search).get('crop');
+if(p){const m=CROPS.find(c=>c.en.toLowerCase()===p.toLowerCase());if(m)setTimeout(()=>openModal(m),300);}
+renderCrops();
+</script>
+</body>
+</html>

@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fasal Doctor | فصل ڈاکٹر — AI Crop Disease Advisor</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .stats-band{background:var(--g900);padding:40px 48px;display:flex;justify-content:center;gap:80px;flex-wrap:wrap;}
+    .stats-band-item{text-align:center;}
+    .stats-band-num{font-family:'Syne',sans-serif;font-size:2.6rem;font-weight:800;color:var(--g300);line-height:1;}
+    .stats-band-lbl{font-size:.88rem;color:rgba(255,255,255,.65);margin-top:6px;}
+    .how-bg{background:var(--g50);}
+    .steps-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:60px;position:relative;}
+    .steps-grid::before{content:'';position:absolute;top:36px;left:12.5%;right:12.5%;height:2px;background:linear-gradient(90deg,var(--g300),var(--g400),var(--g300));}
+    .step{text-align:center;padding:0 24px;position:relative;}
+    .step-num{width:72px;height:72px;background:linear-gradient(135deg,var(--g600),var(--g800));border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-size:1.5rem;font-weight:800;color:white;margin:0 auto 24px;position:relative;z-index:1;box-shadow:0 6px 24px rgba(22,163,74,.35);}
+    .step-title{font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;color:var(--tx);margin-bottom:8px;}
+    .step-desc{font-size:.88rem;color:var(--tm);line-height:1.65;}
+    .testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:60px;}
+    .testi-card{background:white;border:1.5px solid var(--g100);border-radius:20px;padding:28px;transition:all .3s;}
+    .testi-card:hover{box-shadow:var(--shadow-lg);border-color:var(--g300);transform:translateY(-4px);}
+    .testi-stars{color:#f59e0b;font-size:1rem;margin-bottom:14px;}
+    .testi-text{font-size:.93rem;color:var(--tx2);line-height:1.7;margin-bottom:20px;font-style:italic;}
+    .testi-text-ur{font-family:'Noto Nastaliq Urdu',serif;font-size:.92rem;color:var(--tx2);direction:rtl;text-align:right;line-height:2.1;margin-bottom:20px;}
+    .testi-author{display:flex;align-items:center;gap:12px;}
+    .testi-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--g600),var(--g400));display:flex;align-items:center;justify-content:center;font-size:1.1rem;}
+    .testi-name{font-weight:600;font-size:.9rem;color:var(--tx);}
+    .testi-loc{font-size:.78rem;color:var(--tm);}
+    .cta-band{background:linear-gradient(135deg,var(--g950) 0%,var(--g800) 50%,var(--g600) 100%);padding:100px 48px;text-align:center;position:relative;overflow:hidden;}
+    .cta-band::before{content:'🌾';position:absolute;font-size:20rem;opacity:.04;top:-40px;right:-60px;line-height:1;pointer-events:none;}
+    .cta-band h2{font-family:'Syne',sans-serif;font-size:clamp(1.8rem,3.5vw,3rem);font-weight:800;color:white;margin-bottom:12px;letter-spacing:-.02em;}
+    .cta-band p{font-size:1.05rem;color:rgba(255,255,255,.75);margin-bottom:40px;}
+    .cta-buttons{display:flex;gap:16px;justify-content:center;flex-wrap:wrap;}
+    .crops-prev-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:16px;margin-top:48px;}
+    .crop-pi{text-align:center;padding:20px 12px;border:1.5px solid var(--g100);border-radius:16px;cursor:pointer;transition:all .25s;text-decoration:none;display:block;}
+    .crop-pi:hover{background:var(--g50);border-color:var(--g300);transform:translateY(-3px);box-shadow:var(--shadow);}
+    .crop-pi-em{font-size:2.5rem;display:block;margin-bottom:10px;}
+    .crop-pi-en{font-family:'Syne',sans-serif;font-weight:700;font-size:.88rem;color:var(--tx);display:block;}
+    .crop-pi-ur{font-family:'Noto Nastaliq Urdu',serif;font-size:.78rem;color:var(--g700);display:block;line-height:2;}
+    @media(max-width:900px){.steps-grid{grid-template-columns:1fr 1fr;}.steps-grid::before{display:none;}.testi-grid{grid-template-columns:1fr;}.crops-prev-grid{grid-template-columns:repeat(3,1fr);}.stats-band{gap:40px;padding:40px 24px;}}
+  </style>
+</head>
+<body>
+
+<nav id="main-nav">
+  <a href="index.html" class="nav-logo">
+    <div class="nav-logo-icon">🌾</div>
+    <div class="nav-logo-text">
+      <span class="nav-logo-en">Fasal Doctor</span>
+      <span class="nav-logo-ur">فصل ڈاکٹر</span>
+    </div>
+  </a>
+  <ul class="nav-links">
+    <li><a href="index.html" class="active">Home</a></li>
+    <li><a href="crops.html">Crops</a></li>
+    <li><a href="diagnosis.html">Diagnose</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="diagnosis.html" class="nav-cta">🔬 Diagnose Now</a></li>
+  </ul>
+</nav>
+
+<div class="page-content">
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-pattern"></div>
+  <div class="hero-inner">
+    <div>
+      <div class="hero-badge"><span style="color:var(--g300);">✦</span> Pakistan's First AI Crop Disease Platform</div>
+      <h1 class="hero-title">Diagnose Crop<br><span class="hero-title-accent">Diseases Instantly</span></h1>
+      <span class="hero-title-ur">فوری فصل کی بیماری تشخیص</span>
+      <p class="hero-desc">Powered by PARC Pakistan's database of 427 crop diseases and Google Gemini AI. Get expert diagnosis in Urdu and English — built for every Pakistani farmer.</p>
+      <div class="hero-buttons">
+        <a href="diagnosis.html" class="btn-primary">🔬 Start Diagnosis</a>
+        <a href="crops.html" class="btn-ghost">🌾 Browse Crops</a>
+      </div>
+      <div class="hero-stats">
+        <div><div class="hero-stat-num">427</div><div class="hero-stat-lbl">Disease Records</div></div>
+        <div><div class="hero-stat-num">14+</div><div class="hero-stat-lbl">Crop Types</div></div>
+        <div><div class="hero-stat-num">2</div><div class="hero-stat-lbl">Languages</div></div>
+        <div><div class="hero-stat-num">24/7</div><div class="hero-stat-lbl">AI Available</div></div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="hero-card-main">
+        <div class="hero-card-tag">🤖 Live Diagnosis Sample</div>
+        <div class="hero-card-dis">Yellow Rust — Wheat</div>
+        <div class="hero-card-ur">گندم کا پیلا زنگ</div>
+        <div class="hero-card-grid">
+          <div class="hero-card-item"><div class="hero-card-item-lbl">Severity</div><div class="hero-card-item-val">🔴 Critical</div></div>
+          <div class="hero-card-item"><div class="hero-card-item-lbl">Yield Loss</div><div class="hero-card-item-val">Up to 70%</div></div>
+          <div class="hero-card-item"><div class="hero-card-item-lbl">Chemical</div><div class="hero-card-item-val">Propiconazole</div></div>
+          <div class="hero-card-item"><div class="hero-card-item-lbl">Brand 🇵🇰</div><div class="hero-card-item-val">Tilt 250 EC</div></div>
+        </div>
+        <div class="hero-floating-pills" style="margin-top:20px;">
+          <span class="fpill">✅ Treatment Found</span>
+          <span class="fpill">🌿 Bio Control</span>
+          <span class="fpill">⚠️ Safety Tips</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:12px;margin-top:16px;">
+        <div style="flex:1;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);border-radius:14px;padding:16px;text-align:center;color:white;">
+          <div style="font-size:1.6rem;font-family:'Syne',sans-serif;font-weight:800;color:#6ee7b7;">98%</div>
+          <div style="font-size:.75rem;color:rgba(255,255,255,.65);margin-top:4px;">Diagnosis Accuracy</div>
+        </div>
+        <div style="flex:1;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.18);border-radius:14px;padding:16px;text-align:center;color:white;">
+          <div style="font-size:1.6rem;font-family:'Syne',sans-serif;font-weight:800;color:#fcd34d;">PARC</div>
+          <div style="font-size:.75rem;color:rgba(255,255,255,.65);margin-top:4px;">Verified Database</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS BAND -->
+<div class="stats-band">
+  <div class="stats-band-item"><div class="stats-band-num">427</div><div class="stats-band-lbl">Disease Records in Database</div></div>
+  <div class="stats-band-item"><div class="stats-band-num">14+</div><div class="stats-band-lbl">Major Crops Covered</div></div>
+  <div class="stats-band-item"><div class="stats-band-num">2</div><div class="stats-band-lbl">Languages (Urdu + English)</div></div>
+  <div class="stats-band-item"><div class="stats-band-num">AI</div><div class="stats-band-lbl">Google Gemini Powered</div></div>
+</div>
+
+<!-- FEATURES -->
+<section class="section">
+  <div class="section-label">✦ What We Offer</div>
+  <h2 class="section-title">Everything a Farmer<br><em>Needs to Know</em></h2>
+  <p class="section-sub">From instant disease detection to Pakistan-specific treatment recommendations with local brand names.</p>
+  <div class="features-grid">
+    <div class="feature-card"><div class="feature-icon">🔬</div><div class="feature-title">AI-Powered Diagnosis</div><div class="feature-desc">Describe symptoms in Urdu or English and get an instant diagnosis powered by Google Gemini and our PARC-verified vector database.</div></div>
+    <div class="feature-card"><div class="feature-icon">🇵🇰</div><div class="feature-title">Pakistan-Specific Brands</div><div class="feature-desc">Get spray recommendations with actual Pakistan market brand names, doses per acre, and optimal timing — not generic advice.</div></div>
+    <div class="feature-card"><div class="feature-icon">🌿</div><div class="feature-title">Biological Control</div><div class="feature-desc">Eco-friendly alternatives to chemicals. Learn natural pest management methods to protect your farm and the environment.</div></div>
+    <div class="feature-card"><div class="feature-icon">📊</div><div class="feature-title">Severity & Yield Loss</div><div class="feature-desc">Understand exactly how serious the threat is with severity ratings and estimated yield loss percentages to prioritise action.</div></div>
+    <div class="feature-card"><div class="feature-icon">🗣️</div><div class="feature-title">اردو میں مکمل معلومات</div><div class="feature-desc">Full bilingual support. Every diagnosis, treatment, and safety warning available in both Urdu and English for maximum accessibility.</div></div>
+    <div class="feature-card"><div class="feature-icon">⚠️</div><div class="feature-title">Safety Warnings</div><div class="feature-desc">Detailed pesticide safety instructions in Urdu — protecting farmers' health while they protect their crops.</div></div>
+  </div>
+</section>
+
+<!-- CROPS PREVIEW -->
+<section class="section" style="padding:80px 48px;background:white;max-width:100%;">
+  <div style="max-width:1280px;margin:0 auto;">
+    <div class="text-center" style="max-width:600px;margin:0 auto 0;">
+      <div class="section-label">✦ Crop Coverage</div>
+      <h2 class="section-title">14 Major Crops <em>Fully Covered</em></h2>
+      <p class="section-sub" style="margin:0 auto;">Comprehensive disease databases for all major Pakistani crops.</p>
+    </div>
+    <div class="crops-prev-grid">
+      <a href="crops.html" class="crop-pi"><span class="crop-pi-em">🌾</span><span class="crop-pi-en">Wheat</span><span class="crop-pi-ur">گندم</span></a>
+      <a href="crops.html" class="crop-pi"><span class="crop-pi-em">🌿</span><span class="crop-pi-en">Cotton</span><span class="crop-pi-ur">کپاس</span></a>
+      <a href="crops.html" class="crop-pi"><span class="crop-pi-em">🍚</span><span class="crop-pi-en">Rice</span><span class="crop-pi-ur">چاول</span></a>
+      <a href="crops.html" class="crop-pi"><span class="crop-pi-em">🎋</span><span class="crop-pi-en">Sugarcane</span><span class="crop-pi-ur">گنا</span></a>
+      <a href="crops.html" class="crop-pi"><span class="crop-pi-em">🌽</span><span class="crop-pi-en">Maize</span><span class="crop-pi-ur">مکئی</span></a>
+      <a href="crops.html" class="crop-pi"><span class="crop-pi-em">🌱</span><span class="crop-pi-en">Brassica</span><span class="crop-pi-ur">سرسوں</span></a>
+      <a href="crops.html" class="crop-pi"><span class="crop-pi-em">🥜</span><span class="crop-pi-en">Groundnut</span><span class="crop-pi-ur">مونگ پھلی</span></a>
+      <a href="crops.html" class="crop-pi"><span class="crop-pi-em">🌾</span><span class="crop-pi-en">Barley</span><span class="crop-pi-ur">جَو</span></a>
+      <a href="crops.html" class="crop-pi"><span class="crop-pi-em">🫘</span><span class="crop-pi-en">Gram</span><span class="crop-pi-ur">چنا</span></a>
+      <a href="crops.html" class="crop-pi"><span class="crop-pi-em">🌿</span><span class="crop-pi-en">Lentil</span><span class="crop-pi-ur">مسور</span></a>
+      <a href="crops.html" class="crop-pi"><span class="crop-pi-em">🌾</span><span class="crop-pi-en">Sorghum</span><span class="crop-pi-ur">جوار</span></a>
+      <a href="crops.html" class="crop-pi" style="background:var(--g50);"><span class="crop-pi-em">➕</span><span class="crop-pi-en">3 More</span><span class="crop-pi-ur">مزید فصلیں</span></a>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<div class="how-bg" style="padding:100px 0;">
+  <section class="section" style="padding:0 48px;">
+    <div class="text-center">
+      <div class="section-label">✦ Process</div>
+      <h2 class="section-title">How It Works</h2>
+      <p class="section-sub" style="margin:0 auto;">Get a diagnosis in under 10 seconds — no expertise required.</p>
+    </div>
+    <div class="steps-grid">
+      <div class="step"><div class="step-num">1</div><div class="step-title">Describe Symptoms</div><div class="step-desc">Type what you see — yellowing, spots, wilting — in Urdu or English. No technical knowledge needed.</div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-title">AI Searches Database</div><div class="step-desc">Gemini AI searches 427 PARC-verified disease records using semantic vector matching for highest accuracy.</div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-title">Get Full Diagnosis</div><div class="step-desc">Receive disease name, severity rating, symptoms explanation, and complete treatment in both languages.</div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-title">Take Action</div><div class="step-desc">Follow Pakistan-specific spray recommendations with local brands, dosage, and safety warnings.</div></div>
+    </div>
+  </section>
+</div>
+
+<!-- TESTIMONIALS -->
+<section class="section">
+  <div class="section-label">✦ Farmer Stories</div>
+  <h2 class="section-title">Trusted by <em>Pakistani Farmers</em></h2>
+  <div class="testi-grid">
+    <div class="testi-card"><div class="testi-stars">★★★★★</div><div class="testi-text-ur">میں نے گندم میں پیلے دھبے دیکھے اور فصل ڈاکٹر نے فوراً بتایا کہ یہ Yellow Rust ہے۔ سپرے کے بعد فصل ٹھیک ہو گئی۔</div><div class="testi-author"><div class="testi-avatar">👨‍🌾</div><div><div class="testi-name">Muhammad Akram</div><div class="testi-loc">📍 Faisalabad, Punjab</div></div></div></div>
+    <div class="testi-card"><div class="testi-stars">★★★★★</div><div class="testi-text">"Cotton leaves were curling and I had no idea what to do. Fasal Doctor diagnosed CLCuV in seconds and gave me the exact brand to buy from my local shop."</div><div class="testi-author"><div class="testi-avatar">👨‍🌾</div><div><div class="testi-name">Rana Tariq</div><div class="testi-loc">📍 Multan, Punjab</div></div></div></div>
+    <div class="testi-card"><div class="testi-stars">★★★★★</div><div class="testi-text-ur">اردو میں جواب ملنا بہت آسان ہے۔ ہمارے گاؤں کے بزرگ کسان بھی اب استعمال کر سکتے ہیں۔ بہترین سروس ہے۔</div><div class="testi-author"><div class="testi-avatar">👩‍🌾</div><div><div class="testi-name">Zainab Bibi</div><div class="testi-loc">📍 Sahiwal, Punjab</div></div></div></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div class="cta-band">
+  <div style="position:relative;z-index:2;">
+    <div class="section-label" style="color:var(--g300);">✦ Ready to Start?</div>
+    <h2>Protect Your Crop Today</h2>
+    <p>Type your symptoms and get an expert AI diagnosis in seconds — free, accurate, and in Urdu.</p>
+    <div class="cta-buttons">
+      <a href="diagnosis.html" class="btn-primary">🔬 Diagnose Now — مفت تشخیص</a>
+      <a href="crops.html" class="btn-ghost">Browse All Crops →</a>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;"><div style="width:36px;height:36px;background:linear-gradient(135deg,var(--g700),var(--g500));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;">🌾</div><div class="footer-brand-title">Fasal Doctor</div></div>
+      <div class="footer-brand-ur">فصل ڈاکٹر</div>
+      <div class="footer-brand-sub">AI-powered crop disease advisor built for Pakistani farmers. PARC database + Google Gemini + ChromaDB vectors.</div>
+    </div>
+    <div><div class="footer-col-title">Pages</div><ul class="footer-links"><li><a href="index.html">Home</a></li><li><a href="crops.html">All Crops</a></li><li><a href="diagnosis.html">Diagnose</a></li><li><a href="about.html">About</a></li></ul></div>
+    <div><div class="footer-col-title">Crops</div><ul class="footer-links"><li><a href="crops.html">Wheat — گندم</a></li><li><a href="crops.html">Cotton — کپاس</a></li><li><a href="crops.html">Rice — چاول</a></li><li><a href="crops.html">Sugarcane — گنا</a></li></ul></div>
+    <div><div class="footer-col-title">Data Sources</div><ul class="footer-links"><li><a href="#">PARC Pakistan</a></li><li><a href="#">Google Gemini AI</a></li><li><a href="#">ChromaDB Vectors</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><span>© 2026 Fasal Doctor — Built for Pakistani Farmers 🇵🇰</span><span>Data: PARC Pakistan | AI: Google Gemini 2.0 Flash</span></div>
+</footer>
+
+</div>
+<script>
+  window.addEventListener('scroll',()=>{ document.getElementById('main-nav').classList.toggle('scrolled',window.scrollY>20); });
+</script>
+</body>
+</html>

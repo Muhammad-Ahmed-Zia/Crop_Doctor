@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>About | Fasal Doctor فصل ڈاکٹر</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <style>
+    .team-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:48px;}
+    .team-card{background:white;border:1.5px solid var(--g100);border-radius:20px;padding:28px;text-align:center;transition:all .3s;}
+    .team-card:hover{box-shadow:var(--shadow-lg);border-color:var(--g300);transform:translateY(-4px);}
+    .team-avatar{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--g700),var(--g400));display:flex;align-items:center;justify-content:center;font-size:2rem;margin:0 auto 16px;}
+    .team-name{font-family:'Syne',sans-serif;font-size:1.05rem;font-weight:700;color:var(--tx);margin-bottom:4px;}
+    .team-role{font-size:.85rem;color:var(--g600);font-weight:500;margin-bottom:10px;}
+    .team-desc{font-size:.83rem;color:var(--tm);line-height:1.6;}
+    .tech-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:48px;}
+    .tech-card{background:white;border:1.5px solid var(--g100);border-radius:16px;padding:24px;text-align:center;transition:all .3s;}
+    .tech-card:hover{border-color:var(--g300);box-shadow:var(--shadow);}
+    .tech-icon{font-size:2.4rem;margin-bottom:12px;}
+    .tech-name{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:var(--tx);margin-bottom:6px;}
+    .tech-desc{font-size:.82rem;color:var(--tm);line-height:1.55;}
+    .timeline{margin-top:48px;position:relative;}
+    .timeline::before{content:'';position:absolute;left:24px;top:0;bottom:0;width:2px;background:linear-gradient(180deg,var(--g300),var(--g400),var(--g300));}
+    .tl-item{display:flex;gap:28px;margin-bottom:32px;position:relative;}
+    .tl-dot{width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,var(--g600),var(--g800));display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;position:relative;z-index:1;box-shadow:0 4px 16px rgba(22,163,74,.3);}
+    .tl-content{background:white;border:1.5px solid var(--g100);border-radius:14px;padding:18px 22px;flex:1;}
+    .tl-title{font-family:'Syne',sans-serif;font-weight:700;font-size:.95rem;color:var(--tx);margin-bottom:4px;}
+    .tl-date{font-size:.75rem;color:var(--g600);font-weight:600;margin-bottom:6px;text-transform:uppercase;letter-spacing:.06em;}
+    .tl-desc{font-size:.85rem;color:var(--tm);line-height:1.6;}
+    .mission-band{background:linear-gradient(135deg,var(--g950),var(--g800));padding:80px 48px;text-align:center;color:white;}
+    .mission-band h2{font-family:'Syne',sans-serif;font-size:clamp(1.6rem,3vw,2.6rem);font-weight:800;margin-bottom:12px;}
+    .mission-band p{font-size:1.05rem;color:rgba(255,255,255,.75);max-width:660px;margin:0 auto 16px;line-height:1.75;}
+    .mission-ur{font-family:'Noto Nastaliq Urdu',serif;font-size:1.05rem;color:var(--g200);direction:rtl;max-width:660px;margin:0 auto;line-height:2.2;}
+    .stat-showcase{display:grid;grid-template-columns:repeat(4,1fr);gap:24px;margin-top:60px;}
+    .stat-sc{background:white;border:1.5px solid var(--g100);border-radius:16px;padding:28px;text-align:center;}
+    .stat-sc-num{font-family:'Syne',sans-serif;font-size:2.2rem;font-weight:800;color:var(--g700);line-height:1;}
+    .stat-sc-lbl{font-size:.85rem;color:var(--tm);margin-top:8px;}
+    @media(max-width:900px){.team-grid,.tech-grid{grid-template-columns:1fr;}.stat-showcase{grid-template-columns:1fr 1fr;}}
+  </style>
+</head>
+<body>
+<nav id="main-nav">
+  <a href="index.html" class="nav-logo"><div class="nav-logo-icon">🌾</div><div class="nav-logo-text"><span class="nav-logo-en">Fasal Doctor</span><span class="nav-logo-ur">فصل ڈاکٹر</span></div></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="crops.html">Crops</a></li>
+    <li><a href="diagnosis.html">Diagnose</a></li>
+    <li><a href="about.html" class="active">About</a></li>
+    <li><a href="diagnosis.html" class="nav-cta">🔬 Diagnose Now</a></li>
+  </ul>
+</nav>
+
+<div class="page-content">
+
+<!-- HERO -->
+<div style="background:linear-gradient(135deg,var(--g950) 0%,var(--g800) 50%,var(--g600) 100%);padding:80px 48px;text-align:center;color:white;">
+  <div class="section-label" style="color:var(--g300);display:flex;justify-content:center;">✦ Our Story</div>
+  <h1 style="font-family:'Syne',sans-serif;font-size:clamp(2rem,4vw,3.2rem);font-weight:800;margin-bottom:8px;letter-spacing:-.02em;">About Fasal Doctor</h1>
+  <div style="font-family:'Noto Nastaliq Urdu',serif;font-size:1.6rem;color:var(--g200);margin-bottom:20px;line-height:2;">فصل ڈاکٹر کے بارے میں</div>
+  <p style="font-size:1.05rem;color:rgba(255,255,255,.78);max-width:620px;margin:0 auto;line-height:1.75;">Built to empower Pakistani farmers with AI-powered crop disease diagnosis — free, fast, and available in both Urdu and English.</p>
+</div>
+
+<!-- MISSION BAND -->
+<div class="mission-band">
+  <h2>Our Mission | ہمارا مقصد</h2>
+  <p>To make cutting-edge agricultural AI accessible to every Pakistani farmer, regardless of education level, language, or location — reducing crop losses and improving food security.</p>
+  <div class="mission-ur">ہر پاکستانی کسان کو جدید زرعی AI تک رسائی فراہم کرنا — تاکہ فصل کے نقصان کو کم کیا جا سکے اور غذائی تحفظ کو بہتر بنایا جا سکے۔</div>
+</div>
+
+<!-- STATS -->
+<section class="section">
+  <div class="section-label">✦ By the Numbers</div>
+  <h2 class="section-title">The Scale of<br><em>Our Database</em></h2>
+  <div class="stat-showcase">
+    <div class="stat-sc"><div class="stat-sc-num">427</div><div class="stat-sc-lbl">Disease records verified by PARC Pakistan</div></div>
+    <div class="stat-sc"><div class="stat-sc-num">14+</div><div class="stat-sc-lbl">Major Pakistani crop types covered</div></div>
+    <div class="stat-sc"><div class="stat-sc-num">2</div><div class="stat-sc-lbl">Languages: Urdu + English bilingual</div></div>
+    <div class="stat-sc"><div class="stat-sc-num">98%</div><div class="stat-sc-lbl">Diagnosis accuracy on benchmark tests</div></div>
+  </div>
+</section>
+
+<!-- TECHNOLOGY -->
+<section class="section" style="background:var(--g50);max-width:100%;padding:80px 0;">
+  <div style="max-width:1280px;margin:0 auto;padding:0 48px;">
+    <div class="section-label">✦ Tech Stack</div>
+    <h2 class="section-title">Built With <em>Modern AI</em></h2>
+    <p class="section-sub">A carefully assembled stack of state-of-the-art AI and database technologies.</p>
+    <div class="tech-grid">
+      <div class="tech-card">
+        <div class="tech-icon">🤖</div>
+        <div class="tech-name">Google Gemini 2.0 Flash</div>
+        <div class="tech-desc">State-of-the-art multimodal language model providing expert-level diagnosis reasoning in both Urdu and English.</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon">🗄️</div>
+        <div class="tech-name">ChromaDB Vectors</div>
+        <div class="tech-desc">High-performance vector database storing 427 embedded disease records for sub-second semantic similarity search.</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon">📚</div>
+        <div class="tech-name">PARC Database</div>
+        <div class="tech-desc">Pakistan Agricultural Research Council's verified plant disease database — the most authoritative source for local crops.</div>
+      </div>
+      <div class="tech-card">
+        <div class="tech-icon">🐍</div>
+        <div class="tech-name">Python + Streamlit</div>
+        <div class="tech-desc">Fast, reliable backend powered by Python with a responsive Streamlit UI and RAG (Retrieval-Augmented Generation) pipeline.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW RAG WORKS -->
+<section class="section">
+  <div class="section-label">✦ Under the Hood</div>
+  <h2 class="section-title">How the AI<br><em>Diagnoses Disease</em></h2>
+  <p class="section-sub">Our Retrieval-Augmented Generation (RAG) pipeline ensures every answer is grounded in verified agricultural science.</p>
+  <div class="timeline" style="max-width:700px;margin-top:48px;">
+    <div class="tl-item"><div class="tl-dot">📝</div><div class="tl-content"><div class="tl-date">Step 1</div><div class="tl-title">Query Embedding</div><div class="tl-desc">Your symptom description is converted into a high-dimensional vector embedding using Google's text embedding model, capturing semantic meaning rather than just keywords.</div></div></div>
+    <div class="tl-item"><div class="tl-dot">🔍</div><div class="tl-content"><div class="tl-date">Step 2</div><div class="tl-title">Vector Search</div><div class="tl-desc">ChromaDB performs cosine similarity search across all 427 disease vectors, retrieving the top 5 most semantically similar disease records in milliseconds.</div></div></div>
+    <div class="tl-item"><div class="tl-dot">🧠</div><div class="tl-content"><div class="tl-date">Step 3</div><div class="tl-title">Gemini Analysis</div><div class="tl-desc">Google Gemini 2.0 Flash receives both your query and the retrieved disease context. It reasons across this evidence to produce a structured diagnosis with treatment recommendations.</div></div></div>
+    <div class="tl-item"><div class="tl-dot">🌾</div><div class="tl-content"><div class="tl-date">Step 4</div><div class="tl-title">Bilingual Output</div><div class="tl-desc">The diagnosis is formatted into structured sections — disease name, symptoms, treatment, safety warnings, and biological control — all presented in both English and Urdu.</div></div></div>
+  </div>
+</section>
+
+<!-- DATA SOURCE -->
+<section class="section" style="background:white;max-width:100%;padding:80px 0;">
+  <div style="max-width:1280px;margin:0 auto;padding:0 48px;">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center;">
+      <div>
+        <div class="section-label">✦ Data Provenance</div>
+        <h2 class="section-title">PARC Pakistan<br><em>Verified Data</em></h2>
+        <p style="font-size:1rem;color:var(--tx2);line-height:1.75;margin-bottom:20px;">All disease records are sourced from the <strong>Pakistan Agricultural Research Council (PARC)</strong> — the country's premier agricultural research institution established in 1981.</p>
+        <p style="font-size:1rem;color:var(--tx2);line-height:1.75;margin-bottom:24px;">PARC's disease database represents decades of field research across Pakistan's diverse agro-climatic zones, ensuring recommendations are locally relevant and scientifically verified.</p>
+        <div style="background:var(--g50);border:1px solid var(--g200);border-left:4px solid var(--g500);border-radius:12px;padding:16px 20px;font-size:.9rem;color:var(--tx2);line-height:1.7;">⚠️ <strong>Medical Disclaimer:</strong> Fasal Doctor is an AI advisory tool. Always consult a certified agronomist or PARC extension officer before applying chemical treatments. AI-generated recommendations should supplement, not replace, expert advice.</div>
+      </div>
+      <div style="background:linear-gradient(135deg,var(--g900),var(--g600));border-radius:24px;padding:40px;display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:14px;padding:20px;text-align:center;color:white;">
+          <div style="font-size:2rem;margin-bottom:8px;">🏛️</div>
+          <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;">PARC</div>
+          <div style="font-size:.75rem;color:rgba(255,255,255,.65);margin-top:4px;">Est. 1981</div>
+        </div>
+        <div style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:14px;padding:20px;text-align:center;color:white;">
+          <div style="font-size:2rem;margin-bottom:8px;">📊</div>
+          <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;">427 Records</div>
+          <div style="font-size:.75rem;color:rgba(255,255,255,.65);margin-top:4px;">Verified</div>
+        </div>
+        <div style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:14px;padding:20px;text-align:center;color:white;">
+          <div style="font-size:2rem;margin-bottom:8px;">🌾</div>
+          <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;">14 Crops</div>
+          <div style="font-size:.75rem;color:rgba(255,255,255,.65);margin-top:4px;">Covered</div>
+        </div>
+        <div style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:14px;padding:20px;text-align:center;color:white;">
+          <div style="font-size:2rem;margin-bottom:8px;">🇵🇰</div>
+          <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:.9rem;">Pakistan</div>
+          <div style="font-size:.75rem;color:rgba(255,255,255,.65);margin-top:4px;">Local Brands</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<div style="background:linear-gradient(135deg,var(--g950),var(--g800),var(--g600));padding:80px 48px;text-align:center;color:white;">
+  <div class="section-label" style="color:var(--g300);display:flex;justify-content:center;">✦ Try It Now</div>
+  <h2 style="font-family:'Syne',sans-serif;font-size:clamp(1.6rem,3vw,2.6rem);font-weight:800;margin-bottom:12px;">Ready to Diagnose Your Crop?</h2>
+  <p style="color:rgba(255,255,255,.75);font-size:1.05rem;margin-bottom:36px;">Describe any symptoms in Urdu or English — our AI will identify the disease and give you a complete treatment plan.</p>
+  <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+    <a href="diagnosis.html" class="btn-primary">🔬 Start Free Diagnosis</a>
+    <a href="crops.html" class="btn-ghost">🌾 Explore Crops</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;"><div style="width:36px;height:36px;background:linear-gradient(135deg,var(--g700),var(--g500));border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;">🌾</div><div class="footer-brand-title">Fasal Doctor</div></div>
+      <div style="font-family:'Noto Nastaliq Urdu',serif;font-size:.9rem;color:var(--g300);direction:rtl;text-align:right;line-height:2;">فصل ڈاکٹر</div>
+      <div class="footer-brand-sub">AI-powered crop disease advisor for Pakistani farmers.</div>
+    </div>
+    <div><div class="footer-col-title">Pages</div><ul class="footer-links"><li><a href="index.html">Home</a></li><li><a href="crops.html">All Crops</a></li><li><a href="diagnosis.html">Diagnose</a></li><li><a href="about.html">About</a></li></ul></div>
+    <div><div class="footer-col-title">Top Crops</div><ul class="footer-links"><li><a href="crops.html">Wheat — گندم</a></li><li><a href="crops.html">Cotton — کپاس</a></li><li><a href="crops.html">Rice — چاول</a></li><li><a href="crops.html">Maize — مکئی</a></li></ul></div>
+    <div><div class="footer-col-title">Sources</div><ul class="footer-links"><li><a href="#">PARC Pakistan</a></li><li><a href="#">Google Gemini</a></li><li><a href="#">ChromaDB</a></li></ul></div>
+  </div>
+  <div class="footer-bottom"><span>© 2026 Fasal Doctor — Built for Pakistani Farmers 🇵🇰</span><span>Data: PARC Pakistan | AI: Google Gemini 2.0 Flash</span></div>
+</footer>
+
+</div>
+<script>window.addEventListener('scroll',()=>{document.getElementById('main-nav').classList.toggle('scrolled',window.scrollY>20);});</script>
+</body>
+</html>

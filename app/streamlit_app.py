@@ -1,533 +1,343 @@
-"""
-FASAL DOCTOR — Streamlit Web UI
-================================
-Run from project root:
-    streamlit run app/streamlit_app.py
-"""
-
+"""FASAL DOCTOR v2.0 — Professional Streamlit UI"""
 import sys, os, re
 from pathlib import Path
 
-# ── Make src/ importable ──────────────────────────────────────────────────────
-ROOT = Path(__file__).parent.parent          # D:\MObile App Project\fasal-doctor
+ROOT = Path(__file__).parent.parent
 sys.path.insert(0, str(ROOT / "src"))
-os.chdir(ROOT)                               # ensure relative paths (data/) work
+os.chdir(ROOT)
 
 import streamlit as st
 from dotenv import load_dotenv
 load_dotenv()
 
-# ── Page config (MUST be first Streamlit call) ────────────────────────────────
-st.set_page_config(
-    page_title="فصل ڈاکٹر | Fasal Doctor",
-    page_icon="🌾",
-    layout="wide",
-    initial_sidebar_state="expanded",
-    menu_items={
-        "About": "Fasal Doctor — AI Crop Disease Advisor for Pakistani Farmers | فصل ڈاکٹر",
-    },
-)
+st.set_page_config(page_title="فصل ڈاکٹر | Fasal Doctor", page_icon="🌾",
+                   layout="wide", initial_sidebar_state="expanded")
 
-# ── CSS: green theme + Urdu RTL font ─────────────────────────────────────────
+# ── CSS ───────────────────────────────────────────────────────────────────────
 st.markdown("""
 <style>
-@import url('https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;600;700&family=Inter:wght@300;400;500;600;700&display=swap');
-
-/* ── Root variables ── */
-:root {
-    --green-deep:   #1a4731;
-    --green-mid:    #2d7a4f;
-    --green-light:  #4caf7d;
-    --green-pale:   #e8f5ee;
-    --amber:        #f59e0b;
-    --red:          #ef4444;
-    --orange:       #f97316;
-    --card-bg:      #ffffff;
-    --text-dark:    #1a2e1a;
-    --text-muted:   #6b7280;
-    --border:       #d1fae5;
-    --shadow:       0 4px 24px rgba(45,122,79,0.10);
-}
-
-/* ── Global ── */
-html, body, [class*="css"] { font-family: 'Inter', sans-serif; }
-.stApp { background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%); }
-
-/* ── Hide Streamlit chrome ── */
-#MainMenu, footer { visibility: hidden; }
-header { visibility: hidden; }
-
-/* ── Sidebar ── */
-[data-testid="stSidebar"] {
-    background: linear-gradient(180deg, var(--green-deep) 0%, #0f2d1f 100%);
-    border-right: none;
-}
-[data-testid="stSidebar"] * { color: #e8f5ee !important; }
-[data-testid="stSidebar"] .stSelectbox label,
-[data-testid="stSidebar"] .stRadio label { color: #a7f3d0 !important; font-weight: 500; }
-[data-testid="stSidebar"] hr { border-color: rgba(255,255,255,0.15) !important; }
-
-/* ── Header banner ── */
-.fasal-header {
-    background: linear-gradient(135deg, var(--green-deep) 0%, var(--green-mid) 60%, var(--green-light) 100%);
-    border-radius: 20px;
-    padding: 32px 40px;
-    margin-bottom: 28px;
-    box-shadow: var(--shadow);
-    display: flex;
-    align-items: center;
-    gap: 24px;
-}
-.fasal-header .title-en {
-    font-size: 2.4rem;
-    font-weight: 700;
-    color: #ffffff;
-    letter-spacing: -0.5px;
-    line-height: 1.1;
-}
-.fasal-header .title-ur {
-    font-family: 'Noto Nastaliq Urdu', serif;
-    font-size: 2rem;
-    color: #a7f3d0;
-    direction: rtl;
-    line-height: 1.6;
-}
-.fasal-header .subtitle {
-    font-size: 1.05rem;
-    color: rgba(255,255,255,0.78);
-    margin-top: 6px;
-}
-
-/* ── Urdu text blocks ── */
-.urdu-text {
-    font-family: 'Noto Nastaliq Urdu', serif;
-    direction: rtl;
-    text-align: right;
-    font-size: 18px;
-    line-height: 2.4;
-    color: var(--text-dark);
-}
-.urdu-small {
-    font-family: 'Noto Nastaliq Urdu', serif;
-    direction: rtl;
-    text-align: right;
-    font-size: 15px;
-    line-height: 2.2;
-    color: var(--text-muted);
-}
-
-/* ── Disease result card ── */
-.disease-card {
-    background: var(--card-bg);
-    border: 1.5px solid var(--border);
-    border-radius: 18px;
-    padding: 28px 32px;
-    margin-top: 20px;
-    box-shadow: var(--shadow);
-}
-.card-section {
-    border-left: 4px solid var(--green-mid);
-    padding: 14px 18px;
-    margin: 14px 0;
-    background: var(--green-pale);
-    border-radius: 0 10px 10px 0;
-}
-.card-section-title {
-    font-size: 0.88rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: var(--green-mid);
-    margin-bottom: 6px;
-}
-
-/* ── Severity badge ── */
-.badge {
-    display: inline-block;
-    padding: 4px 14px;
-    border-radius: 999px;
-    font-size: 0.82rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-}
-.badge-critical { background: #fee2e2; color: #b91c1c; }
-.badge-high     { background: #ffedd5; color: #c2410c; }
-.badge-medium   { background: #fef9c3; color: #854d0e; }
-.badge-low      { background: #dcfce7; color: #166534; }
-
-/* ── Example question buttons ── */
-.example-btn {
-    display: inline-block;
-    background: var(--green-pale);
-    border: 1.5px solid var(--border);
-    border-radius: 22px;
-    padding: 8px 16px;
-    margin: 4px;
-    font-size: 0.88rem;
-    color: var(--green-deep);
-    cursor: pointer;
-    transition: all 0.2s;
-    font-weight: 500;
-}
-.example-btn:hover {
-    background: var(--green-light);
-    color: white;
-    border-color: var(--green-light);
-}
-
-/* ── Chat history ── */
-.chat-item {
-    background: #f8fffe;
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 10px 16px;
-    margin: 6px 0;
-    font-size: 0.9rem;
-    color: var(--text-muted);
-}
-.chat-item strong { color: var(--green-deep); }
-
-/* ── Input box ── */
-.stTextArea textarea {
-    border-radius: 12px !important;
-    border: 2px solid var(--border) !important;
-    font-size: 1rem !important;
-    padding: 14px !important;
-    transition: border 0.2s !important;
-}
-.stTextArea textarea:focus {
-    border-color: var(--green-mid) !important;
-    box-shadow: 0 0 0 3px rgba(45,122,79,0.12) !important;
-}
-
-/* ── Primary button ── */
-.stButton > button[kind="primary"] {
-    background: linear-gradient(135deg, var(--green-mid), var(--green-deep)) !important;
-    color: white !important;
-    border: none !important;
-    border-radius: 12px !important;
-    padding: 12px 32px !important;
-    font-size: 1.05rem !important;
-    font-weight: 600 !important;
-    letter-spacing: 0.02em !important;
-    transition: all 0.2s !important;
-    box-shadow: 0 4px 14px rgba(45,122,79,0.30) !important;
-}
-.stButton > button[kind="primary"]:hover {
-    transform: translateY(-2px) !important;
-    box-shadow: 0 8px 20px rgba(45,122,79,0.40) !important;
-}
-
-/* ── Spinner ── */
-.stSpinner > div { border-top-color: var(--green-mid) !important; }
-
-/* ── Stat cards ── */
-.stat-card {
-    background: rgba(255,255,255,0.12);
-    border: 1px solid rgba(255,255,255,0.2);
-    border-radius: 12px;
-    padding: 14px;
-    text-align: center;
-    margin: 6px 0;
-}
-.stat-number { font-size: 1.8rem; font-weight: 700; color: #6ee7b7; }
-.stat-label  { font-size: 0.8rem; color: #a7f3d0; margin-top: 2px; }
-
-/* ── Disclaimer ── */
-.disclaimer {
-    background: rgba(245,158,11,0.18);
-    border: 1px solid rgba(245,158,11,0.35);
-    border-radius: 10px;
-    padding: 12px 16px;
-    font-size: 0.85rem;
-    color: #92400e;
-    margin-top: 12px;
-    line-height: 1.6;
-}
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Inter:wght@300;400;500;600&family=Noto+Nastaliq+Urdu:wght@400;600;700&display=swap');
+:root{--g9:#14532d;--g7:#15803d;--g6:#16a34a;--g3:#86efac;--g2:#bbf7d0;--g1:#dcfce7;--g0:#f0fdf4;--tx:#111827;--tm:#6b7280;--wh:#ffffff;}
+html,body,[class*="css"]{font-family:'Inter',sans-serif;}
+.stApp{background:linear-gradient(160deg,#f0fdf4 0%,#f9fffe 100%);}
+#MainMenu,footer,header{visibility:hidden!important;}
+/* sidebar */
+[data-testid="stSidebar"]{background:linear-gradient(180deg,#0f2d1f 0%,#14532d 50%,#0f2d1f 100%);}
+[data-testid="stSidebar"] *{color:#e8f5ee!important;}
+[data-testid="stSidebar"] hr{border-color:rgba(255,255,255,0.12)!important;}
+[data-testid="stSidebar"] .stSelectbox>div>div{background:rgba(255,255,255,0.10)!important;border:1px solid rgba(255,255,255,0.20)!important;border-radius:10px!important;}
+[data-testid="stSidebar"] .stRadio label{color:#d1fae5!important;font-size:0.9rem!important;}
+[data-testid="collapsedControl"]{background:#16a34a!important;border-radius:0 10px 10px 0!important;width:28px!important;padding:12px 4px!important;box-shadow:2px 0 8px rgba(0,0,0,0.2)!important;}
+[data-testid="collapsedControl"] svg{fill:white!important;stroke:white!important;}
+/* disease card — FORCE all text visible */
+.dc,.dc *{color:#111827!important;}
+.safety-blk,.safety-blk *{color:#92400e!important;}
+.urdu-text{font-family:'Noto Nastaliq Urdu',serif!important;direction:rtl!important;text-align:right!important;color:#1a1a1a!important;line-height:2.4!important;}
+/* buttons */
+.stButton>button{background:white!important;color:#15803d!important;border:1.5px solid #86efac!important;border-radius:999px!important;font-size:0.82rem!important;padding:6px 16px!important;font-weight:500!important;transition:all .2s!important;}
+.stButton>button:hover{background:#f0fdf4!important;border-color:#16a34a!important;transform:translateY(-1px)!important;}
+.stButton>button[kind="primary"]{background:linear-gradient(135deg,#16a34a,#14532d)!important;color:white!important;border:none!important;border-radius:14px!important;padding:14px 36px!important;font-size:1.05rem!important;font-weight:700!important;box-shadow:0 6px 20px rgba(22,163,74,.35)!important;}
+.stButton>button[kind="primary"]:hover{transform:translateY(-2px)!important;box-shadow:0 10px 28px rgba(22,163,74,.45)!important;}
+/* textarea */
+.stTextArea textarea{border:2px solid #dcfce7!important;border-radius:14px!important;font-size:1rem!important;background:#f9fffe!important;}
+.stTextArea textarea:focus{border-color:#16a34a!important;}
+/* stat pill */
+.pill{display:inline-block;background:rgba(255,255,255,0.15);border:1px solid rgba(255,255,255,0.3);border-radius:999px;padding:7px 18px;font-weight:600;color:white;font-size:0.88rem;margin:4px;}
+/* stat card sidebar */
+.scard{background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:12px;padding:12px 8px;text-align:center;margin:4px 0;}
+.snum{font-size:1.6rem;font-weight:700;color:#6ee7b7!important;}
+.slbl{font-size:0.75rem;color:#a7f3d0!important;margin-top:2px;}
+/* history */
+.hitem{background:#f0fdf4;border-radius:10px;border-left:3px solid #16a34a;padding:8px 12px;margin:5px 0;font-size:0.84rem;color:#374151;}
+/* response sections */
+.rs{background:white;border:1.5px solid #dcfce7;border-radius:16px;padding:22px 26px;margin:12px 0;box-shadow:0 4px 20px rgba(22,163,74,.08);}
+.rs-title{font-size:0.82rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#15803d;margin-bottom:10px;}
+.treat-grid{background:#f0fdf4;border:1px solid #86efac;border-radius:12px;padding:14px 18px;}
+.treat-row{display:flex;gap:12px;padding:5px 0;border-bottom:1px solid #dcfce7;align-items:baseline;}
+.treat-row:last-child{border-bottom:none;}
+.treat-label{font-weight:600;color:#15803d!important;min-width:110px;font-size:0.88rem;}
+.treat-val{color:#111827!important;font-size:0.95rem;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.6;transform:scale(1.1)}}
 </style>
 """, unsafe_allow_html=True)
 
-# ── Load RAG engine (cached — loads model only once) ─────────────────────────
-@st.cache_resource(show_spinner="🌱 Loading Fasal Doctor AI Engine...")
+
+@st.cache_resource(show_spinner="🌱 Loading AI engine...")
 def load_engine():
     from rag_engine import get_diagnosis, get_retriever
-    get_retriever()          # warm up: loads ChromaDB + sentence transformer
+    get_retriever()
     return get_diagnosis
 
-# ── Crop options ──────────────────────────────────────────────────────────────
-CROPS = {
-    "🌍 All Crops — تمام فصلیں":  None,
-    "🌾 Wheat — گندم":             "Wheat",
-    "🌿 Cotton — کپاس":            "Cotton",
-    "🌾 Rice — چاول":              "Rice",
-    "🎋 Sugarcane — گنا":          "Sugarcane",
-    "🌽 Maize — مکئی":             "Maize",
-    "🥜 Groundnut — مونگ پھلی":    "Groundnut",
-    "🌱 Barley — جَو":             "Barley",
-    "🌾 Sorghum — جوار":           "Sorghum",
-    "🌾 Millet — باجرہ":           "Millet",
-    "🌿 Brassica — سرسوں":         "Brassica",
-    "🌱 Gram — چنا":               "Gram",
-    "🌿 Coriander — دھنیا":        "Coriander",
-    "🌾 Paddy — دھان":             "Paddy",
-    "🌱 Lentil — مسور":            "Lentil",
-}
 
-EXAMPLE_QUESTIONS = [
-    "Yellow spots on wheat leaves",
-    "Cotton leaves curling upward",
-    "Rice plants turning brown",
-    "Maize stem rotting at base",
-    "میری گندم کے پتوں پر پیلے دھبے ہیں",
-    "کپاس کے پتے اوپر مڑ رہے ہیں",
-]
+def severity_badge(text: str) -> str:
+    tl = text.lower()
+    if any(w in tl for w in ["critical","severe","emergency"]):
+        return "<span style='background:#fee2e2;color:#991b1b;padding:4px 14px;border-radius:999px;font-size:.78rem;font-weight:700;'>🔴 CRITICAL</span>"
+    if any(w in tl for w in ["high","serious"]):
+        return "<span style='background:#ffedd5;color:#9a3412;padding:4px 14px;border-radius:999px;font-size:.78rem;font-weight:700;'>🟠 HIGH</span>"
+    if any(w in tl for w in ["medium","moderate"]):
+        return "<span style='background:#fef9c3;color:#854d0e;padding:4px 14px;border-radius:999px;font-size:.78rem;font-weight:700;'>🟡 MEDIUM</span>"
+    return "<span style='background:#dcfce7;color:#166534;padding:4px 14px;border-radius:999px;font-size:.78rem;font-weight:700;'>🟢 LOW</span>"
 
-# ── Session state init ────────────────────────────────────────────────────────
-if "chat_history"  not in st.session_state: st.session_state.chat_history  = []
-if "query_input"   not in st.session_state: st.session_state.query_input   = ""
-if "last_response" not in st.session_state: st.session_state.last_response = None
-if "trigger_query" not in st.session_state: st.session_state.trigger_query = None
+
+def rx(pattern, text, default="—"):
+    m = re.search(pattern, text, re.IGNORECASE | re.MULTILINE)
+    return m.group(1).strip().replace("**","").replace("*","") if m else default
+
+
+def strip_md(s: str) -> str:
+    return re.sub(r'\*+', '', s).strip()
+
+
+def render_card(query: str, response: str):
+    dis_en  = rx(r'Disease Name.*?:\*?\*?\s*(.+)', response)
+    dis_ur  = rx(r'بیماری کا نام.*?:\*?\*?\s*(.+)', response)
+    crop_en = rx(r'Affected Crop.*?:\*?\*?\s*(.+)', response)
+    crop_ur = rx(r'متاثرہ فصل.*?:\*?\*?\s*(.+)', response)
+    sym_en  = rx(r'\*\*English:\*\*\s*(.+)', response)
+    sym_ur  = rx(r'\*\*اردو:\*\*\s*(.+)', response)
+    chem    = rx(r'Spray Chemical.*?:\*?\*?\s*(.+)', response)
+    brand   = rx(r'Pakistan Brand.*?:\*?\*?\s*(.+)', response)
+    dose    = rx(r'Dose per Acre.*?:\*?\*?\s*(.+)', response)
+    timing  = rx(r'Spray Timing.*?:\*?\*?\s*(.+)', response)
+    sev     = rx(r'Severity.*?:\*?\*?\s*(.+)', response)
+    yloss   = rx(r'Yield Loss.*?:\*?\*?\s*(.+)', response)
+
+    # Safety block — multi-line Urdu after SAFETY WARNING header
+    safety_m = re.search(r'SAFETY WARNING.*?---\s*([\s\S]+?)---', response, re.IGNORECASE)
+    safety_txt = strip_md(safety_m.group(1)) if safety_m else ""
+
+    # Bio control
+    bio_m = re.search(r'BIOLOGICAL CONTROL.*?---\s*([\s\S]+?)(?:---|$)', response, re.IGNORECASE)
+    bio_txt = strip_md(bio_m.group(1)) if bio_m else ""
+
+    badge = severity_badge(response)
+
+    # ── Header card ──
+    st.markdown(f"""
+    <div class='dc rs'>
+      <div style='display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px;'>
+        <div>
+          <div style='font-family:Plus Jakarta Sans,sans-serif;font-size:1.35rem;font-weight:700;color:#14532d!important;'>{dis_en}</div>
+          <div class='urdu-text' style='font-size:1.15rem;color:#14532d!important;margin-top:4px;'>{strip_md(dis_ur)}</div>
+          <div style='font-size:0.88rem;color:#6b7280!important;margin-top:6px;'>🌾 {crop_en} &nbsp;|&nbsp; <span style='font-family:Noto Nastaliq Urdu,serif;'>{strip_md(crop_ur)}</span></div>
+        </div>
+        <div>{badge}</div>
+      </div>
+      <div style='font-size:0.8rem;color:#9ca3af!important;margin-top:8px;'>Query: <em>{query[:80]}</em></div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # ── Symptoms ──
+    st.markdown(f"""
+    <div class='dc rs'>
+      <div class='rs-title'>🔍 SYMPTOMS | علامات</div>
+      <div style='color:#111827!important;margin-bottom:10px;'>{strip_md(sym_en)}</div>
+      <div class='urdu-text' style='font-size:17px;'>{strip_md(sym_ur)}</div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # ── Treatment ──
+    st.markdown(f"""
+    <div class='dc rs'>
+      <div class='rs-title'>💊 TREATMENT | علاج</div>
+      <div class='treat-grid'>
+        <div class='treat-row'><span class='treat-label'>Chemical</span><span class='treat-val'>{strip_md(chem)}</span></div>
+        <div class='treat-row'><span class='treat-label'>Pakistan Brand 🇵🇰</span><span class='treat-val'>{strip_md(brand)}</span></div>
+        <div class='treat-row'><span class='treat-label'>Dose / Acre</span><span class='treat-val'>{strip_md(dose)}</span></div>
+        <div class='treat-row'><span class='treat-label'>Timing</span><span class='treat-val'>{strip_md(timing)}</span></div>
+      </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    # ── Safety ──
+    if safety_txt and safety_txt != "—":
+        st.markdown(f"""
+        <div class='safety-blk rs' style='background:#fffbeb;border:1.5px solid #fde68a;border-left:5px solid #f59e0b;'>
+          <div class='rs-title' style='color:#92400e!important;'>⚠️ SAFETY WARNING | حفاظتی ہدایات</div>
+          <div class='urdu-text' style='color:#92400e!important;font-size:17px;'>{safety_txt}</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+    # ── Severity & Bio ──
+    c1, c2 = st.columns(2)
+    with c1:
+        st.markdown(f"""
+        <div class='dc rs' style='height:100%;'>
+          <div class='rs-title'>📊 SEVERITY & LOSSES | نقصانات</div>
+          <div style='color:#111827!important;font-size:0.95rem;'><strong>Severity:</strong> {strip_md(sev)}</div>
+          <div style='color:#111827!important;font-size:0.95rem;margin-top:6px;'><strong>Yield Loss:</strong> {strip_md(yloss)}</div>
+        </div>
+        """, unsafe_allow_html=True)
+    with c2:
+        bio_display = bio_txt if bio_txt and bio_txt != "—" else "Consult local agricultural extension officer."
+        st.markdown(f"""
+        <div class='dc rs' style='height:100%;'>
+          <div class='rs-title'>🌿 BIOLOGICAL CONTROL | قدرتی طریقہ</div>
+          <div style='color:#111827!important;font-size:0.93rem;line-height:1.7;'>{bio_display}</div>
+        </div>
+        """, unsafe_allow_html=True)
+
+
+# ── Data ──────────────────────────────────────────────────────────────────────
+CROPS = {"🌍 All Crops — تمام فصلیں":None,"🌾 Wheat — گندم":"Wheat","🌿 Cotton — کپاس":"Cotton",
+         "🌾 Rice — چاول":"Rice","🎋 Sugarcane — گنا":"Sugarcane","🌽 Maize — مکئی":"Maize",
+         "🥜 Groundnut — مونگ پھلی":"Groundnut","🌱 Barley — جَو":"Barley","🌾 Sorghum — جوار":"Sorghum",
+         "🌾 Millet — باجرہ":"Millet","🌿 Brassica — سرسوں":"Brassica","🌱 Gram — چنا":"Gram",
+         "🌿 Coriander — دھنیا":"Coriander","🌾 Paddy — دھان":"Paddy","🌱 Lentil — مسور":"Lentil"}
+LANG_MAP = {"Both (default)":"both","English":"english","اردو (Urdu)":"urdu"}
+EXAMPLES = ["Yellow spots on wheat leaves","Cotton leaves curling upward",
+            "Rice plants turning brown","Maize stem rotting at base",
+            "میری گندم کے پتوں پر پیلے دھبے ہیں","کپاس کے پتے اوپر مڑ رہے ہیں"]
+
+for k,v in [("chat_history",[]),("query_input",""),("last_response",None),("trigger_query",None)]:
+    if k not in st.session_state: st.session_state[k] = v
 
 # ── SIDEBAR ───────────────────────────────────────────────────────────────────
 with st.sidebar:
     st.markdown("""
-    <div style='text-align:center; padding: 10px 0 20px;'>
-        <div style='font-size:3rem;'>🌾</div>
-        <div style='font-size:1.3rem; font-weight:700; color:#6ee7b7;'>فصل ڈاکٹر</div>
-        <div style='font-size:0.85rem; color:#a7f3d0;'>Fasal Doctor</div>
-    </div>
-    """, unsafe_allow_html=True)
+    <div style='text-align:center;padding:16px 0 20px;'>
+      <div style='font-size:2.8rem;'>🌾</div>
+      <div style='font-family:Noto Nastaliq Urdu,serif;font-size:1.4rem;font-weight:700;color:#6ee7b7;'>فصل ڈاکٹر</div>
+      <div style='font-size:0.82rem;color:#a7f3d0;margin-top:4px;'>Fasal Doctor v2.0</div>
+    </div>""", unsafe_allow_html=True)
 
-    st.markdown("---")
+    st.markdown("<hr>", unsafe_allow_html=True)
+    st.markdown("**🌱 Crop | فصل**")
+    crop_label = st.selectbox("crop", list(CROPS.keys()), index=0, label_visibility="collapsed")
+    crop_filter = CROPS[crop_label]
 
-    # ── Crop selector ──
-    st.markdown("**🌱 Select Crop | فصل منتخب کریں**")
-    selected_crop_label = st.selectbox(
-        "Crop",
-        options=list(CROPS.keys()),
-        index=0,
-        label_visibility="collapsed",
-    )
-    crop_filter = CROPS[selected_crop_label]
+    st.markdown("<hr>", unsafe_allow_html=True)
+    st.markdown("**🌐 Language | زبان**")
+    language = st.radio("lang", list(LANG_MAP.keys()), index=0, label_visibility="collapsed")
+    lang_code = LANG_MAP[language]
 
-    st.markdown("---")
+    st.markdown("<hr>", unsafe_allow_html=True)
+    cols = st.columns(3)
+    for col, num, lbl in zip(cols, ["427","14+","✓"], ["Records","Crops","AI"]):
+        with col:
+            st.markdown(f"<div class='scard'><div class='snum'>{num}</div><div class='slbl'>{lbl}</div></div>", unsafe_allow_html=True)
 
-    # ── Language toggle ──
-    st.markdown("**🌐 Response Language | زبان**")
-    language = st.radio(
-        "Language",
-        options=["Both (default)", "English", "اردو (Urdu)"],
-        index=0,
-        label_visibility="collapsed",
-    )
-    lang_map = {"Both (default)": "both", "English": "english", "اردو (Urdu)": "urdu"}
-    lang_code = lang_map[language]
+    st.markdown("<hr>", unsafe_allow_html=True)
+    st.markdown("""<div style='font-size:0.84rem;line-height:1.8;'>
+    ℹ️ AI crop disease advisor using Pakistan's PARC disease database + Google Gemini.<br><br>
+    <span style='font-family:Noto Nastaliq Urdu,serif;direction:rtl;display:block;font-size:0.9rem;'>
+    پاکستانی کسانوں کے لیے اردو میں تشخیص۔</span><br>
+    <strong>Source:</strong> PARC Pakistan
+    </div>""", unsafe_allow_html=True)
+    st.markdown("""<div style='background:rgba(245,158,11,.18);border:1px solid rgba(245,158,11,.35);border-radius:10px;padding:10px 14px;font-size:0.82rem;margin-top:10px;color:#92400e!important;'>
+    ⚠️ Consult a local agronomist before applying any spray.<br>
+    <span style='font-family:Noto Nastaliq Urdu,serif;direction:rtl;display:block;font-size:0.85rem;'>سپرے سے پہلے زرعی ماہر سے مشورہ کریں۔</span>
+    </div>""", unsafe_allow_html=True)
 
-    st.markdown("---")
-
-    # ── Dataset stats ──
-    st.markdown("**📊 Dataset Info**")
-    st.markdown("""
-    <div class='stat-card'><div class='stat-number'>427</div><div class='stat-label'>Disease Records</div></div>
-    <div class='stat-card'><div class='stat-number'>14+</div><div class='stat-label'>Crops Covered</div></div>
-    <div class='stat-card'><div class='stat-number'>427</div><div class='stat-label'>ChromaDB Vectors</div></div>
-    """, unsafe_allow_html=True)
-
-    st.markdown("---")
-
-    # ── About ──
-    st.markdown("""
-    **ℹ️ About | تعارف**
-
-    Fasal Doctor uses AI + a Pakistan-specific crop disease database (PARC) to help farmers diagnose plant diseases and get treatment advice in Urdu & English.
-
-    <div class='urdu-small'>
-    فصل ڈاکٹر پاکستانی کسانوں کی مدد کے لیے بنایا گیا ہے۔
-    </div>
-
-    **Data Source:** PARC Pakistan Agricultural Research Council
-    """, unsafe_allow_html=True)
-
-    st.markdown("""
-    <div class='disclaimer'>
-    ⚠️ <strong>Disclaimer:</strong> Always consult your local agronomist before applying any spray.<br>
-    <span class='urdu-small'>سپرے کرنے سے پہلے مقامی زرعی ماہر سے مشورہ ضرور کریں۔</span>
-    </div>
-    """, unsafe_allow_html=True)
-
-
-# ── MAIN CONTENT ──────────────────────────────────────────────────────────────
-
-# ── Header ──
+# ── HEADER ────────────────────────────────────────────────────────────────────
 st.markdown("""
-<div class='fasal-header'>
-    <div style='font-size:3.5rem;'>🌾</div>
+<div style='background:linear-gradient(135deg,#14532d 0%,#16a34a 55%,#4ade80 100%);
+  border-radius:24px;padding:40px 44px;margin-bottom:28px;
+  box-shadow:0 8px 32px rgba(21,128,61,.30);display:flex;
+  align-items:center;justify-content:space-between;flex-wrap:wrap;gap:20px;'>
+  <div style='display:flex;align-items:center;gap:22px;'>
+    <div style='font-size:4rem;line-height:1;'>🌾</div>
     <div>
-        <div class='title-en'>Fasal Doctor</div>
-        <div class='title-ur'>فصل ڈاکٹر</div>
-        <div class='subtitle'>🤖 AI Crop Disease Advisor — Powered by PARC Database + Gemini AI</div>
+      <div style='font-family:Plus Jakarta Sans,sans-serif;font-size:2.6rem;font-weight:800;color:#fff;line-height:1.1;'>Fasal Doctor</div>
+      <div style='font-family:Noto Nastaliq Urdu,serif;font-size:1.9rem;color:#bbf7d0;direction:rtl;line-height:1.7;'>فصل ڈاکٹر</div>
+      <div style='font-size:0.95rem;color:rgba(255,255,255,.80);margin-top:4px;'>🤖 AI Crop Disease Advisor — PARC Database + Gemini AI</div>
     </div>
+  </div>
+  <div>
+    <span class='pill'>🦠 427 Diseases</span>
+    <span class='pill'>🌾 14 Crops</span>
+    <span class='pill'>⚡ Gemini AI</span>
+  </div>
 </div>
 """, unsafe_allow_html=True)
 
-col_main, col_history = st.columns([3, 1], gap="large")
+col_main, col_aside = st.columns([3, 1], gap="large")
 
 with col_main:
-
-    # ── Example questions ──
-    st.markdown("**💡 Example Questions | مثالی سوالات**")
-    cols = st.columns(3)
-    for i, example in enumerate(EXAMPLE_QUESTIONS):
-        with cols[i % 3]:
-            if st.button(example, key=f"ex_{i}", use_container_width=True):
-                st.session_state.query_input   = example
-                st.session_state.trigger_query = example
+    st.markdown("**💡 Try an Example | مثالی سوال**")
+    ecols = st.columns(3)
+    for i, ex in enumerate(EXAMPLES):
+        with ecols[i % 3]:
+            if st.button(ex, key=f"ex_{i}", use_container_width=True):
+                st.session_state.query_input = ex
+                st.session_state.trigger_query = ex
                 st.rerun()
 
-    st.markdown("<br>", unsafe_allow_html=True)
-
-    # ── Query input ──
+    st.markdown("<div style='margin-top:18px;'></div>", unsafe_allow_html=True)
     st.markdown("**🔍 Describe Symptoms | علامات بیان کریں**")
-    query_text = st.text_area(
-        label="Query",
-        value=st.session_state.query_input,
-        height=110,
-        placeholder=(
-            "E.g.: Yellow powdery spots on wheat leaves, plant wilting...\n"
-            "مثلاً: گندم کے پتوں پر پیلے دھبے، پودا مرجھا رہا ہے..."
-        ),
-        label_visibility="collapsed",
-        key="main_query_area",
-    )
+    query_text = st.text_area("q", value=st.session_state.query_input, height=120,
+        placeholder="E.g.: Yellow powdery spots on wheat leaves...\nمثلاً: گندم کے پتوں پر پیلے دھبے...",
+        label_visibility="collapsed")
 
-    col_btn1, col_btn2, col_clear = st.columns([2, 2, 1])
-    with col_btn1:
-        diagnose_clicked = st.button(
-            "🔬 Diagnose | تشخیص کریں",
-            type="primary",
-            use_container_width=True,
-        )
-    with col_btn2:
-        if crop_filter:
-            st.info(f"🌱 Filtered: {selected_crop_label}", icon=None)
-    with col_clear:
+    b1, b2, b3 = st.columns([2.5, 2, 1])
+    with b1:
+        go = st.button("🔬 Diagnose | تشخیص کریں", type="primary", use_container_width=True)
+    with b2:
+        if crop_filter: st.info(f"🌱 Filter: **{crop_filter}**")
+        else: st.caption("🌍 All crops")
+    with b3:
         if st.button("🗑️ Clear", use_container_width=True):
-            st.session_state.query_input   = ""
-            st.session_state.last_response = None
-            st.session_state.trigger_query = None
+            st.session_state.update(query_input="", last_response=None, trigger_query=None)
             st.rerun()
 
-    # ── Determine active query ──
-    active_query = None
-    if diagnose_clicked and query_text.strip():
-        active_query = query_text.strip()
+    active = None
+    if go and query_text.strip(): active = query_text.strip()
     elif st.session_state.trigger_query:
-        active_query = st.session_state.trigger_query
+        active = st.session_state.trigger_query
         st.session_state.trigger_query = None
 
-    # ── Run diagnosis ──
-    if active_query:
-        st.session_state.query_input = active_query
-
-        with st.spinner("🔍 Searching disease database & generating diagnosis..."):
+    if active:
+        st.session_state.query_input = active
+        with st.spinner(""):
+            st.markdown("""<div style='text-align:center;padding:36px;'>
+              <div style='font-size:2.8rem;animation:pulse 1.5s infinite;'>🌾</div>
+              <div style='font-size:1.05rem;color:#16a34a;font-weight:600;margin-top:10px;'>Searching 427 disease records...</div>
+              <div style='font-family:Noto Nastaliq Urdu,serif;direction:rtl;color:#6b7280;margin-top:6px;font-size:1rem;'>بیماری کی تشخیص جاری ہے...</div>
+            </div>""", unsafe_allow_html=True)
             try:
-                get_diagnosis = load_engine()
-                response = get_diagnosis(
-                    query=active_query,
-                    crop_filter=crop_filter,
-                    language=lang_code,
-                )
-                st.session_state.last_response = (active_query, response)
-                # Add to history (keep last 5)
-                st.session_state.chat_history.insert(0, active_query)
-                st.session_state.chat_history = st.session_state.chat_history[:5]
+                fn = load_engine()
+                result = fn(query=active, crop_filter=crop_filter, language=lang_code)
+                st.session_state.last_response = (active, result)
+                hist = st.session_state.chat_history
+                if active not in hist: hist.insert(0, active)
+                st.session_state.chat_history = hist[:5]
             except Exception as e:
-                st.error(f"❌ Error: {e}")
+                st.error(f"❌ Error running diagnosis: {e}")
                 st.session_state.last_response = None
+        st.rerun()
 
-    # ── Display response ──
     if st.session_state.last_response:
-        q, response = st.session_state.last_response
-        render_disease_card(q, response)
+        render_card(*st.session_state.last_response)
 
+    st.markdown("""<div style='text-align:center;padding:32px 0 10px;border-top:1px solid #dcfce7;margin-top:40px;'>
+      <div style='font-size:1.4rem;'>🌾</div>
+      <div style='font-size:0.82rem;color:#6b7280;margin-top:6px;'>Fasal Doctor v2.0 — Built for Pakistani Farmers</div>
+      <div style='font-family:Noto Nastaliq Urdu,serif;direction:rtl;font-size:0.9rem;color:#16a34a;margin-top:4px;'>پاکستانی کسانوں کے لیے — فصل ڈاکٹر</div>
+      <div style='font-size:0.76rem;color:#9ca3af;margin-top:6px;'>Data: PARC Pakistan | AI: Google Gemini | Vectors: ChromaDB</div>
+    </div>""", unsafe_allow_html=True)
 
-# ── History column ──
-with col_history:
-    st.markdown("**🕐 Recent Questions**")
+with col_aside:
+    st.markdown("""<div style='background:white;border:1.5px solid #dcfce7;border-radius:16px;padding:16px;margin-bottom:14px;'>
+      <div style='font-size:0.82rem;font-weight:700;color:#15803d;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;'>🕐 Recent Questions</div>""",
+      unsafe_allow_html=True)
     if st.session_state.chat_history:
-        for i, past_q in enumerate(st.session_state.chat_history):
-            st.markdown(f"""
-            <div class='chat-item'>
-                <strong>#{i+1}</strong><br>
-                {past_q[:60]}{"..." if len(past_q) > 60 else ""}
-            </div>
-            """, unsafe_allow_html=True)
+        for i, q in enumerate(st.session_state.chat_history):
+            is_ur = bool(re.search(r'[\u0600-\u06FF]', q))
+            st.markdown(f"<div class='hitem' style='{'direction:rtl;' if is_ur else ''}'><strong>#{i+1}</strong> {q[:55]}{'...' if len(q)>55 else ''}</div>",
+                unsafe_allow_html=True)
     else:
-        st.markdown(
-            "<div style='color:#9ca3af; font-size:0.88rem;'>No questions yet</div>",
-            unsafe_allow_html=True
-        )
+        st.caption("No recent questions.")
+    st.markdown("</div>", unsafe_allow_html=True)
 
-    st.markdown("<br>", unsafe_allow_html=True)
-    st.markdown("**🔑 Quick Tips**")
-    st.markdown("""
-    <div style='font-size:0.85rem; color:#4b5563; line-height:1.9;'>
-    ✅ Describe leaf colour<br>
-    ✅ Mention crop growth stage<br>
-    ✅ Say if roots are affected<br>
-    ✅ Ask in Urdu or English<br>
-    <br>
-    <span class='urdu-small'>
-    پتوں کا رنگ بتائیں<br>
-    فصل کی عمر بتائیں<br>
-    جڑ یا تنے کی بات کریں
-    </span>
-    </div>
-    """, unsafe_allow_html=True)
+    st.markdown("""<div style='background:white;border:1.5px solid #dcfce7;border-radius:16px;padding:16px;margin-bottom:14px;'>
+      <div style='font-size:0.82rem;font-weight:700;color:#15803d;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px;'>💡 Tips | تجاویز</div>
+      <div style='font-size:0.84rem;color:#374151;line-height:1.9;'>✅ Mention leaf colour<br>✅ Describe spot shape<br>✅ State growth stage<br>✅ Mention affected part<br>✅ Urdu or English!</div>
+      <div style='font-family:Noto Nastaliq Urdu,serif;direction:rtl;font-size:0.88rem;color:#374151;line-height:2.2;margin-top:10px;'>پتوں کا رنگ بتائیں<br>فصل کی عمر بتائیں<br>اردو یا انگریزی میں لکھیں</div>
+    </div>""", unsafe_allow_html=True)
 
-
-# ── Disease card renderer (defined after st.cache_resource call) ──────────────
-def render_disease_card(query: str, response: str):
-    """Parse the Gemini markdown response and render a styled card."""
-
-    # ── Detect severity from text ──
-    severity_badge = ""
-    resp_lower = response.lower()
-    if any(w in resp_lower for w in ["critical", "severe", "emergency"]):
-        severity_badge = "<span class='badge badge-critical'>🔴 Critical</span>"
-    elif any(w in resp_lower for w in ["high", "serious", "significant"]):
-        severity_badge = "<span class='badge badge-high'>🟠 High</span>"
-    elif any(w in resp_lower for w in ["medium", "moderate"]):
-        severity_badge = "<span class='badge badge-medium'>🟡 Medium</span>"
-    else:
-        severity_badge = "<span class='badge badge-low'>🟢 Low–Moderate</span>"
-
-    st.markdown(f"""
-    <div class='disease-card'>
-        <div style='display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;'>
-            <span style='font-size:1.15rem; font-weight:700; color:#1a4731;'>🦠 Diagnosis Result</span>
-            {severity_badge}
-        </div>
-        <div style='font-size:0.85rem; color:#6b7280; margin-bottom:16px;'>
-            Query: <em>{query[:80]}{"..." if len(query)>80 else ""}</em>
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
-
-    # ── Render full Gemini markdown response ──
-    st.markdown(response)
-
-    # ── Urdu text blocks (extract lines with Urdu chars) ──
-    urdu_lines = [
-        line.strip() for line in response.split("\n")
-        if re.search(r'[\u0600-\u06FF]', line) and len(line.strip()) > 10
-    ]
-    if urdu_lines:
-        urdu_html = "<br>".join(urdu_lines)
-        st.markdown(f"""
-        <div class='disease-card' style='margin-top:16px; border-color:#bbf7d0;'>
-            <div class='card-section-title'>📖 اردو خلاصہ — Urdu Summary</div>
-            <div class='urdu-text'>{urdu_html}</div>
-        </div>
-        """, unsafe_allow_html=True)
+    try:
+        load_engine()
+        st.markdown("<div style='background:white;border:1.5px solid #dcfce7;border-radius:16px;padding:14px;'><div style='background:#dcfce7;color:#166534;border-radius:10px;padding:8px 14px;font-size:0.85rem;font-weight:600;text-align:center;'>✅ AI Engine Ready</div><div style='background:#eff6ff;color:#1d4ed8;border-radius:10px;padding:8px 14px;font-size:0.85rem;font-weight:600;text-align:center;margin-top:6px;'>⚡ 427 Vectors Loaded</div></div>", unsafe_allow_html=True)
+    except:
+        st.warning("⏳ Engine loading...")

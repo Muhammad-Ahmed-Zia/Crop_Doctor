@@ -23,10 +23,11 @@ load_dotenv()
 
 # ── API Key Rotation ──────────────────────────────────────────────────────────
 _API_KEYS = [
-    os.getenv("GEMINI_RAG_KEY_3"),   # dedicated RAG key (highest priority)
-    os.getenv("GEMINI_API_KEY"),
-    os.getenv("GEMINI_API_KEY_2"),
-    os.getenv("GEMINI_API_KEY_4"),
+    os.getenv("GEMINI_RAG_KEY_3"),
+    os.getenv("GEMINI_RAG_KEY_7"), 
+    os.getenv("GEMINI_RAG_KEY_5"),
+    os.getenv("GEMINI_RAG_KEY_6"), 
+      # dedicated RAG key (highest priority)
 ]
 _API_KEYS = [k for k in _API_KEYS if k]   # drop unset keys
 _current_key_idx = 0
@@ -257,6 +258,13 @@ def ask_gemini(query: str, context: str, _unused_client=None) -> str:
         except Exception as e:
             err = str(e)
 
+            # httpx client closed (happens in Streamlit reruns) — recreate and retry
+            if "client has been closed" in err.lower() or "cannot send a request" in err.lower():
+                global _gemini_client
+                _gemini_client = None   # force fresh client on next _get_client() call
+                print(f"{Fore.YELLOW}  🔄 Gemini client was closed — recreating...{Style.RESET_ALL}")
+                continue
+
             # Per-minute rate limit — wait, then retry same key
             if "429" in err or "RESOURCE_EXHAUSTED" in err:
                 delay = 30
@@ -272,7 +280,7 @@ def ask_gemini(query: str, context: str, _unused_client=None) -> str:
                 print(f"{Fore.YELLOW}  🔑 Key #{_current_key_idx + 1} exhausted, rotating...{Style.RESET_ALL}")
                 if _rotate_key():
                     continue   # retry with new key
-                return f"{Fore.RED}All API keys exhausted. Try again tomorrow.{Style.RESET_ALL}"
+                return "All API keys exhausted. Try again tomorrow."
 
             # Unexpected error — return message
             return f"[Gemini error: {err[:300]}]"

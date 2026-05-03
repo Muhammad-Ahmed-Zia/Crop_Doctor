@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Diagnose | Fasal Doctor فصل ڈاکٹر</title>
+  <link rel="stylesheet" href="styles.css"/>
+  <style>
+    .diag-page{display:grid;grid-template-columns:280px 1fr;min-height:calc(100vh - var(--nav-h));}
+    .server-status{display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:10px;font-size:.78rem;font-weight:600;margin-top:12px;}
+    .status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+    .status-online{background:rgba(74,222,128,.15);border:1px solid rgba(74,222,128,.3);color:#6ee7b7;}
+    .status-online .status-dot{background:#4ade80;box-shadow:0 0 6px #4ade80;}
+    .status-offline{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.25);color:#fcd34d;}
+    .status-offline .status-dot{background:#f59e0b;}
+    .status-checking{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.5);}
+    .status-checking .status-dot{background:rgba(255,255,255,.3);animation:pulse 1s infinite;}
+    .demo-banner{background:#fffbeb;border:1px solid #fde68a;border-left:4px solid #f59e0b;border-radius:12px;padding:12px 16px;font-size:.84rem;color:#92400e;margin-bottom:20px;display:none;}
+    .demo-banner.show{display:flex;align-items:center;gap:10px;}
+    @media(max-width:900px){.diag-page{grid-template-columns:1fr;}}
+  </style>
+</head>
+<body>
+<nav id="main-nav">
+  <a href="index.html" class="nav-logo"><div class="nav-logo-icon">🌾</div><div class="nav-logo-text"><span class="nav-logo-en">Fasal Doctor</span><span class="nav-logo-ur">فصل ڈاکٹر</span></div></a>
+  <ul class="nav-links">
+    <li><a href="index.html">Home</a></li>
+    <li><a href="crops.html">Crops</a></li>
+    <li><a href="diagnosis.html" class="active">Diagnose</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="diagnosis.html" class="nav-cta">🔬 Diagnose Now</a></li>
+  </ul>
+</nav>
+
+<div class="page-content">
+<div class="diag-page">
+
+<!-- ── SIDEBAR ─────────────────────────────────────────────────────────────── -->
+<aside class="diag-sidebar">
+  <div style="text-align:center;padding:8px 0 24px;">
+    <div style="font-size:2.6rem;">🌾</div>
+    <div style="font-family:'Noto Nastaliq Urdu',serif;font-size:1.2rem;font-weight:700;color:#6ee7b7;margin-top:4px;">فصل ڈاکٹر</div>
+    <div style="font-size:.78rem;color:#a7f3d0;margin-top:2px;">Fasal Doctor v2.0</div>
+  </div>
+
+  <hr style="border:none;border-top:1px solid rgba(255,255,255,.1);margin-bottom:22px;"/>
+
+  <!-- Crop filter -->
+  <div class="sidebar-section">
+    <div class="sidebar-label">🌱 Crop Filter | فصل</div>
+    <div class="sidebar-select">
+      <select id="cropFilter">
+        <option value="">🌍 All Crops — تمام فصلیں</option>
+        <option value="Wheat">🌾 Wheat — گندم</option>
+        <option value="Cotton">🌿 Cotton — کپاس</option>
+        <option value="Rice">🍚 Rice — چاول</option>
+        <option value="Sugarcane">🎋 Sugarcane — گنا</option>
+        <option value="Maize">🌽 Maize — مکئی</option>
+        <option value="Groundnut">🥜 Groundnut — مونگ پھلی</option>
+        <option value="Barley">🌾 Barley — جَو</option>
+        <option value="Sorghum">🌾 Sorghum — جوار</option>
+        <option value="Millet">🌾 Millet — باجرہ</option>
+        <option value="Brassica">🌱 Brassica — سرسوں</option>
+        <option value="Gram">🫘 Gram — چنا</option>
+        <option value="Coriander">🌿 Coriander — دھنیا</option>
+        <option value="Paddy">🌾 Paddy — دھان</option>
+        <option value="Lentil">🌿 Lentil — مسور</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Language -->
+  <div class="sidebar-section">
+    <div class="sidebar-label">🌐 Language | زبان</div>
+    <div class="sidebar-radio-group">
+      <label class="sidebar-radio"><input type="radio" name="lang" value="both" checked/> Both (default)</label>
+      <label class="sidebar-radio"><input type="radio" name="lang" value="english"/> English only</label>
+      <label class="sidebar-radio"><input type="radio" name="lang" value="urdu"/> اردو صرف</label>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="sidebar-section">
+    <div class="sidebar-label">📊 Database Stats</div>
+    <div class="sidebar-stats">
+      <div class="ss-card"><div class="ss-num">427</div><div class="ss-lbl">Records</div></div>
+      <div class="ss-card"><div class="ss-num">14+</div><div class="ss-lbl">Crops</div></div>
+      <div class="ss-card"><div class="ss-num" id="ssCropCount">✓</div><div class="ss-lbl">AI</div></div>
+    </div>
+  </div>
+
+  <!-- Server status -->
+  <div class="sidebar-section">
+    <div class="sidebar-label">⚡ Server Status</div>
+    <div class="server-status status-checking" id="serverStatus">
+      <span class="status-dot"></span>
+      <span id="serverStatusText">Checking...</span>
+    </div>
+  </div>
+
+  <hr style="border:none;border-top:1px solid rgba(255,255,255,.1);margin-bottom:20px;"/>
+
+  <div style="font-size:.82rem;line-height:1.85;color:#a7f3d0;">
+    ℹ️ AI advisor using PARC Pakistan + Google Gemini.<br><br>
+    <span style="font-family:'Noto Nastaliq Urdu',serif;direction:rtl;display:block;font-size:.88rem;color:#6ee7b7;">پاکستانی کسانوں کے لیے اردو میں تشخیص۔</span>
+  </div>
+
+  <div style="background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);border-radius:10px;padding:10px 14px;font-size:.8rem;margin-top:14px;color:#fcd34d;">
+    ⚠️ Consult a local agronomist before applying any spray.<br>
+    <span style="font-family:'Noto Nastaliq Urdu',serif;direction:rtl;display:block;font-size:.82rem;margin-top:4px;">سپرے سے پہلے زرعی ماہر سے مشورہ کریں۔</span>
+  </div>
+
+  <!-- Recent history -->
+  <div style="margin-top:24px;">
+    <div class="sidebar-label">🕐 Recent Queries</div>
+    <div id="historyList"><div style="font-size:.8rem;color:rgba(255,255,255,.35);">No recent queries.</div></div>
+  </div>
+</aside>
+
+<!-- ── MAIN ──────────────────────────────────────────────────────────────────── -->
+<main class="diag-main">
+
+  <!-- Page heading -->
+  <div style="margin-bottom:32px;">
+    <div style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--g600);margin-bottom:8px;">✦ PARC Pakistan × Google Gemini AI</div>
+    <h1 style="font-family:'Syne',sans-serif;font-size:2.2rem;font-weight:800;color:var(--tx);letter-spacing:-.02em;line-height:1.1;">Crop Disease Diagnosis</h1>
+    <div style="font-family:'Noto Nastaliq Urdu',serif;font-size:1.15rem;color:var(--g700);direction:rtl;text-align:right;line-height:2;margin-top:4px;">فصل کی بیماری تشخیص</div>
+  </div>
+
+  <!-- Demo mode banner (shown when server is offline) -->
+  <div class="demo-banner" id="demoBanner">
+    <span style="font-size:1.1rem;">⚡</span>
+    <div>
+      <strong>Demo Mode</strong> — Server offline. Showing sample response.
+      Run <code style="background:#fef3c7;padding:2px 6px;border-radius:4px;">python -m uvicorn api.fasal_server:app --port 8000</code> from the project root to connect the real AI engine.
+    </div>
+  </div>
+
+  <!-- Input card -->
+  <div class="diag-input-card">
+    <div class="diag-input-label">💡 Try an Example | مثالی سوال</div>
+    <div class="examples-row" id="examplesRow"></div>
+
+    <div class="diag-input-label" style="margin-top:22px;">🔍 Describe Symptoms | علامات بیان کریں</div>
+    <textarea class="diag-textarea" id="queryInput"
+      placeholder="E.g.: Yellow powdery spots on wheat leaves spreading fast from lower leaves upward...&#10;مثلاً: گندم کے پتوں پر پیلے دھبے تیزی سے پھیل رہے ہیں، پتے خشک ہو رہے ہیں..."></textarea>
+
+    <div class="diag-btn-row">
+      <button class="btn-diagnose" id="diagnoseBtn">🔬 Diagnose | تشخیص کریں</button>
+      <button class="btn-clear" id="clearBtn">🗑️ Clear</button>
+      <span id="cropFilterDisplay" style="font-size:.84rem;color:var(--tm);margin-left:4px;"></span>
+      <span style="margin-left:auto;font-size:.78rem;color:var(--tm);">Ctrl+Enter to diagnose</span>
+    </div>
+  </div>
+
+  <!-- Loading -->
+  <div class="loading-overlay" id="loadingBox">
+    <div class="loading-wheat">🌾</div>
+    <div class="loading-text">Searching 427 disease records...</div>
+    <div class="loading-text-ur">بیماری کی تشخیص جاری ہے...</div>
+    <div style="margin-top:16px;font-size:.82rem;color:var(--tm);">Powered by PARC Pakistan × Google Gemini</div>
+  </div>
+
+  <!-- Response renders here -->
+  <div id="responseArea"></div>
+
+  <!-- Tips panel -->
+  <div style="background:white;border:1.5px solid var(--g100);border-radius:16px;padding:22px 26px;margin-top:24px;">
+    <div style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--g600);margin-bottom:14px;">💡 Tips for Better Diagnosis | بہتر تشخیص کے لیے</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:.86rem;color:var(--tx2);line-height:1.8;">
+      <div>
+        ✅ Mention leaf colour (yellow/brown/black)<br>
+        ✅ Describe spot shape, size &amp; spread<br>
+        ✅ State the crop growth stage
+      </div>
+      <div>
+        ✅ Mention which plant part is affected<br>
+        ✅ Urdu <em>or</em> English both work perfectly<br>
+        ✅ Include your region for better advice
+      </div>
+    </div>
+    <div style="font-family:'Noto Nastaliq Urdu',serif;direction:rtl;font-size:.9rem;color:var(--tx2);line-height:2.3;margin-top:12px;border-top:1px solid var(--g100);padding-top:12px;">
+      پتوں کا رنگ بتائیں · دھبوں کی شکل بتائیں · فصل کی عمر بتائیں · اپنا علاقہ بتائیں
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div style="text-align:center;padding:44px 0 16px;border-top:1px solid var(--g100);margin-top:44px;">
+    <div style="font-size:1.5rem;">🌾</div>
+    <div style="font-size:.82rem;color:var(--tm);margin-top:8px;">Fasal Doctor v2.0 — Built for Pakistani Farmers</div>
+    <div style="font-family:'Noto Nastaliq Urdu',serif;direction:rtl;font-size:.9rem;color:var(--g600);margin-top:4px;">پاکستانی کسانوں کے لیے — فصل ڈاکٹر</div>
+    <div style="font-size:.75rem;color:#9ca3af;margin-top:6px;">Data: PARC Pakistan &nbsp;|&nbsp; AI: Google Gemini 2.0 Flash &nbsp;|&nbsp; Vectors: ChromaDB</div>
+  </div>
+</main>
+
+</div><!-- end diag-page -->
+</div><!-- end page-content -->
+
+<!-- API client -->
+<script src="api.js"></script>
+
+<script>
+// ── Examples ───────────────────────────────────────────────────────────────────
+const EXAMPLES = [
+  'Yellow spots on wheat leaves',
+  'Cotton leaves curling upward',
+  'Rice plants turning brown',
+  'Maize stem rotting at base',
+  'White powder on gram plants',
+  'میری گندم کے پتوں پر پیلے دھبے ہیں',
+  'کپاس کے پتے اوپر مڑ رہے ہیں',
+  'چاول کے پودے بھورے ہو رہے ہیں',
+];
+
+const exRow = document.getElementById('examplesRow');
+EXAMPLES.forEach(ex => {
+  const btn = document.createElement('button');
+  btn.className = 'example-chip';
+  if (/[\u0600-\u06FF]/.test(ex)) btn.style.fontFamily = "'Noto Nastaliq Urdu',serif";
+  btn.textContent = ex;
+  btn.addEventListener('click', () => {
+    document.getElementById('queryInput').value = ex;
+    document.getElementById('queryInput').focus();
+  });
+  exRow.appendChild(btn);
+});
+
+// ── URL param: pre-select crop ─────────────────────────────────────────────────
+const urlCrop = new URLSearchParams(location.search).get('crop');
+if (urlCrop) {
+  const sel = document.getElementById('cropFilter');
+  for (const opt of sel.options) if (opt.value === urlCrop) { opt.selected = true; break; }
+}
+
+// ── Crop filter display ────────────────────────────────────────────────────────
+function updateCropDisplay() {
+  const v = document.getElementById('cropFilter').value;
+  document.getElementById('cropFilterDisplay').textContent = v ? '🌱 ' + v : '🌍 All crops';
+}
+document.getElementById('cropFilter').addEventListener('change', updateCropDisplay);
+updateCropDisplay();
+
+// ── History (localStorage) ─────────────────────────────────────────────────────
+let hist = JSON.parse(localStorage.getItem('fd_hist') || '[]');
+
+function renderHist() {
+  const el = document.getElementById('historyList');
+  if (!hist.length) {
+    el.innerHTML = '<div style="font-size:.8rem;color:rgba(255,255,255,.35);">No recent queries.</div>';
+    return;
+  }
+  el.innerHTML = hist.slice(0, 5).map((q, i) => {
+    const isUr = /[\u0600-\u06FF]/.test(q);
+    const short = q.length > 44 ? q.slice(0, 44) + '…' : q;
+    return `<div class="history-item" style="${isUr ? 'direction:rtl;font-family:Noto Nastaliq Urdu,serif;' : ''}"
+      onclick="document.getElementById('queryInput').value='${q.replace(/'/g, "\\'")}'"
+      title="${q}">
+      <strong style="color:var(--g400);">#${i + 1}</strong> ${short}
+    </div>`;
+  }).join('');
+}
+renderHist();
+
+// ── Server status ──────────────────────────────────────────────────────────────
+let serverOnline = false;
+
+async function pingServer() {
+  const statusEl = document.getElementById('serverStatus');
+  const textEl   = document.getElementById('serverStatusText');
+  const status   = await checkServerStatus();
+
+  if (status) {
+    serverOnline = true;
+    statusEl.className = 'server-status status-online';
+    textEl.textContent = `AI Engine Ready — ${status.disease_records} records`;
+    document.getElementById('ssCropCount').textContent = '✓';
+  } else {
+    serverOnline = false;
+    statusEl.className = 'server-status status-offline';
+    textEl.textContent = 'Server offline — Demo mode';
+  }
+}
+pingServer();
+
+// ── Severity badge ─────────────────────────────────────────────────────────────
+function sevBadge(t) {
+  const l = t.toLowerCase();
+  if (/critical|severe|emergency/.test(l)) return '<span class="severity-badge sev-critical">🔴 CRITICAL</span>';
+  if (/high|serious/.test(l))             return '<span class="severity-badge sev-high">🟠 HIGH</span>';
+  if (/medium|moderate/.test(l))          return '<span class="severity-badge sev-medium">🟡 MEDIUM</span>';
+  return '<span class="severity-badge sev-low">🟢 LOW</span>';
+}
+
+function rx(pat, txt, def = '—') {
+  const m = txt.match(new RegExp(pat, 'im'));
+  return m ? m[1].trim().replace(/\*+/g, '') : def;
+}
+function strip(s) { return (s || '').replace(/\*+/g, '').trim(); }
+
+// ── Render response card ───────────────────────────────────────────────────────
+function renderResponse(query, resp, isDemo) {
+  const disEn  = rx('Disease Name.*?:\\*?\\*?\\s*(.+)', resp);
+  const disUr  = rx('بیماری کا نام.*?:\\*?\\*?\\s*(.+)', resp);
+  const cropEn = rx('Affected Crop.*?:\\*?\\*?\\s*(.+)', resp);
+  const cropUr = rx('متاثرہ فصل.*?:\\*?\\*?\\s*(.+)', resp);
+  const symEn  = rx('\\*\\*English:\\*\\*\\s*(.+)', resp);
+  const symUr  = rx('\\*\\*اردو:\\*\\*\\s*(.+)', resp);
+  const chem   = rx('Spray Chemical.*?:\\*?\\*?\\s*(.+)', resp);
+  const brand  = rx('Pakistan Brand.*?:\\*?\\*?\\s*(.+)', resp);
+  const dose   = rx('Dose per Acre.*?:\\*?\\*?\\s*(.+)', resp);
+  const timing = rx('Spray Timing.*?:\\*?\\*?\\s*(.+)', resp);
+  const sev    = rx('Severity.*?:\\*?\\*?\\s*(.+)', resp);
+  const yloss  = rx('Yield Loss.*?:\\*?\\*?\\s*(.+)', resp);
+
+  const safetyM  = resp.match(/SAFETY WARNING.*?---\s*([\s\S]+?)---/i);
+  const safetyTxt = safetyM ? strip(safetyM[1]) : '';
+  const bioM     = resp.match(/BIOLOGICAL CONTROL.*?---\s*([\s\S]+?)(?:---|$)/i);
+  const bioTxt   = bioM ? strip(bioM[1]) : 'Consult local agricultural extension officer.';
+
+  const demoBadge = isDemo
+    ? `<div style="background:#fef3c7;border:1px solid #fde68a;border-radius:8px;padding:6px 14px;font-size:.75rem;color:#92400e;font-weight:600;margin-top:10px;">⚡ Demo response — start server for live AI</div>`
+    : '';
+
+  document.getElementById('responseArea').innerHTML = `
+  <div class="response-card">
+    <div class="response-header">
+      <div>
+        <div class="response-dis-en">${strip(disEn)}</div>
+        <div class="response-dis-ur">${strip(disUr)}</div>
+        <div class="response-crop">
+          🌾 ${strip(cropEn)}
+          <span style="font-family:'Noto Nastaliq Urdu',serif;margin-left:6px;">${strip(cropUr)}</span>
+        </div>
+        <div style="font-size:.76rem;color:rgba(255,255,255,.45);margin-top:6px;">Query: <em>${query.slice(0, 90)}</em></div>
+        ${demoBadge}
+      </div>
+      <div>${sevBadge(resp)}</div>
+    </div>
+
+    <div class="response-body">
+
+      <div class="res-section">
+        <div class="res-section-title">🔍 SYMPTOMS | علامات</div>
+        <div class="res-text">${strip(symEn)}</div>
+        <div class="res-text-ur">${strip(symUr)}</div>
+      </div>
+
+      <div class="res-section">
+        <div class="res-section-title">💊 TREATMENT | علاج</div>
+        <table class="treat-table">
+          <tr><td class="treat-label-cell">Chemical</td><td class="treat-val-cell">${strip(chem)}</td></tr>
+          <tr><td class="treat-label-cell">Pakistan Brand 🇵🇰</td><td class="treat-val-cell">${strip(brand)}</td></tr>
+          <tr><td class="treat-label-cell">Dose / Acre</td><td class="treat-val-cell">${strip(dose)}</td></tr>
+          <tr><td class="treat-label-cell">Timing</td><td class="treat-val-cell">${strip(timing)}</td></tr>
+        </table>
+      </div>
+
+      ${safetyTxt && safetyTxt !== '—' ? `
+      <div class="safety-box">
+        <div class="safety-title">⚠️ SAFETY WARNING | حفاظتی ہدایات</div>
+        <div class="safety-text">${safetyTxt}</div>
+      </div>` : ''}
+
+      <div class="two-col">
+        <div class="res-section">
+          <div class="res-section-title">📊 SEVERITY &amp; LOSSES | نقصانات</div>
+          <div class="res-text"><strong>Severity:</strong> ${strip(sev)}</div>
+          <div class="res-text" style="margin-top:6px;"><strong>Yield Loss:</strong> ${strip(yloss)}</div>
+        </div>
+        <div class="res-section">
+          <div class="res-section-title">🌿 BIOLOGICAL CONTROL | قدرتی طریقہ</div>
+          <div class="res-text">${bioTxt}</div>
+        </div>
+      </div>
+
+    </div><!-- end response-body -->
+  </div>`;
+}
+
+// ── Main diagnose action ───────────────────────────────────────────────────────
+async function diagnose() {
+  const query = document.getElementById('queryInput').value.trim();
+  if (!query) {
+    document.getElementById('queryInput').style.borderColor = '#f87171';
+    setTimeout(() => document.getElementById('queryInput').style.borderColor = '', 1200);
+    return;
+  }
+
+  const crop = document.getElementById('cropFilter').value;
+  const lang = document.querySelector('input[name="lang"]:checked').value;
+
+  // Update history
+  if (!hist.includes(query)) { hist.unshift(query); hist = hist.slice(0, 5); }
+  localStorage.setItem('fd_hist', JSON.stringify(hist));
+  renderHist();
+
+  // Show loader
+  document.getElementById('loadingBox').classList.add('active');
+  document.getElementById('responseArea').innerHTML = '';
+  document.getElementById('demoBanner').classList.remove('show');
+
+  // Call API (api.js handles offline fallback automatically)
+  const result = await callDiagnose(query, crop, lang);
+
+  document.getElementById('loadingBox').classList.remove('active');
+
+  if (!result.success) {
+    // Show demo banner when server was unreachable
+    document.getElementById('demoBanner').classList.add('show');
+  }
+
+  renderResponse(query, result.response, !result.success);
+}
+
+// ── Event listeners ────────────────────────────────────────────────────────────
+document.getElementById('diagnoseBtn').addEventListener('click', diagnose);
+document.getElementById('queryInput').addEventListener('keydown', e => {
+  if (e.ctrlKey && e.key === 'Enter') diagnose();
+});
+document.getElementById('clearBtn').addEventListener('click', () => {
+  document.getElementById('queryInput').value = '';
+  document.getElementById('responseArea').innerHTML = '';
+  document.getElementById('loadingBox').classList.remove('active');
+  document.getElementById('demoBanner').classList.remove('show');
+});
+window.addEventListener('scroll', () => {
+  document.getElementById('main-nav').classList.toggle('scrolled', window.scrollY > 20);
+});
+</script>
+</body>
+</html>
