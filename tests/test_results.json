@@ -1,0 +1,602 @@
+[
+  {
+    "query": "گندم کے پتوں پر پیلی دھاریاں",
+    "response": "---\n🌾 DISEASE DIAGNOSIS | بیماری کی تشخیص\n---\n\n**Disease Name (English):** Yellow rust\n**بیماری کا نام (اردو):** زرد زنگ\n**Affected Crop:** Wheat\n**متاثرہ فصل:** گندم\n\n---\n🔍 SYMPTOMS | علامات\n---\n\n**E...",
+    "passed": true,
+    "is_edge_case": false,
+    "metrics": {
+      "has_disease": true,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  },
+  {
+    "query": "white powder on wheat leaves",
+    "response": "---\n🌾 DISEASE DIAGNOSIS | بیماری کی تشخیص\n---\n\n**Disease Name (English):** Powdery Mildew\n**بیماری کا نام (اردو):** پھپھوندی (Powdery Mildew)\n**Affected Crop:** Wheat\n**متاثرہ فصل:** گندم\n\n---\n🔍 SYMPT...",
+    "passed": true,
+    "is_edge_case": false,
+    "metrics": {
+      "has_disease": true,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  },
+  {
+    "query": "wheat mein kala dhaba",
+    "response": "---\n🌾 DISEASE DIAGNOSIS | بیماری کی تشخیص\n---\n\n**Disease Name (English):** Black-pointed\n**بیماری کا نام (اردو):** سیاہ پوائنٹڈ\n**Affected Crop:** Wheat\n**متاثرہ فصل:** گندم\n\n---\n🔍 SYMPTOMS | علامات\n-...",
+    "passed": true,
+    "is_edge_case": false,
+    "metrics": {
+      "has_disease": true,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  },
+  {
+    "query": "meri gandum kharab ho rahi hai",
+    "response": "---\n🌾 DISEASE DIAGNOSIS | بیماری کی تشخیص\n---\n\n**Disease Name (English):** Bunt\n**بیماری کا نام (اردو):** گینڈیا (Bunt)\n**Affected Crop:** Wheat\n**متاثرہ فصل:** گندم\n\n---\n🔍 SYMPTOMS | علامات\n---\n\n**En...",
+    "passed": true,
+    "is_edge_case": false,
+    "metrics": {
+      "has_disease": true,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  },
+  {
+    "query": "گندم کا بیج نہیں اگ رہا",
+    "response": "---\n🌾 DISEASE DIAGNOSIS | بیماری کی تشخیص\n---\n\n**Disease Name (English):** Seed Rot\n**بیماری کا نام (اردو):** بیج کا گلنا\n**Affected Crop:** Wheat\n**متاثرہ فصل:** گندم\n\n---\n🔍 SYMPTOMS | علامات\n---\n\n**...",
+    "passed": true,
+    "is_edge_case": false,
+    "metrics": {
+      "has_disease": true,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  },
+  {
+    "query": "black spots on wheat head",
+    "response": "---\n🌾 DISEASE DIAGNOSIS | بیماری کی تشخیص\n---\n\n**Disease Name (English):** Black Point Complex\n**بیماری کا نام (اردو):** کالا نقطہ کمپلیکس\n**Affected Crop:** Wheat\n**متاثرہ فصل:** گندم\n\n---\n🔍 SYMPTOMS...",
+    "passed": true,
+    "is_edge_case": false,
+    "metrics": {
+      "has_disease": true,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  },
+  {
+    "query": "gandum ke patte sookh rahe hain",
+    "response": "---\n🌾 DISEASE DIAGNOSIS | بیماری کی تشخیص\n---\n\n**Disease Name (English):** Wilt — Wilt\n**بیماری کا نام (اردو):** وِلٹ (مرجھاؤ)\n**Affected Crop:** Wheat\n**متاثرہ فصل:** گندم\n\n---\n🔍 SYMPTOMS | علامات\n--...",
+    "passed": true,
+    "is_edge_case": false,
+    "metrics": {
+      "has_disease": true,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  },
+  {
+    "query": "wheat rust problem",
+    "response": "---\n🌾 DISEASE DIAGNOSIS | بیماری کی تشخیص\n---\n\n**Disease Name (English):** Leaf Rust\n**بیماری کا نام (اردو):** پتوں کا زنگ\n**Affected Crop:** Wheat\n**متاثرہ فصل:** گندم\n\n---\n🔍 SYMPTOMS | علامات\n---\n\n*...",
+    "passed": true,
+    "is_edge_case": false,
+    "metrics": {
+      "has_disease": true,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  },
+  {
+    "query": "گندم میں دیمک کا مسئلہ",
+    "response": "---\n🌾 DISEASE DIAGNOSIS | بیماری کی تشخیص\n---\n\n**Disease Name (English):** Termite Infestation\n**بیماری کا نام (اردو):** دیمک کا حملہ\n**Affected Crop:** Wheat\n**متاثرہ فصل:** گندم\n\n---\n🔍 SYMPTOMS | عل...",
+    "passed": true,
+    "is_edge_case": false,
+    "metrics": {
+      "has_disease": true,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  },
+  {
+    "query": "wheat roots rotting",
+    "response": "---\n🌾 DISEASE DIAGNOSIS | بیماری کی تشخیص\n---\n\n**Disease Name (English):** Root Rot\n**بیماری کا نام (اردو):** جڑ کا گلنا (Jarr ka Galna)\n**Affected Crop:** Wheat\n**متاثرہ فصل:** گندم (Gandam)\n\n---\n🔍 S...",
+    "passed": true,
+    "is_edge_case": false,
+    "metrics": {
+      "has_disease": true,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  },
+  {
+    "query": "کپاس کے پتے اوپر مڑ رہے ہیں",
+    "response": "---\n🌾 DISEASE DIAGNOSIS | بیماری کی تشخیص\n---\n\n**Disease Name (English):** Cotton Leaf Curl Virus (CLCuV) - **Note:** While not explicitly in the provided records, the symptom of leaves curling upward...",
+    "passed": true,
+    "is_edge_case": false,
+    "metrics": {
+      "has_disease": true,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  },
+  {
+    "query": "cotton leaves turning yellow and falling",
+    "response": "---\n🌾 DISEASE DIAGNOSIS | بیماری کی تشخیص\n---\n\n**Disease Name (English):** Cercospora Leaf Spot\n**بیماری کا نام (اردو):** سیرکوسپورا لیف اسپاٹ\n**Affected Crop:** Cotton\n**متاثرہ فصل:** کپاس\n\n---\n🔍 SYM...",
+    "passed": true,
+    "is_edge_case": false,
+    "metrics": {
+      "has_disease": true,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  },
+  {
+    "query": "kapas ki bail mar rahi hai",
+    "response": "---\n🌾 DISEASE DIAGNOSIS | بیماری کی تشخیص\n---\n\n**Disease Name (English):** Wilting (due to Macrophomina phaseolina, Fusarium and Verticillium wilts)\n**بیماری کا نام (اردو):** مرجھانا (Macrophomina pha...",
+    "passed": true,
+    "is_edge_case": false,
+    "metrics": {
+      "has_disease": true,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  },
+  {
+    "query": "کپاس کے ٹنڈے کالے ہو رہے ہیں",
+    "response": "---\n🌾 DISEASE DIAGNOSIS | بیماری کی تشخیص\n---\n\n**Disease Name (English):** Sooty Mold\n**بیماری کا نام (اردو):** کوڑا پھپھوندی (Sooty Mold)\n**Affected Crop:** Cotton\n**متاثرہ فصل:** کپاس\n\n---\n🔍 SYMPTOM...",
+    "passed": true,
+    "is_edge_case": false,
+    "metrics": {
+      "has_disease": true,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  },
+  {
+    "query": "whitefly attack on cotton",
+    "response": "---\n🌾 DISEASE DIAGNOSIS | بیماری کی تشخیص\n---\n\n**Disease Name (English):** Whitefly Infestation (leading to other issues)\n**بیماری کا نام (اردو):** سفید مکھی کا حملہ (جس سے دیگر مسائل پیدا ہو سکتے ہیں...",
+    "passed": true,
+    "is_edge_case": false,
+    "metrics": {
+      "has_disease": true,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  },
+  {
+    "query": "kapas ke patton par safed powder",
+    "response": "---\n🌾 DISEASE DIAGNOSIS | بیماری کی تشخیص\n---\n\n**Disease Name (English):** Powdery Mildew\n**بیماری کا نام (اردو):** پھپھوندی (Powdery Mildew)\n**Affected Crop:** Cotton (کپاس)\n**متاثرہ فصل:** کپاس\n\n---...",
+    "passed": true,
+    "is_edge_case": false,
+    "metrics": {
+      "has_disease": true,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  },
+  {
+    "query": "cotton boll rot disease",
+    "response": "---\n🌾 DISEASE DIAGNOSIS | بیماری کی تشخیص\n---\n\n**Disease Name (English):** Boll Rots\n**بیماری کا نام (اردو):** ڈوڈوں کا گلنا\n**Affected Crop:** Cotton\n**متاثرہ فصل:** کپاس\n\n---\n🔍 SYMPTOMS | علامات\n---...",
+    "passed": true,
+    "is_edge_case": false,
+    "metrics": {
+      "has_disease": true,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  },
+  {
+    "query": "کپاس کی جڑ گل گئی ہے",
+    "response": "---\n🌾 DISEASE DIAGNOSIS | بیماری کی تشخیص\n---\n\n**Disease Name (English):** Root rot (likely due to *Rhizoctonia solani* or *Fusarium spp.*)\n**بیماری کا نام (اردو):** جڑ کا گلنا (غالباً *Rhizoctonia so...",
+    "passed": true,
+    "is_edge_case": false,
+    "metrics": {
+      "has_disease": true,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  },
+  {
+    "query": "cotton seedlings dying",
+    "response": "---\n🌾 DISEASE DIAGNOSIS | بیماری کی تشخیص\n---\n\n**Disease Name (English):** Root rot\n**بیماری کا نام (اردو):** جڑوں کا گلنا\n**Affected Crop:** Cotton\n**متاثرہ فصل:** کپاس\n\n---\n🔍 SYMPTOMS | علامات\n---\n\n...",
+    "passed": true,
+    "is_edge_case": false,
+    "metrics": {
+      "has_disease": true,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  },
+  {
+    "query": "kapas mein gulabi sundi",
+    "response": "---\n🌾 DISEASE DIAGNOSIS | بیماری کی تشخیص\n---\n\n**Disease Name (English):** Pink Bollworm\n**بیماری کا نام (اردو):** کپاس میں گلابی سنڈی\n**Affected Crop:** Cotton\n**متاثرہ فصل:** کپاس\n\n---\n🔍 SYMPTOMS | ...",
+    "passed": true,
+    "is_edge_case": false,
+    "metrics": {
+      "has_disease": true,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  },
+  {
+    "query": "chawal ke patte bhure ho gaye",
+    "response": "---\n🌾 DISEASE DIAGNOSIS | بیماری کی تشخیص\n---\n\n**Disease Name (English):** Fungal Disease (Brown Spots)\n**بیماری کا نام (اردو):** فنگل بیماری (بھورے دھبے)\n**Affected Crop:** Rice (چاول)\n**متاثرہ فصل:*...",
+    "passed": true,
+    "is_edge_case": false,
+    "metrics": {
+      "has_disease": true,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  },
+  {
+    "query": "rice stem rotting near ground",
+    "response": "---\n🌾 DISEASE DIAGNOSIS | بیماری کی تشخیص\n---\n\n**Disease Name (English):** Foot Rot\n**بیماری کا نام (اردو):** فٹ روٹ\n**Affected Crop:** Rice (چاول)\n**متاثرہ فصل:** چاول\n\n---\n🔍 SYMPTOMS | علامات\n---\n\n*...",
+    "passed": true,
+    "is_edge_case": false,
+    "metrics": {
+      "has_disease": true,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  },
+  {
+    "query": "چاول میں گہرے دھبے",
+    "response": "---\n🌾 DISEASE DIAGNOSIS | بیماری کی تشخیص\n---\n\n**Disease Name (English):** Helminthosporium blight\n**بیماری کا نام (اردو):** ہیلمینتھوسپوریئم بلائٹ\n**Affected Crop:** Rice\n**متاثرہ فصل:** چاول\n\n---\n🔍 ...",
+    "passed": true,
+    "is_edge_case": false,
+    "metrics": {
+      "has_disease": true,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  },
+  {
+    "query": "rice grains turning black",
+    "response": "---\n🌾 DISEASE DIAGNOSIS | بیماری کی تشخیص\n---\n\n**Disease Name (English):** Bunt or Kernel Smut\n**بیماری کا نام (اردو):** بنٹ یا کنول گندم\n**Affected Crop:** Rice\n**متاثرہ فصل:** چاول\n\n---\n🔍 SYMPTOMS |...",
+    "passed": true,
+    "is_edge_case": false,
+    "metrics": {
+      "has_disease": true,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  },
+  {
+    "query": "chawal ki fasal mein keera",
+    "response": "---\n🌾 DISEASE DIAGNOSIS | بیماری کی تشخیص\n---\n\n**Disease Name (English):** Unspecified Pests (Keera)\n**بیماری کا نام (اردو):** کیر (مختلف کیڑوں کا حملہ)\n**Affected Crop:** Rice\n**متاثرہ فصل:** چاول\n\n-...",
+    "passed": false,
+    "is_edge_case": false,
+    "metrics": {
+      "has_disease": false,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  },
+  {
+    "query": "چاول کے پتے پیلے ہو کر سوکھ رہے ہیں",
+    "response": "---\n🌾 DISEASE DIAGNOSIS | بیماری کی تشخیص\n---\n\n**Disease Name (English):** Bacterial Leaf Streak\n**بیماری کا نام (اردو):** جراثیمی پتوں کا گُردہ (Bacterial Leaf Streak)\n**Affected Crop:** Rice\n**متاثر...",
+    "passed": true,
+    "is_edge_case": false,
+    "metrics": {
+      "has_disease": true,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  },
+  {
+    "query": "rice blast disease",
+    "response": "---\n🌾 DISEASE DIAGNOSIS | بیماری کی تشخیص\n---\n\n**Disease Name (English):** Blast\n**بیماری کا نام (اردو):** جھلسا (Jhulsa)\n**Affected Crop:** Rice\n**متاثرہ فصل:** چاول\n\n---\n🔍 SYMPTOMS | علامات\n---\n\n**E...",
+    "passed": true,
+    "is_edge_case": false,
+    "metrics": {
+      "has_disease": true,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  },
+  {
+    "query": "chawal ke tano par dhabbe",
+    "response": "---\n🌾 DISEASE DIAGNOSIS | بیماری کی تشخیص\n---\n\n**Disease Name (English):** Brown Spot\n**بیماری کا نام (اردو):** براؤن سپاٹ\n**Affected Crop:** Rice (چاول)\n**متاثرہ فصل:** چاول\n\n---\n🔍 SYMPTOMS | علامات\n...",
+    "passed": true,
+    "is_edge_case": false,
+    "metrics": {
+      "has_disease": true,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  },
+  {
+    "query": "rice plant growth stunted",
+    "response": "---\n🌾 DISEASE DIAGNOSIS | بیماری کی تشخیص\n---\n\n**Disease Name (English):** Stunted Growth (General)\n**بیماری کا نام (اردو):** پودوں کا صحیح سے نہ بڑھنا (عام)\n**Affected Crop:** Rice\n**متاثرہ فصل:** چا...",
+    "passed": true,
+    "is_edge_case": false,
+    "metrics": {
+      "has_disease": true,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  },
+  {
+    "query": "چاول کی جڑوں کا مسئلہ",
+    "response": "---\n🌾 DISEASE DIAGNOSIS | بیماری کی تشخیص\n---\n\n**Disease Name (English):** Root Rot / Fungal Diseases\n**بیماری کا نام (اردو):** جڑوں کا گلنا / فنگلی امراض\n**Affected Crop:** Rice (Chawal)\n**متاثرہ فصل...",
+    "passed": true,
+    "is_edge_case": false,
+    "metrics": {
+      "has_disease": true,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  },
+  {
+    "query": "sugarcane leaves drying",
+    "response": "---\n🌾 DISEASE DIAGNOSIS | بیماری کی تشخیص\n---\n\n**Disease Name (English):** Stem Canker\n**بیماری کا نام (اردو):** تھان کا کینکر\n**Affected Crop:** Sugarcane\n**متاثرہ فصل:** گنا\n\n---\n🔍 SYMPTOMS | علامات...",
+    "passed": true,
+    "is_edge_case": false,
+    "metrics": {
+      "has_disease": true,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  },
+  {
+    "query": "گنے میں لال سڑن",
+    "response": "---\n🌾 DISEASE DIAGNOSIS | بیماری کی تشخیص\n---\n\n**Disease Name (English):** Red Rot\n**بیماری کا نام (اردو):** سرخی گل\n**Affected Crop:** Sugarcane\n**متاثرہ فصل:** گنا\n\n---\n🔍 SYMPTOMS | علامات\n---\n\n**En...",
+    "passed": true,
+    "is_edge_case": false,
+    "metrics": {
+      "has_disease": true,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  },
+  {
+    "query": "ganne ka tana kala ho raha hai",
+    "response": "---\n🌾 DISEASE DIAGNOSIS | بیماری کی تشخیص\n---\n\n**Disease Name (English):** Red rot of Sugarcane\n**بیماری کا نام (اردو):** سرخ گلاڑ\n**Affected Crop:** Sugarcane\n**متاثرہ فصل:** گنا\n\n---\n🔍 SYMPTOMS | عل...",
+    "passed": true,
+    "is_edge_case": false,
+    "metrics": {
+      "has_disease": true,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  },
+  {
+    "query": "maize stem borer",
+    "response": "---\n🌾 DISEASE DIAGNOSIS | بیماری کی تشخیص\n---\n\n**Disease Name (English):** Maize Stem Borer\n**بیماری کا نام (اردو):** مکئی کا تنہ سوراخ کرنے والا کیڑا (مکئی کا سنڈی)\n**Affected Crop:** Maize\n**متاثرہ ...",
+    "passed": true,
+    "is_edge_case": false,
+    "metrics": {
+      "has_disease": true,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  },
+  {
+    "query": "مکئی کے پتوں پر سوراخ",
+    "response": "---\n🌾 DISEASE DIAGNOSIS | بیماری کی تشخیص\n---\n\n**Disease Name (English):** Myrothecium Leaf Spot\n**بیماری کا نام (اردو):** مائروتھیسیم لیف اسپاٹ\n**Affected Crop:** Cotton (کپاس)\n**متاثرہ فصل:** کپاس (...",
+    "passed": true,
+    "is_edge_case": false,
+    "metrics": {
+      "has_disease": true,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  },
+  {
+    "query": "makai ke poudy murjha rahe hain",
+    "response": "---\n🌾 DISEASE DIAGNOSIS | بیماری کی تشخیص\n---\n\n**Disease Name (English):** Damping-off\n**بیماری کا نام (اردو):** گلدان\n**Affected Crop:** Maize\n**متاثرہ فصل:** مکئی\n\n---\n🔍 SYMPTOMS | علامات\n---\n\n**Eng...",
+    "passed": true,
+    "is_edge_case": false,
+    "metrics": {
+      "has_disease": true,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  },
+  {
+    "query": "peanut leaves yellowing",
+    "response": "---\n🌾 DISEASE DIAGNOSIS | بیماری کی تشخیص\n---\n\n**Disease Name (English):** Downy Mildew\n**بیماری کا نام (اردو):** ڈاؤنی ملڈیو (پھپھوندی)\n**Affected Crop:** Peanut\n**متاثرہ فصل:** مونگ پھلی\n\n---\n🔍 SYMP...",
+    "passed": true,
+    "is_edge_case": false,
+    "metrics": {
+      "has_disease": true,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  },
+  {
+    "query": "مونگ پھلی میں جڑ کا گلنا",
+    "response": "The farmer has described \"جڑ کا گلنا\" (root rot) in groundnut. While the provided records are not directly about groundnut root rot, they do mention fungal diseases. Since root rot in groundnut is a c...",
+    "passed": true,
+    "is_edge_case": false,
+    "metrics": {
+      "has_disease": true,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  },
+  {
+    "query": "tomato early blight symptoms",
+    "response": "---\n🌾 DISEASE DIAGNOSIS | بیماری کی تشخیص\n---\n\n**Disease Name (English):** Early Blight\n**بیماری کا نام (اردو):** ابتدائی جھلساؤ (Early Blight)\n**Affected Crop:** Tomato\n**متاثرہ فصل:** ٹماٹر\n\n---\n🔍 S...",
+    "passed": true,
+    "is_edge_case": false,
+    "metrics": {
+      "has_disease": true,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  },
+  {
+    "query": "ٹماٹر کے پتے مڑ رہے ہیں",
+    "response": "---\n🌾 DISEASE DIAGNOSIS | بیماری کی تشخیص\n---\n\n**Disease Name (English):** Late Blight\n**بیماری کا نام (اردو):** لیٹ بلائٹ\n**Affected Crop:** Tomato\n**متاثرہ فصل:** ٹماٹر\n\n---\n🔍 SYMPTOMS | علامات\n---\n...",
+    "passed": true,
+    "is_edge_case": false,
+    "metrics": {
+      "has_disease": true,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  },
+  {
+    "query": "hello",
+    "response": "UNKNOWN_CROP_FLAG\n\nI'm sorry, I can only help with crop disease diagnosis and treatment for Pakistani farmers.\nPlease describe your crop problem — mention the crop name, affected part (leaves/stem/roo...",
+    "passed": true,
+    "is_edge_case": true,
+    "metrics": {
+      "has_disease": false,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": true
+    }
+  },
+  {
+    "query": "meri fasal theek nahi",
+    "response": "UNKNOWN_CROP_FLAG\n\nI'm sorry, I can only help with crop disease diagnosis and treatment for Pakistani farmers.\nPlease describe your crop problem — mention the crop name, affected part (leaves/stem/roo...",
+    "passed": true,
+    "is_edge_case": true,
+    "metrics": {
+      "has_disease": false,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": true
+    }
+  },
+  {
+    "query": "strawberry disease",
+    "response": "---\n🌾 DISEASE DIAGNOSIS | بیماری کی تشخیص\n---\n\n**Disease Name (English):** Colletotrichum Fruit Rot\n**بیماری کا نام (اردو):** پھل کا گلنے والا مرض (کولے ٹوٹرکم)\n**Affected Crop:** Strawberry\n**متاثرہ ...",
+    "passed": false,
+    "is_edge_case": true,
+    "metrics": {
+      "has_disease": true,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  },
+  {
+    "query": "kal barish hogi?",
+    "response": "UNKNOWN_CROP_FLAG\n\nI'm sorry, I can only help with crop disease diagnosis and treatment for Pakistani farmers.\nPlease describe your crop problem — mention the crop name, affected part (leaves/stem/roo...",
+    "passed": true,
+    "is_edge_case": true,
+    "metrics": {
+      "has_disease": false,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": true
+    }
+  },
+  {
+    "query": "wheat price today",
+    "response": "UNKNOWN_CROP_FLAG\n\nI'm sorry, I can only help with crop disease diagnosis and treatment for Pakistani farmers.\nPlease describe your crop problem — mention the crop name, affected part (leaves/stem/roo...",
+    "passed": true,
+    "is_edge_case": true,
+    "metrics": {
+      "has_disease": false,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": true
+    }
+  },
+  {
+    "query": "mujhe kya karna chahiye",
+    "response": "UNKNOWN_CROP_FLAG\n\nI'm sorry, I can only help with crop disease diagnosis and treatment for Pakistani farmers.\nPlease describe your crop problem — mention the crop name, affected part (leaves/stem/roo...",
+    "passed": true,
+    "is_edge_case": true,
+    "metrics": {
+      "has_disease": false,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": true
+    }
+  },
+  {
+    "query": "apple tree not growing",
+    "response": "---\n🌾 DISEASE DIAGNOSIS | بیماری کی تشخیص\n---\n\n**Disease Name (English):** Scab\n**بیماری کا نام (اردو):** سکب (Scab)\n**Affected Crop:** Apple (سیب)\n**متاثرہ فصل:** سیب\n\n---\n🔍 SYMPTOMS | علامات\n---\n\n**...",
+    "passed": false,
+    "is_edge_case": true,
+    "metrics": {
+      "has_disease": true,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  },
+  {
+    "query": "what is your name",
+    "response": "UNKNOWN_CROP_FLAG\n\nI'm sorry, I can only help with crop disease diagnosis and treatment for Pakistani farmers.\nPlease describe your crop problem — mention the crop name, affected part (leaves/stem/roo...",
+    "passed": true,
+    "is_edge_case": true,
+    "metrics": {
+      "has_disease": false,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": true
+    }
+  },
+  {
+    "query": "can you tell me a joke?",
+    "response": "UNKNOWN_CROP_FLAG\n\nI'm sorry, I can only help with crop disease diagnosis and treatment for Pakistani farmers.\nPlease describe your crop problem — mention the crop name, affected part (leaves/stem/roo...",
+    "passed": true,
+    "is_edge_case": true,
+    "metrics": {
+      "has_disease": false,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": true
+    }
+  },
+  {
+    "query": "fertilizer for roses",
+    "response": "---\n🌾 DISEASE DIAGNOSIS | بیماری کی تشخیص\n---\n\n**Disease Name (English):** Nutrient Deficiency (Nitrogen and Potassium)\n**بیماری کا نام (اردو):** غذائی اجزاء کی کمی (نائٹروجن اور پوٹاش)\n**Affected Cro...",
+    "passed": false,
+    "is_edge_case": true,
+    "metrics": {
+      "has_disease": true,
+      "has_spray": true,
+      "has_urdu": true,
+      "has_fallback": false
+    }
+  }
+]

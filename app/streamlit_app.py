@@ -68,6 +68,13 @@ def load_engine():
     get_retriever()
     return get_diagnosis
 
+try:
+    from rag_engine import get_retriever
+    _col, _ = get_retriever()
+    RECORD_COUNT = _col.count()
+except Exception:
+    RECORD_COUNT = "..."
+
 
 def severity_badge(text: str) -> str:
     tl = text.lower()
@@ -214,7 +221,7 @@ with st.sidebar:
 
     st.markdown("<hr>", unsafe_allow_html=True)
     cols = st.columns(3)
-    for col, num, lbl in zip(cols, ["427","14+","✓"], ["Records","Crops","AI"]):
+    for col, num, lbl in zip(cols, [f"{RECORD_COUNT}","19+","✓"], ["Records","Crops","AI"]):
         with col:
             st.markdown(f"<div class='scard'><div class='snum'>{num}</div><div class='slbl'>{lbl}</div></div>", unsafe_allow_html=True)
 
@@ -245,8 +252,8 @@ st.markdown("""
     </div>
   </div>
   <div>
-    <span class='pill'>🦠 427 Diseases</span>
-    <span class='pill'>🌾 14 Crops</span>
+    <span class='pill'>🦠 {RECORD_COUNT} Diseases</span>
+    <span class='pill'>🌾 19 Crops</span>
     <span class='pill'>⚡ Gemini AI</span>
   </div>
 </div>
@@ -255,34 +262,44 @@ st.markdown("""
 col_main, col_aside = st.columns([3, 1], gap="large")
 
 with col_main:
-    st.markdown("**💡 Try an Example | مثالی سوال**")
-    ecols = st.columns(3)
-    for i, ex in enumerate(EXAMPLES):
-        with ecols[i % 3]:
-            if st.button(ex, key=f"ex_{i}", use_container_width=True):
-                st.session_state.query_input = ex
-                st.session_state.trigger_query = ex
+    tab1, tab2 = st.tabs(["💬 Chat / چیٹ", "🧙 Symptom Wizard / علامات گائیڈ"])
+    
+    with tab1:
+        st.markdown("**💡 Try an Example | مثالی سوال**")
+        ecols = st.columns(3)
+        for i, ex in enumerate(EXAMPLES):
+            with ecols[i % 3]:
+                if st.button(ex, key=f"ex_{i}", use_container_width=True):
+                    st.session_state.query_input = ex
+                    st.session_state.trigger_query = ex
+                    st.rerun()
+
+        st.markdown("<div style='margin-top:18px;'></div>", unsafe_allow_html=True)
+        st.markdown("**🔍 Describe Symptoms | علامات بیان کریں**")
+        query_text = st.text_area("q", value=st.session_state.query_input, height=120,
+            placeholder="E.g.: Yellow powdery spots on wheat leaves...\nمثلاً: گندم کے پتوں پر پیلے دھبے...",
+            label_visibility="collapsed")
+
+        b1, b2, b3 = st.columns([2.5, 2, 1])
+        with b1:
+            go = st.button("🔬 Diagnose | تشخیص کریں", type="primary", use_container_width=True)
+        with b2:
+            if crop_filter: st.info(f"🌱 Filter: **{crop_filter}**")
+            else: st.caption("🌍 All crops")
+        with b3:
+            if st.button("🗑️ Clear", use_container_width=True):
+                st.session_state.update(query_input="", last_response=None, trigger_query=None)
                 st.rerun()
 
-    st.markdown("<div style='margin-top:18px;'></div>", unsafe_allow_html=True)
-    st.markdown("**🔍 Describe Symptoms | علامات بیان کریں**")
-    query_text = st.text_area("q", value=st.session_state.query_input, height=120,
-        placeholder="E.g.: Yellow powdery spots on wheat leaves...\nمثلاً: گندم کے پتوں پر پیلے دھبے...",
-        label_visibility="collapsed")
+        if go and not query_text.strip():
+            st.warning("Please describe your crop problem. / براہ کرم فصل کی بیماری بیان کریں۔")
 
-    b1, b2, b3 = st.columns([2.5, 2, 1])
-    with b1:
-        go = st.button("🔬 Diagnose | تشخیص کریں", type="primary", use_container_width=True)
-    with b2:
-        if crop_filter: st.info(f"🌱 Filter: **{crop_filter}**")
-        else: st.caption("🌍 All crops")
-    with b3:
-        if st.button("🗑️ Clear", use_container_width=True):
-            st.session_state.update(query_input="", last_response=None, trigger_query=None)
-            st.rerun()
+    with tab2:
+        from symptom_wizard import render_wizard
+        render_wizard(crop_filter)
 
     active = None
-    if go and query_text.strip(): active = query_text.strip()
+    if 'go' in locals() and go and query_text.strip(): active = query_text.strip()
     elif st.session_state.trigger_query:
         active = st.session_state.trigger_query
         st.session_state.trigger_query = None
@@ -290,9 +307,9 @@ with col_main:
     if active:
         st.session_state.query_input = active
         with st.spinner(""):
-            st.markdown("""<div style='text-align:center;padding:36px;'>
+            st.markdown(f"""<div style='text-align:center;padding:36px;'>
               <div style='font-size:2.8rem;animation:pulse 1.5s infinite;'>🌾</div>
-              <div style='font-size:1.05rem;color:#16a34a;font-weight:600;margin-top:10px;'>Searching 427 disease records...</div>
+              <div style='font-size:1.05rem;color:#16a34a;font-weight:600;margin-top:10px;'>Searching {RECORD_COUNT} disease records...</div>
               <div style='font-family:Noto Nastaliq Urdu,serif;direction:rtl;color:#6b7280;margin-top:6px;font-size:1rem;'>بیماری کی تشخیص جاری ہے...</div>
             </div>""", unsafe_allow_html=True)
             try:
@@ -308,13 +325,32 @@ with col_main:
         st.rerun()
 
     if st.session_state.last_response:
-        render_card(*st.session_state.last_response)
+        q, res = st.session_state.last_response
+        
+        if res == "UNKNOWN_CROP_FLAG" or "UNKNOWN_CROP_FLAG" in res:
+            st.error("I don't have specific data for this. Please consult your local agronomist or call 0800-KISSAN Pakistan helpline.\n\nاس بارے میں میرے پاس مخصوص معلومات نہیں۔ مقامی زرعی ماہر سے رابطہ کریں یا پاکستان کسان ہیلپ لائن 0800-55476 پر کال کریں۔")
+        else:
+            if "LOW_CONFIDENCE_FLAG" in res:
+                st.warning("Low confidence diagnosis. Please describe more symptoms or use the symptom wizard.\n\nکم اعتماد تشخیص۔ براہ کرم مزید علامات بتائیں یا گائیڈڈ وزرڈ استعمال کریں۔")
+            if "CROP_MISMATCH_FLAG" in res:
+                st.info("Showing closest match — results may not be specific to your crop.\n\nقریب ترین نتیجہ دکھایا جا رہا ہے۔")
+                
+            if "API_ERROR_FLAG" in res:
+                st.warning("AI generation unavailable. Showing database records directly.")
+                raw_context = res.replace("API_ERROR_FLAG", "").replace("LOW_CONFIDENCE_FLAG", "").replace("CROP_MISMATCH_FLAG", "")
+                st.markdown(f"```text\n{raw_context}\n```")
+            else:
+                render_card(q, res)
 
     st.markdown("""<div style='text-align:center;padding:32px 0 10px;border-top:1px solid #dcfce7;margin-top:40px;'>
       <div style='font-size:1.4rem;'>🌾</div>
       <div style='font-size:0.82rem;color:#6b7280;margin-top:6px;'>Fasal Doctor v2.0 — Built for Pakistani Farmers</div>
       <div style='font-family:Noto Nastaliq Urdu,serif;direction:rtl;font-size:0.9rem;color:#16a34a;margin-top:4px;'>پاکستانی کسانوں کے لیے — فصل ڈاکٹر</div>
       <div style='font-size:0.76rem;color:#9ca3af;margin-top:6px;'>Data: PARC Pakistan | AI: Google Gemini | Vectors: ChromaDB</div>
+      <div style='background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.2);border-radius:10px;padding:10px 14px;font-size:0.82rem;margin-top:15px;color:#92400e;display:inline-block;'>
+        ⚠️ Always confirm with a local agronomist before applying any spray.<br>
+        <span style='font-family:Noto Nastaliq Urdu,serif;direction:rtl;display:block;font-size:0.85rem;'>اسپرے کرنے سے پہلے ہمیشہ مقامی زرعی ماہر سے تصدیق کریں۔</span>
+      </div>
     </div>""", unsafe_allow_html=True)
 
 with col_aside:
@@ -338,6 +374,6 @@ with col_aside:
 
     try:
         load_engine()
-        st.markdown("<div style='background:white;border:1.5px solid #dcfce7;border-radius:16px;padding:14px;'><div style='background:#dcfce7;color:#166534;border-radius:10px;padding:8px 14px;font-size:0.85rem;font-weight:600;text-align:center;'>✅ AI Engine Ready</div><div style='background:#eff6ff;color:#1d4ed8;border-radius:10px;padding:8px 14px;font-size:0.85rem;font-weight:600;text-align:center;margin-top:6px;'>⚡ 427 Vectors Loaded</div></div>", unsafe_allow_html=True)
+        st.markdown(f"<div style='background:white;border:1.5px solid #dcfce7;border-radius:16px;padding:14px;'><div style='background:#dcfce7;color:#166534;border-radius:10px;padding:8px 14px;font-size:0.85rem;font-weight:600;text-align:center;'>✅ AI Engine Ready</div><div style='background:#eff6ff;color:#1d4ed8;border-radius:10px;padding:8px 14px;font-size:0.85rem;font-weight:600;text-align:center;margin-top:6px;'>⚡ {RECORD_COUNT} Vectors Loaded</div></div>", unsafe_allow_html=True)
     except:
         st.warning("⏳ Engine loading...")

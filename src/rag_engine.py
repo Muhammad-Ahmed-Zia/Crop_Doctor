@@ -22,14 +22,17 @@ init(autoreset=True)
 load_dotenv()
 
 # ── API Key Rotation ──────────────────────────────────────────────────────────
-_API_KEYS = [
-    os.getenv("GEMINI_RAG_KEY_3"),
-    os.getenv("GEMINI_RAG_KEY_7"), 
+# Load ALL available keys, deduplicated (preserving order)
+_RAW_KEYS = [
+    os.getenv("GEMINI_API_KEY"),
+    os.getenv("GEMINI_API_KEY_2"),
+    os.getenv("GEMINI_API_KEY_3"),
+    os.getenv("GEMINI_API_KEY_4"),
     os.getenv("GEMINI_RAG_KEY_5"),
-    os.getenv("GEMINI_RAG_KEY_6"), 
-      # dedicated RAG key (highest priority)
+    os.getenv("GEMINI_RAG_KEY_6"),
+    os.getenv("GEMINI_RAG_KEY_7"),
 ]
-_API_KEYS = [k for k in _API_KEYS if k]   # drop unset keys
+_API_KEYS = list(dict.fromkeys(k for k in _RAW_KEYS if k))  # dedup, preserve order
 _current_key_idx = 0
 _gemini_client = None
 
@@ -46,14 +49,21 @@ def _get_client() -> genai.Client:
 
 
 def _rotate_key() -> bool:
-    """Switch to the next available API key. Returns False if all exhausted."""
+    """Switch to the next available API key. Returns False if all exhausted (full cycle done)."""
     global _current_key_idx, _gemini_client
     _current_key_idx += 1
     if _current_key_idx >= len(_API_KEYS):
         return False
     _gemini_client = genai.Client(api_key=_API_KEYS[_current_key_idx])
-    print(f"{Fore.YELLOW}  🔄 Switched to API key #{_current_key_idx + 1}{Style.RESET_ALL}")
+    print(f"{Fore.YELLOW}  🔄 Switched to API key #{_current_key_idx + 1}/{len(_API_KEYS)}{Style.RESET_ALL}")
     return True
+
+
+def _reset_to_first_key():
+    """Reset rotation back to key #1 (call after all keys are exhausted)."""
+    global _current_key_idx, _gemini_client
+    _current_key_idx = 0
+    _gemini_client = genai.Client(api_key=_API_KEYS[0])
 
 # ── Config ────────────────────────────────────────────────────────────────
 CHROMA_DIR  = "data/chroma_db"
@@ -61,6 +71,122 @@ COLLECTION  = "fasal_doctor_diseases"
 EMBED_MODEL = "paraphrase-multilingual-MiniLM-L12-v2"
 GEMINI_MODEL= "gemini-2.5-flash-lite"
 TOP_K       = 3        # number of records to retrieve
+
+# ── Romanized Urdu → English expansion map ────────────────────────────────
+# Covers the most common Romanized Urdu agricultural terms so the multilingual
+# embedder can find the right disease records even when real Urdu script is absent.
+_ROMAN_URDU_MAP = {
+    # ── Crops ──
+    "gandum":    "wheat",
+    "kapas":     "cotton",
+    "chawal":    "rice",
+    "ganna":     "sugarcane",
+    "ganne":     "sugarcane",
+    "makai":     "maize corn",
+    "maka":      "maize corn",
+    "alu":       "potato",
+    "aloo":      "potato",
+    "tamatar":   "tomato",
+    "pyaz":      "onion",
+    "mong phali":"groundnut peanut",
+    "mong":      "mung bean",
+    # ── Plant parts ──
+    "patte":     "leaves",
+    "patton":    "leaves",
+    "patta":     "leaf",
+    "jad":       "root",
+    "jari":      "roots",
+    "jaron":     "roots",
+    "tana":      "stem",
+    "tano":      "stem",
+    "tane":      "stems",
+    "bail":      "plant vine",
+    "poudy":     "plant seedling",
+    "paudy":     "plant seedling",
+    "fasal":     "crop",
+    # ── Symptoms / colours ──
+    "sookh":     "dry dying drying",
+    "sookhna":   "drying wilting",
+    "pila":      "yellow",
+    "pile":      "yellow",
+    "pilli":     "yellow",
+    "kala":      "black",
+    "kale":      "black",
+    "kali":      "black",
+    "safed":     "white",
+    "lal":       "red",
+    "bhure":     "brown",
+    "bhura":     "brown",
+    "dhaba":     "spot",
+    "dhabbe":    "spots",
+    "dabbe":     "spots",
+    "dabb":      "spot",
+    "dhubbe":    "spots",
+    "murjha":    "wilting wilt",
+    "murjhana":  "wilting",
+    "kharab":    "damaged diseased",
+    "gal":       "rot rotting",
+    "galna":     "rotting rot",
+    "sarna":     "rotting decay",
+    "sukhna":    "drying dying",
+    # ── Pests / diseases ──
+    "keera":     "insect pest worm",
+    "kira":      "insect pest",
+    "sundi":     "worm borer caterpillar",
+    "gulabi sundi": "pink bollworm",
+    "deeemak":   "termite",
+    "deemak":    "termite",
+    "powder":    "powdery mildew",
+    "fungus":    "fungal disease",
+    # ── Actions ──
+    "mar":       "dying dead",
+    "marna":     "dying",
+    "girna":     "falling dropping",
+    "girr":      "falling",
+    "nahi":      "",  # negation — remove
+    "mein":      "in",
+    "par":       "on",
+    "ke":        "of",
+    "ki":        "of",
+    "ka":        "of",
+    "ho":        "",
+    "raha":      "",
+    "rahi":      "",
+    "hai":       "",
+    "hain":      "",
+    "meri":      "my",
+}
+
+
+def normalize_query(query: str) -> str:
+    """
+    If the query contains Romanized Urdu (no Unicode Urdu script), expand known
+    Roman-Urdu words to their English equivalents so the sentence embedder can
+    find the right disease records in ChromaDB.
+
+    Real Urdu script queries (\u0600–\u06FF) are passed through unchanged because
+    the multilingual model handles them natively.
+    """
+    has_urdu_script = bool(re.search(r'[\u0600-\u06FF]', query))
+    if has_urdu_script:
+        return query   # already proper Urdu — embedder handles it
+
+    # Check if this looks purely English (no Romanized Urdu trigger words)
+    query_lower = query.lower()
+    has_roman_urdu = any(word in query_lower for word in _ROMAN_URDU_MAP)
+    if not has_roman_urdu:
+        return query   # pure English — no expansion needed
+
+    # Expand Romanized Urdu words to English equivalents
+    # Use word-boundary-aware replacement to avoid partial matches
+    expanded = query_lower
+    # First try multi-word phrases (longest match first)
+    for roman, english in sorted(_ROMAN_URDU_MAP.items(), key=lambda x: -len(x[0])):
+        expanded = re.sub(r'\b' + re.escape(roman) + r'\b', ' ' + english + ' ', expanded)
+
+    # Clean up extra whitespace
+    expanded = ' '.join(expanded.split())
+    return expanded if expanded.strip() else query
 
 # ── System prompt ─────────────────────────────────────────────────────────
 SYSTEM_PROMPT = """
@@ -172,9 +298,13 @@ def retrieve(query: str, collection, embedder, top_k: int = TOP_K,
              crop_filter: str = "") -> list[dict]:
     """
     Embed the query and retrieve top-k similar disease records.
+    Romanized Urdu queries are expanded to English before embedding so the
+    multilingual model finds the right records. The original query is passed
+    to Gemini for generation (preserving the farmer's language).
     Optional crop_filter narrows results to a specific crop.
     """
-    query_vec = embedder.encode([query])[0].tolist()
+    embed_query = normalize_query(query)  # expand Roman Urdu → English for better retrieval
+    query_vec = embedder.encode([embed_query])[0].tolist()
 
     where = None
     if crop_filter:
@@ -265,22 +395,39 @@ def ask_gemini(query: str, context: str, _unused_client=None) -> str:
                 print(f"{Fore.YELLOW}  🔄 Gemini client was closed — recreating...{Style.RESET_ALL}")
                 continue
 
-            # Per-minute rate limit — wait, then retry same key
+            # Per-minute rate limit — rotate to next key IMMEDIATELY.
+            # Only wait if we've gone through the full key cycle.
             if "429" in err or "RESOURCE_EXHAUSTED" in err:
+                print(f"{Fore.YELLOW}  ⚡ Rate limited on key #{_current_key_idx + 1} — rotating...{Style.RESET_ALL}")
+                if _rotate_key():
+                    continue   # try next key right away — no sleep needed
+                # All keys rate-limited — reset to key #1 and wait
+                _reset_to_first_key()
                 delay = 30
                 match = re.search(r"retryDelay.*?(\d+)s", err)
                 if match:
                     delay = int(match.group(1)) + 3
-                print(f"{Fore.YELLOW}  ⏳ Rate limited — waiting {delay}s then retrying...{Style.RESET_ALL}")
+                print(f"{Fore.YELLOW}  ⏳ All {len(_API_KEYS)} keys rate limited — waiting {delay}s then retrying from key #1...{Style.RESET_ALL}")
                 time.sleep(delay)
-                continue   # retry same key after wait
+                continue
 
             # Daily quota exhausted — rotate key
             if "limit: 0" in err or "GenerateRequestsPerDay" in err or "403" in err:
-                print(f"{Fore.YELLOW}  🔑 Key #{_current_key_idx + 1} exhausted, rotating...{Style.RESET_ALL}")
+                print(f"{Fore.YELLOW}  🔑 Key #{_current_key_idx + 1} daily quota exhausted, rotating...{Style.RESET_ALL}")
                 if _rotate_key():
                     continue   # retry with new key
                 return "All API keys exhausted. Try again tomorrow."
+
+            # Service unavailable (503) — model overloaded, rotate key and retry
+            if "503" in err or "UNAVAILABLE" in err or "overloaded" in err.lower():
+                print(f"{Fore.YELLOW}  🟡 Model overloaded on key #{_current_key_idx + 1} — rotating...{Style.RESET_ALL}")
+                if _rotate_key():
+                    continue   # try next key immediately
+                # All keys hit 503 — short wait then reset
+                _reset_to_first_key()
+                print(f"{Fore.YELLOW}  ⏳ All keys overloaded — waiting 20s...{Style.RESET_ALL}")
+                time.sleep(20)
+                continue
 
             # Unexpected error — return message
             return f"[Gemini error: {err[:300]}]"
@@ -377,6 +524,45 @@ def get_retriever():
     return _retriever_cache["collection"], _retriever_cache["embedder"]
 
 
+# ── Off-topic query detection ─────────────────────────────────────────────────
+# Patterns that clearly indicate a non-agricultural / non-disease query.
+# These are checked BEFORE calling Gemini to avoid hallucinated diagnoses.
+_OFF_TOPIC_PATTERNS = [
+    # Greetings
+    r'^(hello|hi|hey|salaam|salam|assalam|assalamu|aoa)\b',
+    # Name / identity questions
+    r'\b(your name|what are you|who are you|aap ka naam|tumhara naam)\b',
+    # Weather
+    r'\b(barish|baarish|mausam|weather|rain|temperature|tapman)\b',
+    # Jokes / off-topic conversation
+    r'\b(joke|lateefa|latifa|mazhak|funny|tell me a)\b',
+    # Price / market queries
+    r'\b(price|qeemat|rate|mandi|market|bazar|bhav)\b',
+    # Generic vague queries with no crop/symptom context
+    r'^(mujhe kya karna chahiye|kya karna chahiye|kya karun|what should i do)\?*$',
+    r'^meri fasal theek nahi\?*$',
+]
+
+_OFF_TOPIC_RE = [re.compile(p, re.IGNORECASE) for p in _OFF_TOPIC_PATTERNS]
+
+_OFF_TOPIC_RESPONSE = (
+    "UNKNOWN_CROP_FLAG\n\n"
+    "I'm sorry, I can only help with crop disease diagnosis and treatment for Pakistani farmers.\n"
+    "Please describe your crop problem — mention the crop name, affected part (leaves/stem/roots), "
+    "and symptom (color, spots, wilting, etc.).\n\n"
+    "میں صرف فصلوں کی بیماریوں کی تشخیص میں مدد کر سکتا ہوں۔ براہ کرم فصل کا نام، متاثرہ حصہ اور علامت بتائیں۔"
+)
+
+
+def is_off_topic(query: str) -> bool:
+    """Return True if the query is clearly not about crop disease diagnosis."""
+    q = query.strip()
+    for pattern in _OFF_TOPIC_RE:
+        if pattern.search(q):
+            return True
+    return False
+
+
 def get_diagnosis(query: str,
                   crop_filter: str | None = None,
                   language: str = "both",
@@ -393,6 +579,10 @@ def get_diagnosis(query: str,
     Returns:
         Full diagnosis text from Gemini (markdown-formatted).
     """
+    # ── Off-topic guard: reject clearly non-agricultural queries immediately ──
+    if is_off_topic(query):
+        return _OFF_TOPIC_RESPONSE
+
     collection, embedder = get_retriever()
     records = retrieve(query, collection, embedder,
                        top_k=top_k, crop_filter=crop_filter or "")

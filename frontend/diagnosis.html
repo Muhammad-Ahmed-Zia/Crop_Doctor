@@ -1,430 +1,502 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Diagnose | Fasal Doctor فصل ڈاکٹر</title>
-  <link rel="stylesheet" href="styles.css"/>
-  <style>
-    .diag-page{display:grid;grid-template-columns:280px 1fr;min-height:calc(100vh - var(--nav-h));}
-    .server-status{display:flex;align-items:center;gap:8px;padding:8px 14px;border-radius:10px;font-size:.78rem;font-weight:600;margin-top:12px;}
-    .status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
-    .status-online{background:rgba(74,222,128,.15);border:1px solid rgba(74,222,128,.3);color:#6ee7b7;}
-    .status-online .status-dot{background:#4ade80;box-shadow:0 0 6px #4ade80;}
-    .status-offline{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.25);color:#fcd34d;}
-    .status-offline .status-dot{background:#f59e0b;}
-    .status-checking{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);color:rgba(255,255,255,.5);}
-    .status-checking .status-dot{background:rgba(255,255,255,.3);animation:pulse 1s infinite;}
-    .demo-banner{background:#fffbeb;border:1px solid #fde68a;border-left:4px solid #f59e0b;border-radius:12px;padding:12px 16px;font-size:.84rem;color:#92400e;margin-bottom:20px;display:none;}
-    .demo-banner.show{display:flex;align-items:center;gap:10px;}
-    @media(max-width:900px){.diag-page{grid-template-columns:1fr;}}
-  </style>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Diagnose | Fasal Doctor فصل ڈاکٹر</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600&family=Noto+Nastaliq+Urdu:wght@400;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@400,0&display=swap" rel="stylesheet"/>
+<script>
+tailwind.config={theme:{extend:{colors:{primary:'#006b2c','primary-dark':'#002109',surface:'#f8f9ff','surface-card':'#ffffff','on-surface':'#0b1c30','on-surface-muted':'#3e4a3d'},fontFamily:{syne:['Syne','sans-serif'],dm:['DM Sans','sans-serif'],urdu:['Noto Nastaliq Urdu','serif']}}}};
+</script>
+<style>
+  *{box-sizing:border-box;} body{font-family:'DM Sans',sans-serif;background:#f8f9ff;color:#0b1c30;}
+  .font-syne{font-family:'Syne',sans-serif;} .font-urdu{font-family:'Noto Nastaliq Urdu',serif;direction:rtl;}
+  .ms{font-family:'Material Symbols Outlined';font-size:20px;line-height:1;display:inline-block;}
+  /* Global search */
+  .search-overlay{position:fixed;inset:0;background:rgba(0,33,9,0.8);backdrop-filter:blur(8px);z-index:9999;display:flex;align-items:flex-start;justify-content:center;padding-top:100px;opacity:0;pointer-events:none;transition:opacity .3s;}
+  .search-overlay.open{opacity:1;pointer-events:all;}
+  .search-box{background:white;border-radius:16px;width:100%;max-width:660px;overflow:hidden;transform:scale(.94) translateY(-16px);transition:transform .3s;box-shadow:0 24px 80px rgba(0,0,0,.25);}
+  .search-overlay.open .search-box{transform:scale(1) translateY(0);}
+  .sri:hover{background:#f0fdf4;}
+  /* Sidebar */
+  .diag-sidebar{background:linear-gradient(180deg,#001a0a 0%,#002109 40%,#14532d 80%,#001a0a 100%);width:280px;min-height:calc(100vh - 80px);padding:24px 20px;position:sticky;top:80px;height:calc(100vh - 80px);overflow-y:auto;flex-shrink:0;}
+  /* History items — clearly visible on dark bg */
+  .hist-item{background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.18);border-left:3px solid #4ade80;border-radius:10px;padding:9px 12px;margin-bottom:8px;font-size:.82rem;color:#d1fae5;cursor:pointer;transition:all .2s;line-height:1.4;}
+  .hist-item:hover{background:rgba(255,255,255,0.20);border-color:#86efac;}
+  .hist-item strong{color:#86efac;}
+  /* Status badge */
+  .status-online{background:rgba(74,222,128,.15);border:1px solid rgba(74,222,128,.3);color:#6ee7b7;}
+  .status-offline{background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.25);color:#fcd34d;}
+  .status-checking{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:rgba(255,255,255,.55);}
+  .status-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;display:inline-block;}
+  /* Example chips */
+  .ex-chip{background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:999px;padding:7px 16px;font-size:.82rem;font-weight:500;color:#006b2c;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;}
+  .ex-chip:hover{background:white;border-color:#4ade80;box-shadow:0 3px 12px rgba(22,163,74,.15);transform:translateY(-1px);}
+  /* Loading */
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(1.15);}}
+  .wheat-pulse{animation:pulse 1.5s infinite;font-size:3rem;}
+  /* Response card */
+  @keyframes slideUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+  .response-card{animation:slideUp .4s ease;}
+  /* Severity badges */
+  .sev-critical{background:#fee2e2;color:#991b1b;}
+  .sev-high{background:#ffedd5;color:#9a3412;}
+  .sev-medium{background:#fef9c3;color:#854d0e;}
+  .sev-low{background:#dcfce7;color:#166534;}
+  /* Textarea */
+  .diag-textarea{width:100%;min-height:120px;border:2px solid #dcfce7;border-radius:14px;padding:16px 18px;font-family:'DM Sans',sans-serif;font-size:1rem;color:#0b1c30;background:#f9fffe;resize:vertical;outline:none;transition:border-color .2s;line-height:1.6;}
+  .diag-textarea:focus{border-color:#16a34a;}
+  /* Sidebar select */
+  .sidebar-sel{width:100%;background:rgba(255,255,255,.10);border:1px solid rgba(255,255,255,.20);border-radius:12px;padding:10px 14px;color:#d1fae5;font-family:'DM Sans',sans-serif;font-size:.88rem;outline:none;cursor:pointer;}
+  .sidebar-sel option{background:#14532d;color:white;}
+</style>
 </head>
 <body>
-<nav id="main-nav">
-  <a href="index.html" class="nav-logo"><div class="nav-logo-icon">🌾</div><div class="nav-logo-text"><span class="nav-logo-en">Fasal Doctor</span><span class="nav-logo-ur">فصل ڈاکٹر</span></div></a>
-  <ul class="nav-links">
-    <li><a href="index.html">Home</a></li>
-    <li><a href="crops.html">Crops</a></li>
-    <li><a href="diagnosis.html" class="active">Diagnose</a></li>
-    <li><a href="about.html">About</a></li>
-    <li><a href="diagnosis.html" class="nav-cta">🔬 Diagnose Now</a></li>
-  </ul>
+
+<!-- SEARCH OVERLAY -->
+<div class="search-overlay" id="searchOverlay">
+  <div class="search-box">
+    <div style="display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid #e5e7eb;">
+      <span class="ms" style="color:#006b2c;">search</span>
+      <input id="globalSearchInput" type="text" placeholder="Search crops, diseases, symptoms…" autocomplete="off" style="flex:1;border:none;outline:none;font-size:1rem;font-family:'DM Sans',sans-serif;"/>
+      <button id="searchCloseBtn" style="background:#f3f4f6;border:none;border-radius:50%;width:30px;height:30px;cursor:pointer;">✕</button>
+    </div>
+    <div id="searchResults" style="padding:12px;max-height:400px;overflow-y:auto;"><div style="padding:24px;text-align:center;color:#6e7b6c;font-size:.9rem;">Start typing…</div></div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav id="main-nav" class="fixed top-0 w-full z-50 bg-white/85 backdrop-blur-xl border-b border-green-100 shadow-sm transition-all">
+  <div class="max-w-full px-6 h-20 flex items-center justify-between">
+    <a href="index.html" class="flex items-center gap-3 font-syne font-extrabold text-green-900 text-xl">
+      <div class="w-10 h-10 bg-gradient-to-br from-green-600 to-green-900 rounded-xl flex items-center justify-center text-white text-lg">🌾</div>
+      <div><div class="leading-tight">Fasal Doctor</div><div class="font-urdu text-xs text-green-600 font-normal leading-tight">فصل ڈاکٹر</div></div>
+    </a>
+    <div class="flex items-center gap-2">
+      <button id="searchOpenBtn" class="w-10 h-10 rounded-full border border-green-200 bg-green-50 flex items-center justify-center text-green-700 hover:bg-green-100 cursor-pointer">
+        <span class="ms" style="font-size:18px;">search</span>
+      </button>
+      <nav class="hidden md:flex items-center gap-1 ml-2">
+        <a href="index.html" class="px-4 py-2 rounded-full text-sm font-medium text-slate-600 hover:text-green-700 hover:bg-green-50 transition-colors">Home</a>
+        <a href="crops.html" class="px-4 py-2 rounded-full text-sm font-medium text-slate-600 hover:text-green-700 hover:bg-green-50 transition-colors">Crops</a>
+        <a href="reviews.html" class="px-4 py-2 rounded-full text-sm font-medium text-slate-600 hover:text-green-700 hover:bg-green-50 transition-colors">Reviews</a>
+        <a href="about.html" class="px-4 py-2 rounded-full text-sm font-medium text-slate-600 hover:text-green-700 hover:bg-green-50 transition-colors">About</a>
+        <a href="diagnosis.html" class="ml-2 bg-gradient-to-br from-green-500 to-green-900 text-white px-5 py-2.5 rounded-full text-sm font-semibold flex items-center gap-1.5 hover:shadow-lg hover:shadow-green-500/25 transition-all">
+          <span class="ms" style="font-size:16px;color:white;">science</span> Diagnose Now
+        </a>
+      </nav>
+    </div>
+  </div>
 </nav>
 
-<div class="page-content">
-<div class="diag-page">
+<div style="padding-top:80px;display:flex;min-height:calc(100vh - 80px);">
 
-<!-- ── SIDEBAR ─────────────────────────────────────────────────────────────── -->
-<aside class="diag-sidebar">
-  <div style="text-align:center;padding:8px 0 24px;">
-    <div style="font-size:2.6rem;">🌾</div>
-    <div style="font-family:'Noto Nastaliq Urdu',serif;font-size:1.2rem;font-weight:700;color:#6ee7b7;margin-top:4px;">فصل ڈاکٹر</div>
-    <div style="font-size:.78rem;color:#a7f3d0;margin-top:2px;">Fasal Doctor v2.0</div>
+<!-- ── SIDEBAR ──────────────────────────────────────────────────────── -->
+<aside class="diag-sidebar hidden md:block">
+
+  <!-- Logo -->
+  <div style="text-align:center;padding:8px 0 20px;">
+    <div style="font-size:2.2rem;margin-bottom:6px;">🌾</div>
+    <div class="font-urdu" style="font-size:1.1rem;font-weight:700;color:#6ee7b7;line-height:1.6;">فصل ڈاکٹر</div>
+    <div style="font-size:.68rem;color:#a7f3d0;letter-spacing:.06em;margin-top:2px;">FASAL DOCTOR v2.0</div>
   </div>
 
-  <hr style="border:none;border-top:1px solid rgba(255,255,255,.1);margin-bottom:22px;"/>
+  <div style="height:1px;background:rgba(255,255,255,.1);margin-bottom:20px;"></div>
 
-  <!-- Crop filter -->
-  <div class="sidebar-section">
-    <div class="sidebar-label">🌱 Crop Filter | فصل</div>
-    <div class="sidebar-select">
-      <select id="cropFilter">
-        <option value="">🌍 All Crops — تمام فصلیں</option>
-        <option value="Wheat">🌾 Wheat — گندم</option>
-        <option value="Cotton">🌿 Cotton — کپاس</option>
-        <option value="Rice">🍚 Rice — چاول</option>
-        <option value="Sugarcane">🎋 Sugarcane — گنا</option>
-        <option value="Maize">🌽 Maize — مکئی</option>
-        <option value="Groundnut">🥜 Groundnut — مونگ پھلی</option>
-        <option value="Barley">🌾 Barley — جَو</option>
-        <option value="Sorghum">🌾 Sorghum — جوار</option>
-        <option value="Millet">🌾 Millet — باجرہ</option>
-        <option value="Brassica">🌱 Brassica — سرسوں</option>
-        <option value="Gram">🫘 Gram — چنا</option>
-        <option value="Coriander">🌿 Coriander — دھنیا</option>
-        <option value="Paddy">🌾 Paddy — دھان</option>
-        <option value="Lentil">🌿 Lentil — مسور</option>
-      </select>
-    </div>
+  <!-- Crop Filter -->
+  <div style="margin-bottom:20px;">
+    <div style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(187,247,208,.8);margin-bottom:8px;">🌱 Crop Filter | فصل</div>
+    <select id="cropFilter" class="sidebar-sel">
+      <option value="">🌍 All Crops — تمام فصلیں</option>
+      <option value="Wheat">🌾 Wheat — گندم</option>
+      <option value="Cotton">🌿 Cotton — کپاس</option>
+      <option value="Rice">🍚 Rice — چاول</option>
+      <option value="Sugarcane">🎋 Sugarcane — گنا</option>
+      <option value="Maize">🌽 Maize — مکئی</option>
+      <option value="Groundnut">🥜 Groundnut — مونگ پھلی</option>
+      <option value="Barley">🌾 Barley — جَو</option>
+      <option value="Sorghum">🌾 Sorghum — جوار</option>
+      <option value="Millet">🌾 Millet — باجرہ</option>
+      <option value="Brassica">🌱 Brassica — سرسوں</option>
+      <option value="Gram">🫘 Gram — چنا</option>
+      <option value="Coriander">🌿 Coriander — دھنیا</option>
+      <option value="Paddy">🌾 Paddy — دھان</option>
+      <option value="Lentil">🌿 Lentil — مسور</option>
+      <option value="Tomato">🍅 Tomato — ٹماٹر</option>
+      <option value="Potato">🥔 Potato — آلو</option>
+      <option value="Onion">🧅 Onion — پیاز</option>
+      <option value="Chilies">🌶️ Chilies — مرچ</option>
+    </select>
   </div>
 
   <!-- Language -->
-  <div class="sidebar-section">
-    <div class="sidebar-label">🌐 Language | زبان</div>
-    <div class="sidebar-radio-group">
-      <label class="sidebar-radio"><input type="radio" name="lang" value="both" checked/> Both (default)</label>
-      <label class="sidebar-radio"><input type="radio" name="lang" value="english"/> English only</label>
-      <label class="sidebar-radio"><input type="radio" name="lang" value="urdu"/> اردو صرف</label>
+  <div style="margin-bottom:20px;">
+    <div style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(187,247,208,.8);margin-bottom:8px;">🌐 Language | زبان</div>
+    <div style="background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:8px 12px;">
+      <label style="display:flex;align-items:center;gap:8px;padding:6px 0;cursor:pointer;font-size:.86rem;color:#d1fae5;border-bottom:1px solid rgba(255,255,255,.06);">
+        <input type="radio" name="lang" value="both" checked style="accent-color:#4ade80;"/> Both (default)
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;padding:6px 0;cursor:pointer;font-size:.86rem;color:#d1fae5;border-bottom:1px solid rgba(255,255,255,.06);">
+        <input type="radio" name="lang" value="english" style="accent-color:#4ade80;"/> English only
+      </label>
+      <label style="display:flex;align-items:center;gap:8px;padding:6px 0;cursor:pointer;font-size:.86rem;color:#d1fae5;font-family:'Noto Nastaliq Urdu',serif;direction:rtl;">
+        <input type="radio" name="lang" value="urdu" style="accent-color:#4ade80;"/> اردو صرف
+      </label>
     </div>
   </div>
 
   <!-- Stats -->
-  <div class="sidebar-section">
-    <div class="sidebar-label">📊 Database Stats</div>
-    <div class="sidebar-stats">
-      <div class="ss-card"><div class="ss-num">427</div><div class="ss-lbl">Records</div></div>
-      <div class="ss-card"><div class="ss-num">14+</div><div class="ss-lbl">Crops</div></div>
-      <div class="ss-card"><div class="ss-num" id="ssCropCount">✓</div><div class="ss-lbl">AI</div></div>
+  <div style="margin-bottom:20px;">
+    <div style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(187,247,208,.8);margin-bottom:8px;">📊 Database</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;">
+      <div style="background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:10px 6px;text-align:center;">
+        <div class="font-syne" style="font-size:1.1rem;font-weight:700;color:#6ee7b7;">671</div>
+        <div style="font-size:.64rem;color:#a7f3d0;margin-top:2px;">Records</div>
+      </div>
+      <div style="background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:10px 6px;text-align:center;">
+        <div class="font-syne" style="font-size:1.1rem;font-weight:700;color:#6ee7b7;">19+</div>
+        <div style="font-size:.64rem;color:#a7f3d0;margin-top:2px;">Crops</div>
+      </div>
+      <div style="background:rgba(255,255,255,.09);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:10px 6px;text-align:center;">
+        <div class="font-syne" id="engineBadge" style="font-size:1.1rem;font-weight:700;color:#6ee7b7;">⏳</div>
+        <div style="font-size:.64rem;color:#a7f3d0;margin-top:2px;">AI</div>
+      </div>
     </div>
   </div>
 
-  <!-- Server status -->
-  <div class="sidebar-section">
-    <div class="sidebar-label">⚡ Server Status</div>
-    <div class="server-status status-checking" id="serverStatus">
-      <span class="status-dot"></span>
-      <span id="serverStatusText">Checking...</span>
+  <!-- Server Status -->
+  <div style="margin-bottom:20px;">
+    <div style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(187,247,208,.8);margin-bottom:8px;">⚡ Engine Status</div>
+    <div id="serverStatus" class="status-checking" style="display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;font-size:.78rem;font-weight:600;">
+      <span class="status-dot" style="background:rgba(255,255,255,.3);"></span>
+      <span id="serverStatusText">Checking server…</span>
     </div>
   </div>
 
-  <hr style="border:none;border-top:1px solid rgba(255,255,255,.1);margin-bottom:20px;"/>
+  <div style="height:1px;background:rgba(255,255,255,.1);margin-bottom:20px;"></div>
 
-  <div style="font-size:.82rem;line-height:1.85;color:#a7f3d0;">
-    ℹ️ AI advisor using PARC Pakistan + Google Gemini.<br><br>
-    <span style="font-family:'Noto Nastaliq Urdu',serif;direction:rtl;display:block;font-size:.88rem;color:#6ee7b7;">پاکستانی کسانوں کے لیے اردو میں تشخیص۔</span>
+  <!-- RECENT QUERIES — fully visible on dark bg -->
+  <div style="margin-bottom:16px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+      <div style="font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:rgba(187,247,208,.8);">🕐 Recent Queries</div>
+      <button id="clearHistBtn" style="background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:6px;color:#a7f3d0;font-size:.68rem;padding:3px 8px;cursor:pointer;font-family:'DM Sans',sans-serif;">Clear</button>
+    </div>
+    <div id="historyList">
+      <div style="font-size:.82rem;color:#6ee7b7;opacity:.6;padding:6px 4px;font-style:italic;">No recent queries yet.</div>
+    </div>
   </div>
 
-  <div style="background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);border-radius:10px;padding:10px 14px;font-size:.8rem;margin-top:14px;color:#fcd34d;">
-    ⚠️ Consult a local agronomist before applying any spray.<br>
-    <span style="font-family:'Noto Nastaliq Urdu',serif;direction:rtl;display:block;font-size:.82rem;margin-top:4px;">سپرے سے پہلے زرعی ماہر سے مشورہ کریں۔</span>
+  <div style="height:1px;background:rgba(255,255,255,.1);margin-bottom:16px;"></div>
+
+  <!-- Info -->
+  <div style="font-size:.78rem;line-height:1.8;color:#a7f3d0;margin-bottom:12px;">
+    ℹ️ PARC Pakistan database + Google Gemini AI for every Pakistani farmer.<br>
+    <span class="font-urdu" style="display:block;font-size:.8rem;color:#6ee7b7;margin-top:4px;">پاکستانی کسانوں کے لیے اردو میں تشخیص۔</span>
   </div>
 
-  <!-- Recent history -->
-  <div style="margin-top:24px;">
-    <div class="sidebar-label">🕐 Recent Queries</div>
-    <div id="historyList"><div style="font-size:.8rem;color:rgba(255,255,255,.35);">No recent queries.</div></div>
+  <div style="background:rgba(245,158,11,.15);border:1px solid rgba(245,158,11,.3);border-radius:10px;padding:10px 12px;font-size:.76rem;color:#fcd34d;line-height:1.6;">
+    ⚠️ Consult a local agronomist before any spray.
+    <span class="font-urdu" style="display:block;font-size:.78rem;margin-top:4px;">سپرے سے پہلے ماہر سے مشورہ کریں۔</span>
   </div>
 </aside>
 
-<!-- ── MAIN ──────────────────────────────────────────────────────────────────── -->
-<main class="diag-main">
+<!-- ── MAIN ─────────────────────────────────────────────────────── -->
+<main style="flex:1;padding:40px 44px;background:#f8f9ff;overflow-y:auto;">
 
   <!-- Page heading -->
-  <div style="margin-bottom:32px;">
-    <div style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--g600);margin-bottom:8px;">✦ PARC Pakistan × Google Gemini AI</div>
-    <h1 style="font-family:'Syne',sans-serif;font-size:2.2rem;font-weight:800;color:var(--tx);letter-spacing:-.02em;line-height:1.1;">Crop Disease Diagnosis</h1>
-    <div style="font-family:'Noto Nastaliq Urdu',serif;font-size:1.15rem;color:var(--g700);direction:rtl;text-align:right;line-height:2;margin-top:4px;">فصل کی بیماری تشخیص</div>
+  <div style="margin-bottom:28px;">
+    <div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#006b2c;margin-bottom:8px;">✦ PARC Pakistan × Google Gemini AI</div>
+    <h1 class="font-syne" style="font-size:2.2rem;font-weight:800;color:#0b1c30;letter-spacing:-.02em;line-height:1.1;">Crop Disease Diagnosis</h1>
+    <div class="font-urdu" style="font-size:1.1rem;color:#006b2c;text-align:right;line-height:2;margin-top:2px;">فصل کی بیماری تشخیص</div>
   </div>
 
-  <!-- Demo mode banner (shown when server is offline) -->
-  <div class="demo-banner" id="demoBanner">
-    <span style="font-size:1.1rem;">⚡</span>
-    <div>
-      <strong>Demo Mode</strong> — Server offline. Showing sample response.
-      Run <code style="background:#fef3c7;padding:2px 6px;border-radius:4px;">python -m uvicorn api.fasal_server:app --port 8000</code> from the project root to connect the real AI engine.
-    </div>
+  <!-- Demo banner (hidden by default) -->
+  <div id="demoBanner" style="display:none;background:#fffbeb;border:1px solid #fde68a;border-left:4px solid #f59e0b;border-radius:12px;padding:12px 16px;font-size:.84rem;color:#92400e;margin-bottom:20px;align-items:center;gap:10px;">
+    <span style="font-size:1.1rem;flex-shrink:0;">⚡</span>
+    <div><strong>Demo Mode</strong> — Server offline. Showing a sample response. Run <code style="background:#fef3c7;padding:1px 6px;border-radius:4px;font-size:.83em;">uvicorn fasal_server:app --port 8000</code> for live AI.</div>
   </div>
 
   <!-- Input card -->
-  <div class="diag-input-card">
-    <div class="diag-input-label">💡 Try an Example | مثالی سوال</div>
-    <div class="examples-row" id="examplesRow"></div>
+  <div style="background:white;border:2px solid #dcfce7;border-radius:20px;padding:28px;box-shadow:0 4px 24px rgba(22,163,74,.08);margin-bottom:24px;">
 
-    <div class="diag-input-label" style="margin-top:22px;">🔍 Describe Symptoms | علامات بیان کریں</div>
-    <textarea class="diag-textarea" id="queryInput"
-      placeholder="E.g.: Yellow powdery spots on wheat leaves spreading fast from lower leaves upward...&#10;مثلاً: گندم کے پتوں پر پیلے دھبے تیزی سے پھیل رہے ہیں، پتے خشک ہو رہے ہیں..."></textarea>
+    <!-- Examples -->
+    <div style="font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;color:#002109;margin-bottom:12px;display:flex;align-items:center;gap:6px;">💡 Quick Examples | مثالی سوال</div>
+    <div id="examplesRow" style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:20px;"></div>
 
-    <div class="diag-btn-row">
-      <button class="btn-diagnose" id="diagnoseBtn">🔬 Diagnose | تشخیص کریں</button>
-      <button class="btn-clear" id="clearBtn">🗑️ Clear</button>
-      <span id="cropFilterDisplay" style="font-size:.84rem;color:var(--tm);margin-left:4px;"></span>
-      <span style="margin-left:auto;font-size:.78rem;color:var(--tm);">Ctrl+Enter to diagnose</span>
+    <!-- Textarea -->
+    <div style="font-family:'Syne',sans-serif;font-size:.95rem;font-weight:700;color:#002109;margin-bottom:10px;">🔍 Describe Symptoms | علامات بیان کریں</div>
+    <textarea id="queryInput" class="diag-textarea"
+      placeholder="E.g.: Yellow powdery spots on wheat leaves spreading from lower leaves upward, plants turning pale…&#10;مثلاً: گندم کے پتوں پر پیلے دھبے تیزی سے پھیل رہے ہیں، پتے خشک ہو رہے ہیں…"></textarea>
+
+    <!-- Buttons — SINGLE diagnose button -->
+    <div style="display:flex;gap:12px;align-items:center;margin-top:16px;flex-wrap:wrap;">
+      <button id="diagnoseBtn" style="display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,#16a34a,#002109);color:white;border:none;border-radius:14px;padding:14px 36px;font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:0 6px 20px rgba(22,163,74,.35);transition:all .25s;">
+        <span class="ms" style="color:white;font-size:20px;">science</span> Diagnose | تشخیص کریں
+      </button>
+      <button id="clearBtn" style="background:white;color:#6e7b6c;border:1.5px solid #bbf7d0;border-radius:14px;padding:13px 22px;font-family:'DM Sans',sans-serif;font-size:.9rem;cursor:pointer;transition:all .2s;">🗑️ Clear</button>
+      <span id="cropFilterDisplay" style="font-size:.82rem;color:#3e4a3d;padding:6px 14px;background:#f0fdf4;border-radius:999px;border:1px solid #bbf7d0;"></span>
+      <span style="margin-left:auto;font-size:.74rem;color:#6e7b6c;">Ctrl+Enter to diagnose</span>
     </div>
   </div>
 
   <!-- Loading -->
-  <div class="loading-overlay" id="loadingBox">
-    <div class="loading-wheat">🌾</div>
-    <div class="loading-text">Searching 427 disease records...</div>
-    <div class="loading-text-ur">بیماری کی تشخیص جاری ہے...</div>
-    <div style="margin-top:16px;font-size:.82rem;color:var(--tm);">Powered by PARC Pakistan × Google Gemini</div>
+  <div id="loadingBox" style="display:none;text-align:center;padding:56px 20px;background:white;border-radius:20px;border:1.5px solid #dcfce7;margin-bottom:24px;box-shadow:0 4px 24px rgba(22,163,74,.08);">
+    <div class="wheat-pulse">🌾</div>
+    <div class="font-syne" style="font-size:1.1rem;font-weight:600;color:#006b2c;margin-top:16px;">Searching 671 disease records…</div>
+    <div class="font-urdu" style="font-size:.95rem;color:#6e7b6c;direction:rtl;margin-top:6px;">بیماری کی تشخیص جاری ہے…</div>
+    <div style="font-size:.8rem;color:#6e7b6c;margin-top:10px;">Powered by PARC Pakistan × Google Gemini 2.0 Flash</div>
   </div>
 
-  <!-- Response renders here -->
+  <!-- Response area -->
   <div id="responseArea"></div>
 
   <!-- Tips panel -->
-  <div style="background:white;border:1.5px solid var(--g100);border-radius:16px;padding:22px 26px;margin-top:24px;">
-    <div style="font-size:.75rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--g600);margin-bottom:14px;">💡 Tips for Better Diagnosis | بہتر تشخیص کے لیے</div>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:.86rem;color:var(--tx2);line-height:1.8;">
+  <div style="background:white;border:1.5px solid #dcfce7;border-radius:16px;padding:22px 26px;margin-top:24px;">
+    <div style="font-size:.7rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#006b2c;margin-bottom:14px;">💡 Tips for Better Diagnosis | بہتر تشخیص کے لیے</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:.86rem;color:#3e4a3d;line-height:1.8;">
       <div>
         ✅ Mention leaf colour (yellow/brown/black)<br>
-        ✅ Describe spot shape, size &amp; spread<br>
-        ✅ State the crop growth stage
+        ✅ Describe spot shape, size &amp; spread pattern<br>
+        ✅ State crop growth stage (seedling/tillering)
       </div>
       <div>
         ✅ Mention which plant part is affected<br>
         ✅ Urdu <em>or</em> English both work perfectly<br>
-        ✅ Include your region for better advice
+        ✅ Include your city/region for better advice
       </div>
     </div>
-    <div style="font-family:'Noto Nastaliq Urdu',serif;direction:rtl;font-size:.9rem;color:var(--tx2);line-height:2.3;margin-top:12px;border-top:1px solid var(--g100);padding-top:12px;">
+    <div class="font-urdu" style="font-size:.88rem;color:#3e4a3d;line-height:2.3;margin-top:12px;padding-top:12px;border-top:1px solid #dcfce7;text-align:right;">
       پتوں کا رنگ بتائیں · دھبوں کی شکل بتائیں · فصل کی عمر بتائیں · اپنا علاقہ بتائیں
     </div>
   </div>
 
-  <!-- Footer -->
-  <div style="text-align:center;padding:44px 0 16px;border-top:1px solid var(--g100);margin-top:44px;">
-    <div style="font-size:1.5rem;">🌾</div>
-    <div style="font-size:.82rem;color:var(--tm);margin-top:8px;">Fasal Doctor v2.0 — Built for Pakistani Farmers</div>
-    <div style="font-family:'Noto Nastaliq Urdu',serif;direction:rtl;font-size:.9rem;color:var(--g600);margin-top:4px;">پاکستانی کسانوں کے لیے — فصل ڈاکٹر</div>
+  <!-- Footer note -->
+  <div style="text-align:center;padding:44px 0 16px;border-top:1px solid #dcfce7;margin-top:44px;">
+    <div style="font-size:1.4rem;">🌾</div>
+    <div style="font-size:.82rem;color:#6e7b6c;margin-top:8px;">Fasal Doctor v2.0 — Built for Pakistani Farmers</div>
+    <div class="font-urdu" style="font-size:.88rem;color:#006b2c;margin-top:4px;text-align:center;">پاکستانی کسانوں کے لیے — فصل ڈاکٹر</div>
     <div style="font-size:.75rem;color:#9ca3af;margin-top:6px;">Data: PARC Pakistan &nbsp;|&nbsp; AI: Google Gemini 2.0 Flash &nbsp;|&nbsp; Vectors: ChromaDB</div>
   </div>
 </main>
 
-</div><!-- end diag-page -->
-</div><!-- end page-content -->
+</div><!-- end flex layout -->
 
-<!-- API client -->
 <script src="api.js"></script>
-
+<script src="search-data.js"></script>
 <script>
-// ── Examples ───────────────────────────────────────────────────────────────────
-const EXAMPLES = [
-  'Yellow spots on wheat leaves',
-  'Cotton leaves curling upward',
-  'Rice plants turning brown',
-  'Maize stem rotting at base',
-  'White powder on gram plants',
-  'میری گندم کے پتوں پر پیلے دھبے ہیں',
-  'کپاس کے پتے اوپر مڑ رہے ہیں',
-  'چاول کے پودے بھورے ہو رہے ہیں',
-];
+// ── SEARCH ─────────────────────────────────────────────────────────
+const sO=document.getElementById('searchOverlay'),sI=document.getElementById('globalSearchInput'),sR=document.getElementById('searchResults');
+document.getElementById('searchOpenBtn').addEventListener('click',()=>{sO.classList.add('open');setTimeout(()=>sI.focus(),100);});
+document.getElementById('searchCloseBtn').addEventListener('click',()=>sO.classList.remove('open'));
+sO.addEventListener('click',e=>{if(e.target===sO)sO.classList.remove('open');});
+document.addEventListener('keydown',e=>{if(e.key==='Escape')sO.classList.remove('open');});
+sI.addEventListener('input',()=>{
+  const q=sI.value.trim().toLowerCase();
+  if(!q||q.length<2){sR.innerHTML='<div style="padding:24px;text-align:center;color:#6e7b6c;">Start typing…</div>';return;}
+  const hits=(window.SEARCH_DATA||[]).filter(d=>d.text.toLowerCase().includes(q)||(d.ur&&d.ur.includes(q))).slice(0,10);
+  sR.innerHTML=hits.length?hits.map(h=>`<a href="${h.url}" class="sri" style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:10px;text-decoration:none;color:#0b1c30;"><div style="width:34px;height:34px;background:#f0fdf4;border-radius:8px;display:flex;align-items:center;justify-content:center;">${h.icon}</div><div><div style="font-size:.88rem;font-weight:500;">${h.title}</div><div style="font-size:.75rem;color:#6e7b6c;">${h.sub}</div></div></a>`).join(''):'<div style="padding:24px;text-align:center;color:#6e7b6c;">No results.</div>';
+});
+window.addEventListener('scroll',()=>document.getElementById('main-nav').classList.toggle('shadow-md',scrollY>10));
 
-const exRow = document.getElementById('examplesRow');
-EXAMPLES.forEach(ex => {
-  const btn = document.createElement('button');
-  btn.className = 'example-chip';
-  if (/[\u0600-\u06FF]/.test(ex)) btn.style.fontFamily = "'Noto Nastaliq Urdu',serif";
-  btn.textContent = ex;
-  btn.addEventListener('click', () => {
-    document.getElementById('queryInput').value = ex;
-    document.getElementById('queryInput').focus();
-  });
+// ── EXAMPLES ───────────────────────────────────────────────────────
+const EXES=['Yellow spots on wheat leaves','Cotton leaves curling upward','Rice plants turning brown','Maize stem rotting at base','White powder on gram plants','گندم پتوں پر پیلے دھبے','کپاس کے پتے مڑ رہے ہیں'];
+const exRow=document.getElementById('examplesRow');
+EXES.forEach(ex=>{
+  const btn=document.createElement('button');
+  btn.className='ex-chip';
+  if(/[\u0600-\u06FF]/.test(ex)){btn.style.fontFamily="'Noto Nastaliq Urdu',serif";btn.style.direction='rtl';}
+  btn.textContent=ex;
+  btn.addEventListener('click',()=>{document.getElementById('queryInput').value=ex;document.getElementById('queryInput').focus();});
   exRow.appendChild(btn);
 });
 
-// ── URL param: pre-select crop ─────────────────────────────────────────────────
-const urlCrop = new URLSearchParams(location.search).get('crop');
-if (urlCrop) {
-  const sel = document.getElementById('cropFilter');
-  for (const opt of sel.options) if (opt.value === urlCrop) { opt.selected = true; break; }
-}
+// ── URL PARAM ───────────────────────────────────────────────────────
+const urlCrop=new URLSearchParams(location.search).get('crop');
+if(urlCrop){const s=document.getElementById('cropFilter');for(const o of s.options)if(o.value===urlCrop){o.selected=true;break;}}
 
-// ── Crop filter display ────────────────────────────────────────────────────────
-function updateCropDisplay() {
-  const v = document.getElementById('cropFilter').value;
-  document.getElementById('cropFilterDisplay').textContent = v ? '🌱 ' + v : '🌍 All crops';
+// ── CROP FILTER DISPLAY ─────────────────────────────────────────────
+function updateCropDisplay(){
+  const v=document.getElementById('cropFilter').value;
+  document.getElementById('cropFilterDisplay').textContent=v?'🌱 '+v:'🌍 All crops';
 }
-document.getElementById('cropFilter').addEventListener('change', updateCropDisplay);
+document.getElementById('cropFilter').addEventListener('change',updateCropDisplay);
 updateCropDisplay();
 
-// ── History (localStorage) ─────────────────────────────────────────────────────
-let hist = JSON.parse(localStorage.getItem('fd_hist') || '[]');
+// ── HISTORY — clearly readable ──────────────────────────────────────
+let hist=JSON.parse(localStorage.getItem('fd_hist')||'[]');
 
-function renderHist() {
-  const el = document.getElementById('historyList');
-  if (!hist.length) {
-    el.innerHTML = '<div style="font-size:.8rem;color:rgba(255,255,255,.35);">No recent queries.</div>';
+function renderHist(){
+  const el=document.getElementById('historyList');
+  if(!hist.length){
+    el.innerHTML='<div style="font-size:.82rem;color:#6ee7b7;opacity:.6;padding:6px 4px;font-style:italic;">No recent queries yet.</div>';
     return;
   }
-  el.innerHTML = hist.slice(0, 5).map((q, i) => {
-    const isUr = /[\u0600-\u06FF]/.test(q);
-    const short = q.length > 44 ? q.slice(0, 44) + '…' : q;
-    return `<div class="history-item" style="${isUr ? 'direction:rtl;font-family:Noto Nastaliq Urdu,serif;' : ''}"
-      onclick="document.getElementById('queryInput').value='${q.replace(/'/g, "\\'")}'"
-      title="${q}">
-      <strong style="color:var(--g400);">#${i + 1}</strong> ${short}
+  el.innerHTML=hist.slice(0,6).map((q,i)=>{
+    const isUr=/[\u0600-\u06FF]/.test(q);
+    const short=q.length>40?q.slice(0,40)+'…':q;
+    return `<div class="hist-item" title="${q}"
+      style="${isUr?'direction:rtl;font-family:Noto Nastaliq Urdu,serif;font-size:.78rem;':''}"
+      onclick="document.getElementById('queryInput').value='${q.replace(/'/g,"\\'")}';document.getElementById('queryInput').focus();">
+      <strong>${i+1}.</strong> ${short}
     </div>`;
   }).join('');
 }
 renderHist();
 
-// ── Server status ──────────────────────────────────────────────────────────────
-let serverOnline = false;
+document.getElementById('clearHistBtn').addEventListener('click',()=>{
+  hist=[];localStorage.removeItem('fd_hist');renderHist();
+});
 
-async function pingServer() {
-  const statusEl = document.getElementById('serverStatus');
-  const textEl   = document.getElementById('serverStatusText');
-  const status   = await checkServerStatus();
-
-  if (status) {
-    serverOnline = true;
-    statusEl.className = 'server-status status-online';
-    textEl.textContent = `AI Engine Ready — ${status.disease_records} records`;
-    document.getElementById('ssCropCount').textContent = '✓';
-  } else {
-    serverOnline = false;
-    statusEl.className = 'server-status status-offline';
-    textEl.textContent = 'Server offline — Demo mode';
+// ── SERVER STATUS ───────────────────────────────────────────────────
+async function pingServer(){
+  const el=document.getElementById('serverStatus');
+  const tx=document.getElementById('serverStatusText');
+  const badge=document.getElementById('engineBadge');
+  try{
+    const status=await checkServerStatus();
+    if(status&&status.engine_loaded){
+      el.className='status-online';el.style.cssText='display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;font-size:.78rem;font-weight:600;background:rgba(74,222,128,.15);border:1px solid rgba(74,222,128,.3);color:#6ee7b7;';
+      el.innerHTML=`<span class="status-dot" style="background:#4ade80;box-shadow:0 0 6px #4ade80;"></span><span>AI Ready — ${status.disease_records||671} records</span>`;
+      badge.textContent='✓';badge.style.color='#4ade80';
+    }else{
+      el.style.cssText='display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;font-size:.78rem;font-weight:600;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.25);color:#fcd34d;';
+      el.innerHTML='<span class="status-dot" style="background:#f59e0b;"></span><span>Offline — Demo mode</span>';
+      badge.textContent='📴';
+    }
+  }catch{
+    el.style.cssText='display:flex;align-items:center;gap:8px;padding:8px 12px;border-radius:10px;font-size:.78rem;font-weight:600;background:rgba(245,158,11,.12);border:1px solid rgba(245,158,11,.25);color:#fcd34d;';
+    el.innerHTML='<span class="status-dot" style="background:#f59e0b;"></span><span>Offline — Demo mode</span>';
+    badge.textContent='📴';
   }
 }
 pingServer();
 
-// ── Severity badge ─────────────────────────────────────────────────────────────
-function sevBadge(t) {
-  const l = t.toLowerCase();
-  if (/critical|severe|emergency/.test(l)) return '<span class="severity-badge sev-critical">🔴 CRITICAL</span>';
-  if (/high|serious/.test(l))             return '<span class="severity-badge sev-high">🟠 HIGH</span>';
-  if (/medium|moderate/.test(l))          return '<span class="severity-badge sev-medium">🟡 MEDIUM</span>';
-  return '<span class="severity-badge sev-low">🟢 LOW</span>';
+// ── HELPERS ─────────────────────────────────────────────────────────
+function sevBadge(t){
+  const l=t.toLowerCase();
+  if(/critical|severe|emergency/.test(l))return'<span style="background:#fee2e2;color:#991b1b;border-radius:999px;padding:5px 14px;font-size:.78rem;font-weight:700;white-space:nowrap;">🔴 CRITICAL</span>';
+  if(/high|serious/.test(l))return'<span style="background:#ffedd5;color:#9a3412;border-radius:999px;padding:5px 14px;font-size:.78rem;font-weight:700;white-space:nowrap;">🟠 HIGH</span>';
+  if(/medium|moderate/.test(l))return'<span style="background:#fef9c3;color:#854d0e;border-radius:999px;padding:5px 14px;font-size:.78rem;font-weight:700;white-space:nowrap;">🟡 MEDIUM</span>';
+  return'<span style="background:#dcfce7;color:#166534;border-radius:999px;padding:5px 14px;font-size:.78rem;font-weight:700;white-space:nowrap;">🟢 LOW</span>';
 }
+function rx(pat,txt,def='—'){const m=txt.match(new RegExp(pat,'im'));return m?m[1].trim().replace(/\*+/g,''):def;}
+function strip(s){return(s||'').replace(/\*+/g,'').trim();}
 
-function rx(pat, txt, def = '—') {
-  const m = txt.match(new RegExp(pat, 'im'));
-  return m ? m[1].trim().replace(/\*+/g, '') : def;
-}
-function strip(s) { return (s || '').replace(/\*+/g, '').trim(); }
+// ── RENDER RESPONSE ──────────────────────────────────────────────────
+function renderResponse(query,resp,isDemo){
+  const disEn=rx('Disease Name.*?:\\*?\\*?\\s*(.+)',resp);
+  const disUr=rx('بیماری کا نام.*?:\\*?\\*?\\s*(.+)',resp);
+  const cropEn=rx('Affected Crop.*?:\\*?\\*?\\s*(.+)',resp);
+  const cropUr=rx('متاثرہ فصل.*?:\\*?\\*?\\s*(.+)',resp);
+  const symEn=rx('\\*\\*English:\\*\\*\\s*(.+)',resp);
+  const symUr=rx('\\*\\*اردو:\\*\\*\\s*(.+)',resp);
+  const chem=rx('Spray Chemical.*?:\\*?\\*?\\s*(.+)',resp);
+  const brand=rx('Pakistan Brand.*?:\\*?\\*?\\s*(.+)',resp);
+  const dose=rx('Dose per Acre.*?:\\*?\\*?\\s*(.+)',resp);
+  const timing=rx('Spray Timing.*?:\\*?\\*?\\s*(.+)',resp);
+  const sev=rx('Severity.*?:\\*?\\*?\\s*(.+)',resp);
+  const yloss=rx('Yield Loss.*?:\\*?\\*?\\s*(.+)',resp);
+  const safetyM=resp.match(/SAFETY WARNING.*?---\s*([\s\S]+?)---/i);
+  const safetyTxt=safetyM?strip(safetyM[1]):'';
+  const bioM=resp.match(/BIOLOGICAL CONTROL.*?---\s*([\s\S]+?)(?:---|$)/i);
+  const bioTxt=bioM?strip(bioM[1]):'Consult local agricultural extension officer.';
 
-// ── Render response card ───────────────────────────────────────────────────────
-function renderResponse(query, resp, isDemo) {
-  const disEn  = rx('Disease Name.*?:\\*?\\*?\\s*(.+)', resp);
-  const disUr  = rx('بیماری کا نام.*?:\\*?\\*?\\s*(.+)', resp);
-  const cropEn = rx('Affected Crop.*?:\\*?\\*?\\s*(.+)', resp);
-  const cropUr = rx('متاثرہ فصل.*?:\\*?\\*?\\s*(.+)', resp);
-  const symEn  = rx('\\*\\*English:\\*\\*\\s*(.+)', resp);
-  const symUr  = rx('\\*\\*اردو:\\*\\*\\s*(.+)', resp);
-  const chem   = rx('Spray Chemical.*?:\\*?\\*?\\s*(.+)', resp);
-  const brand  = rx('Pakistan Brand.*?:\\*?\\*?\\s*(.+)', resp);
-  const dose   = rx('Dose per Acre.*?:\\*?\\*?\\s*(.+)', resp);
-  const timing = rx('Spray Timing.*?:\\*?\\*?\\s*(.+)', resp);
-  const sev    = rx('Severity.*?:\\*?\\*?\\s*(.+)', resp);
-  const yloss  = rx('Yield Loss.*?:\\*?\\*?\\s*(.+)', resp);
+  document.getElementById('responseArea').innerHTML=`
+  <div class="response-card" style="background:white;border:1.5px solid #dcfce7;border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(22,163,74,.1);margin-bottom:24px;">
 
-  const safetyM  = resp.match(/SAFETY WARNING.*?---\s*([\s\S]+?)---/i);
-  const safetyTxt = safetyM ? strip(safetyM[1]) : '';
-  const bioM     = resp.match(/BIOLOGICAL CONTROL.*?---\s*([\s\S]+?)(?:---|$)/i);
-  const bioTxt   = bioM ? strip(bioM[1]) : 'Consult local agricultural extension officer.';
-
-  const demoBadge = isDemo
-    ? `<div style="background:#fef3c7;border:1px solid #fde68a;border-radius:8px;padding:6px 14px;font-size:.75rem;color:#92400e;font-weight:600;margin-top:10px;">⚡ Demo response — start server for live AI</div>`
-    : '';
-
-  document.getElementById('responseArea').innerHTML = `
-  <div class="response-card">
-    <div class="response-header">
+    <!-- Header -->
+    <div style="background:linear-gradient(135deg,#002109,#166534);padding:28px 32px;display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:16px;">
       <div>
-        <div class="response-dis-en">${strip(disEn)}</div>
-        <div class="response-dis-ur">${strip(disUr)}</div>
-        <div class="response-crop">
-          🌾 ${strip(cropEn)}
-          <span style="font-family:'Noto Nastaliq Urdu',serif;margin-left:6px;">${strip(cropUr)}</span>
-        </div>
-        <div style="font-size:.76rem;color:rgba(255,255,255,.45);margin-top:6px;">Query: <em>${query.slice(0, 90)}</em></div>
-        ${demoBadge}
+        <div class="font-syne" style="font-size:1.5rem;font-weight:800;color:white;line-height:1.2;">${strip(disEn)}</div>
+        <div class="font-urdu" style="font-size:1.05rem;color:#bbf7d0;line-height:2;">${strip(disUr)}</div>
+        <div style="font-size:.88rem;color:rgba(255,255,255,.6);margin-top:5px;">🌾 ${strip(cropEn)} <span class="font-urdu" style="margin-left:4px;">${strip(cropUr)}</span></div>
+        <div style="font-size:.75rem;color:rgba(255,255,255,.4);margin-top:5px;">Query: <em>${query.slice(0,90)}</em></div>
+        ${isDemo?'<div style="background:rgba(245,158,11,.2);border-radius:6px;padding:4px 12px;font-size:.72rem;color:#fcd34d;margin-top:8px;display:inline-block;">⚡ Demo — start server for live AI</div>':''}
       </div>
       <div>${sevBadge(resp)}</div>
     </div>
 
-    <div class="response-body">
+    <!-- Body -->
+    <div style="padding:28px 32px;">
 
-      <div class="res-section">
-        <div class="res-section-title">🔍 SYMPTOMS | علامات</div>
-        <div class="res-text">${strip(symEn)}</div>
-        <div class="res-text-ur">${strip(symUr)}</div>
+      <!-- Symptoms -->
+      <div style="background:#f0fdf4;border:1px solid #dcfce7;border-radius:14px;padding:20px 24px;margin-bottom:18px;">
+        <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#006b2c;margin-bottom:12px;display:flex;align-items:center;gap:6px;">
+          <span class="ms" style="font-size:16px;color:#006b2c;">symptoms</span> SYMPTOMS | علامات
+        </div>
+        <div style="font-size:.95rem;color:#0b1c30;line-height:1.7;">${strip(symEn)}</div>
+        <div class="font-urdu" style="font-size:1rem;color:#0b1c30;line-height:2.2;margin-top:10px;text-align:right;">${strip(symUr)}</div>
       </div>
 
-      <div class="res-section">
-        <div class="res-section-title">💊 TREATMENT | علاج</div>
-        <table class="treat-table">
-          <tr><td class="treat-label-cell">Chemical</td><td class="treat-val-cell">${strip(chem)}</td></tr>
-          <tr><td class="treat-label-cell">Pakistan Brand 🇵🇰</td><td class="treat-val-cell">${strip(brand)}</td></tr>
-          <tr><td class="treat-label-cell">Dose / Acre</td><td class="treat-val-cell">${strip(dose)}</td></tr>
-          <tr><td class="treat-label-cell">Timing</td><td class="treat-val-cell">${strip(timing)}</td></tr>
+      <!-- Treatment -->
+      <div style="background:#f0fdf4;border:1px solid #dcfce7;border-radius:14px;padding:20px 24px;margin-bottom:18px;">
+        <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#006b2c;margin-bottom:14px;display:flex;align-items:center;gap:6px;">
+          <span class="ms" style="font-size:16px;color:#006b2c;">medication</span> TREATMENT | علاج
+        </div>
+        <table style="width:100%;border-collapse:collapse;">
+          <tr style="border-bottom:1px solid #dcfce7;"><td style="padding:10px 8px;font-weight:600;color:#006b2c;width:130px;font-size:.9rem;">Chemical</td><td style="padding:10px 8px;font-size:.9rem;color:#0b1c30;">${strip(chem)}</td></tr>
+          <tr style="border-bottom:1px solid #dcfce7;"><td style="padding:10px 8px;font-weight:600;color:#006b2c;font-size:.9rem;">Pakistan Brand 🇵🇰</td><td style="padding:10px 8px;font-size:.9rem;color:#0b1c30;">${strip(brand)}</td></tr>
+          <tr style="border-bottom:1px solid #dcfce7;"><td style="padding:10px 8px;font-weight:600;color:#006b2c;font-size:.9rem;">Dose / Acre</td><td style="padding:10px 8px;font-size:.9rem;color:#0b1c30;">${strip(dose)}</td></tr>
+          <tr><td style="padding:10px 8px;font-weight:600;color:#006b2c;font-size:.9rem;">Timing</td><td style="padding:10px 8px;font-size:.9rem;color:#0b1c30;">${strip(timing)}</td></tr>
         </table>
       </div>
 
-      ${safetyTxt && safetyTxt !== '—' ? `
-      <div class="safety-box">
-        <div class="safety-title">⚠️ SAFETY WARNING | حفاظتی ہدایات</div>
-        <div class="safety-text">${safetyTxt}</div>
-      </div>` : ''}
+      <!-- Safety Warning -->
+      ${safetyTxt&&safetyTxt!=='—'?`
+      <div style="background:#fffbeb;border:1px solid #fde68a;border-left:5px solid #f59e0b;border-radius:14px;padding:20px 24px;margin-bottom:18px;">
+        <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#92400e;margin-bottom:10px;">⚠️ SAFETY WARNING | حفاظتی ہدایات</div>
+        <div class="font-urdu" style="font-size:1rem;color:#92400e;line-height:2.2;text-align:right;">${safetyTxt}</div>
+      </div>`:''}
 
-      <div class="two-col">
-        <div class="res-section">
-          <div class="res-section-title">📊 SEVERITY &amp; LOSSES | نقصانات</div>
-          <div class="res-text"><strong>Severity:</strong> ${strip(sev)}</div>
-          <div class="res-text" style="margin-top:6px;"><strong>Yield Loss:</strong> ${strip(yloss)}</div>
+      <!-- Severity & Bio Control -->
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;">
+        <div style="background:#f0fdf4;border:1px solid #dcfce7;border-radius:14px;padding:20px 24px;">
+          <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#006b2c;margin-bottom:12px;">📊 SEVERITY &amp; LOSSES | نقصانات</div>
+          <div style="font-size:.95rem;color:#0b1c30;margin-bottom:6px;"><strong>Severity:</strong> ${strip(sev)}</div>
+          <div style="font-size:.95rem;color:#0b1c30;"><strong>Yield Loss:</strong> ${strip(yloss)}</div>
         </div>
-        <div class="res-section">
-          <div class="res-section-title">🌿 BIOLOGICAL CONTROL | قدرتی طریقہ</div>
-          <div class="res-text">${bioTxt}</div>
+        <div style="background:#f0fdf4;border:1px solid #dcfce7;border-radius:14px;padding:20px 24px;">
+          <div style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:#006b2c;margin-bottom:12px;">🌿 BIOLOGICAL CONTROL | قدرتی طریقہ</div>
+          <div style="font-size:.93rem;color:#0b1c30;line-height:1.7;">${bioTxt}</div>
         </div>
       </div>
-
-    </div><!-- end response-body -->
+    </div>
   </div>`;
 }
 
-// ── Main diagnose action ───────────────────────────────────────────────────────
-async function diagnose() {
-  const query = document.getElementById('queryInput').value.trim();
-  if (!query) {
-    document.getElementById('queryInput').style.borderColor = '#f87171';
-    setTimeout(() => document.getElementById('queryInput').style.borderColor = '', 1200);
-    return;
+// ── DIAGNOSE ────────────────────────────────────────────────────────
+async function diagnose(){
+  const query=document.getElementById('queryInput').value.trim();
+  if(!query){
+    const ta=document.getElementById('queryInput');
+    ta.style.borderColor='#f87171';setTimeout(()=>ta.style.borderColor='',1500);return;
   }
-
-  const crop = document.getElementById('cropFilter').value;
-  const lang = document.querySelector('input[name="lang"]:checked').value;
-
-  // Update history
-  if (!hist.includes(query)) { hist.unshift(query); hist = hist.slice(0, 5); }
-  localStorage.setItem('fd_hist', JSON.stringify(hist));
+  const crop=document.getElementById('cropFilter').value;
+  const lang=document.querySelector('input[name="lang"]:checked').value;
+  if(!hist.includes(query)){hist.unshift(query);hist=hist.slice(0,6);}
+  localStorage.setItem('fd_hist',JSON.stringify(hist));
   renderHist();
-
-  // Show loader
-  document.getElementById('loadingBox').classList.add('active');
-  document.getElementById('responseArea').innerHTML = '';
-  document.getElementById('demoBanner').classList.remove('show');
-
-  // Call API (api.js handles offline fallback automatically)
-  const result = await callDiagnose(query, crop, lang);
-
-  document.getElementById('loadingBox').classList.remove('active');
-
-  if (!result.success) {
-    // Show demo banner when server was unreachable
-    document.getElementById('demoBanner').classList.add('show');
-  }
-
-  renderResponse(query, result.response, !result.success);
+  document.getElementById('loadingBox').style.display='block';
+  document.getElementById('responseArea').innerHTML='';
+  document.getElementById('demoBanner').style.display='none';
+  const result=await callDiagnose(query,crop,lang);
+  document.getElementById('loadingBox').style.display='none';
+  if(!result.success)document.getElementById('demoBanner').style.display='flex';
+  renderResponse(query,result.response,!result.success);
 }
 
-// ── Event listeners ────────────────────────────────────────────────────────────
-document.getElementById('diagnoseBtn').addEventListener('click', diagnose);
-document.getElementById('queryInput').addEventListener('keydown', e => {
-  if (e.ctrlKey && e.key === 'Enter') diagnose();
-});
-document.getElementById('clearBtn').addEventListener('click', () => {
-  document.getElementById('queryInput').value = '';
-  document.getElementById('responseArea').innerHTML = '';
-  document.getElementById('loadingBox').classList.remove('active');
-  document.getElementById('demoBanner').classList.remove('show');
-});
-window.addEventListener('scroll', () => {
-  document.getElementById('main-nav').classList.toggle('scrolled', window.scrollY > 20);
+const diagnoseBtn=document.getElementById('diagnoseBtn');
+diagnoseBtn.addEventListener('click',diagnose);
+diagnoseBtn.addEventListener('mouseover',()=>{diagnoseBtn.style.transform='translateY(-2px)';diagnoseBtn.style.boxShadow='0 10px 28px rgba(22,163,74,.45)';});
+diagnoseBtn.addEventListener('mouseout',()=>{diagnoseBtn.style.transform='';diagnoseBtn.style.boxShadow='0 6px 20px rgba(22,163,74,.35)';});
+
+document.getElementById('queryInput').addEventListener('keydown',e=>{if(e.ctrlKey&&e.key==='Enter')diagnose();});
+document.getElementById('clearBtn').addEventListener('click',()=>{
+  document.getElementById('queryInput').value='';
+  document.getElementById('responseArea').innerHTML='';
+  document.getElementById('loadingBox').style.display='none';
+  document.getElementById('demoBanner').style.display='none';
 });
 </script>
 </body>
