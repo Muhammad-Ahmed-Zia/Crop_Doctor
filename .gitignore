@@ -223,6 +223,9 @@ data/processed/*.json
 data/processed/*.csv
 data/raw/
 data/output/
+*.xlsx
+*.csv
+
 data/chroma_db/
 .env
 requirements.txt
