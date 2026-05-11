@@ -222,9 +222,8 @@ __marimo__/
 data/processed/*.json
 data/processed/*.csv
 data/raw/
-data/output/
-*.xlsx
-*.csv
+data/output/*.xlsx
+
 
 data/chroma_db/
 .env
