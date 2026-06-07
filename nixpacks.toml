@@ -1,13 +1,9 @@
-[phases.setup]
-nixPkgs = ["python312"]
-
 [phases.install]
-cmds = ["pip install -r requirements.txt"]
+cmds = ["python -m pip install -r requirements.txt"]
 
 [phases.build]
 cmds = [
-  "python -c \"from sentence_transformers import SentenceTransformer; SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2'); print('Model cached during build!')\"",
-  "python -c \"import chromadb; print('ChromaDB ready!')\""
+  "python -c \"from sentence_transformers import SentenceTransformer; SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2'); print('Model cached!')\""
 ]
 
 [start]
