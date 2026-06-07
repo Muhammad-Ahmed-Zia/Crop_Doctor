@@ -111,6 +111,7 @@ app.add_middleware(
     allow_origins=[
         "http://localhost:8000",
         "http://localhost:3000",
+        "https://crop-doctor-tau.vercel.app",
         "https://ahmed-zia-fasal-doctor.hf.space",
         "*",   # fallback — remove in production if you want strict CORS
     ],
