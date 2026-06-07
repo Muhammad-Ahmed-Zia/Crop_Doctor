@@ -13,7 +13,8 @@
 // ─── PRODUCTION: replace with your Railway URL after deploying ───────────────
 // Railway URL looks like: https://fasal-doctor-production-xxxx.up.railway.app
 // Local dev:  http://localhost:8000
-const FASAL_API = "http://localhost:8000"; // ← REPLACE with Railway URL for production
+const FASAL_API = "https://web-production-f5842.up.railway.app";
+// ← REPLACE with Railway URL for production
 
 
 /**
