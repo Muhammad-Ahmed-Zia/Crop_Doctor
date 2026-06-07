@@ -288,13 +288,15 @@ def load_retriever():
     collection = client.get_collection(COLLECTION)
 
     # Try loading from local cache first (avoids network call to HuggingFace hub).
-    # Falls back to downloading if the model isn't cached yet.
+    # Load in float16 (half precision) to cut memory: 1.64GB → ~0.8GB (fits Railway 1GB limit).
     try:
         embedder = SentenceTransformer(EMBED_MODEL, local_files_only=True)
-        print(f"  {Fore.GREEN}✓ Embedder loaded from local cache (offline mode){Style.RESET_ALL}")
+        embedder.half()   # float16 — halves RAM, quality unchanged for cosine similarity
+        print(f"  {Fore.GREEN}✓ Embedder loaded from local cache (float16 — low-memory mode){Style.RESET_ALL}")
     except Exception:
         print(f"  {Fore.YELLOW}⬇  Embedder not cached — downloading {EMBED_MODEL}...{Style.RESET_ALL}")
         embedder = SentenceTransformer(EMBED_MODEL)
+        embedder.half()   # float16 after download too
 
     total = collection.count()
     print(f"  {Fore.GREEN}✓ ChromaDB loaded — {total} disease vectors{Style.RESET_ALL}")

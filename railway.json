@@ -1,7 +1,6 @@
 {
   "build": {
-    "builder": "RAILPACK",
-    "buildCommand": "pip install -r requirements.txt && python -c \"from sentence_transformers import SentenceTransformer; SentenceTransformer('paraphrase-multilingual-MiniLM-L12-v2'); print('Model pre-cached during build!')\""
+    "builder": "RAILPACK"
   },
   "deploy": {
     "startCommand": "uvicorn fasal_server:app --host 0.0.0.0 --port $PORT",
