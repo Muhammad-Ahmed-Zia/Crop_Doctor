@@ -57,13 +57,14 @@ from pydantic import BaseModel
 from typing import Optional
 
 # ── Engine state (populated by lifespan startup) ───────────────────────────────
-ENGINE_LOADED = False
-ENGINE_ERROR  = ""
+ENGINE_LOADED    = False
+ENGINE_ERROR     = ""
+_get_diagnosis   = None   # set during lifespan startup
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Load the RAG engine once when the server worker starts (not the reloader)."""
-    global ENGINE_LOADED, ENGINE_ERROR
+    global ENGINE_LOADED, ENGINE_ERROR, _get_diagnosis
     
     # Auto-embed ChromaDB if it doesn't exist (e.g. first deploy on cloud)
     from pathlib import Path
@@ -86,6 +87,7 @@ async def lifespan(app: FastAPI):
         from rag_engine import get_diagnosis, get_retriever
         print("🔄  Warming up ChromaDB vectors...")
         get_retriever()
+        _get_diagnosis = get_diagnosis   # store at module level for route handlers
         ENGINE_LOADED = True
         print("✅  RAG engine ready — 671 disease records loaded")
     except Exception as exc:
@@ -261,7 +263,7 @@ async def diagnose(req: DiagnosisRequest):
         )
 
     try:
-        result = get_diagnosis(
+        result = _get_diagnosis(
             query=req.query.strip(),
             crop_filter=req.crop_filter or None,
             language=req.language,

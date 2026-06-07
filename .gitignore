@@ -230,7 +230,8 @@ data/raw/
 data/output/*.xlsx
 
 
-data/chroma_db/
+# data/chroma_db/ is intentionally committed — Railway needs it to serve AI diagnoses
+# The database is ~5.5MB (within GitHub's 100MB file limit)
 .env
 # requirements.txt is intentionally committed — needed by Railway and HuggingFace Spaces
 

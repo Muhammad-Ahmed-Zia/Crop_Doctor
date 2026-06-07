@@ -10,11 +10,12 @@
  * automatically shows a demo / offline response.
  */
 
-// ─── PRODUCTION: replace with your Railway URL after deploying ───────────────
-// Railway URL looks like: https://fasal-doctor-production-xxxx.up.railway.app
-// Local dev:  http://localhost:8000
-const FASAL_API = "https://web-production-f5842.up.railway.app";
-// ← REPLACE with Railway URL for production
+// ─── Auto-detect environment ──────────────────────────────────────────────────
+// Local dev → calls your local FastAPI server (python fasal_server.py)
+// Vercel / any other host → calls the Railway production backend
+const FASAL_API = window.location.hostname === "localhost"
+  ? "http://localhost:8000"
+  : "https://web-production-f5842.up.railway.app";
 
 
 /**
