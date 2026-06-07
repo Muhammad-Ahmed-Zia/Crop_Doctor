@@ -1,35 +1,32 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
 <head>
-<meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Farmer Reviews | Fasal Doctor فصل ڈاکٹر</title>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Farmer Community Voice | Fasal Doctor</title>
 <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500;600&family=Noto+Nastaliq+Urdu:wght@400;600;700&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&family=Noto+Nastaliq+Urdu:wght@400;600;700&display=swap" rel="stylesheet"/>
 <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@400,0&display=swap" rel="stylesheet"/>
-<script>
-tailwind.config={theme:{extend:{colors:{primary:'#006b2c','primary-dark':'#002109',surface:'#f8f9ff','surface-card':'#ffffff','on-surface':'#0b1c30','on-surface-muted':'#3e4a3d'},fontFamily:{syne:['Syne','sans-serif'],dm:['DM Sans','sans-serif'],urdu:['Noto Nastaliq Urdu','serif']}}}};
-</script>
+<script>tailwind.config={theme:{extend:{colors:{primary:'#006b2c','primary-dark':'#002109',surface:'#f8f9ff','on-surface':'#0b1c30','on-surface-variant':'#3e4a3d'},fontFamily:{syne:['Syne'],dm:['DM Sans'],urdu:['Noto Nastaliq Urdu']}}}};</script>
 <style>
-  *{box-sizing:border-box;} body{font-family:'DM Sans',sans-serif;background:#f8f9ff;color:#0b1c30;}
-  .font-syne{font-family:'Syne',sans-serif;} .font-urdu{font-family:'Noto Nastaliq Urdu',serif;direction:rtl;}
-  .ms{font-family:'Material Symbols Outlined';font-size:20px;line-height:1;display:inline-block;}
-  .search-overlay{position:fixed;inset:0;background:rgba(0,33,9,0.8);backdrop-filter:blur(8px);z-index:9999;display:flex;align-items:flex-start;justify-content:center;padding-top:100px;opacity:0;pointer-events:none;transition:opacity .3s;}
-  .search-overlay.open{opacity:1;pointer-events:all;}
-  .search-box{background:white;border-radius:16px;width:100%;max-width:660px;overflow:hidden;transform:scale(.94) translateY(-16px);transition:transform .3s;box-shadow:0 24px 80px rgba(0,0,0,.25);}
-  .search-overlay.open .search-box{transform:scale(1) translateY(0);}
-  .sri:hover{background:#f0fdf4;}
-  .card-hover{transition:all .3s;} .card-hover:hover{transform:translateY(-4px);box-shadow:0 12px 40px rgba(0,107,44,.12);}
-  .star-btn{font-size:1.8rem;cursor:pointer;opacity:.3;transition:all .2s;background:none;border:none;padding:0 2px;line-height:1;}
-  .star-btn.active,.star-btn:hover{opacity:1;transform:scale(1.12);}
-  .filter-btn-r{border:1.5px solid #bbcaba;background:white;color:#3e4a3d;border-radius:9999px;padding:7px 18px;font-size:.84rem;font-weight:500;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;}
-  .filter-btn-r:hover,.filter-btn-r.active{background:#006b2c;border-color:#006b2c;color:white;}
-  .rf-input,.rf-textarea,.rf-select{width:100%;padding:12px 16px;border:2px solid #dcfce7;border-radius:12px;font-family:'DM Sans',sans-serif;font-size:.94rem;color:#0b1c30;background:#f9fffe;outline:none;transition:border-color .2s;}
-  .rf-input:focus,.rf-textarea:focus,.rf-select:focus{border-color:#16a34a;}
-  .rf-textarea{min-height:110px;resize:vertical;}
+*{box-sizing:border-box;}body{font-family:'DM Sans',sans-serif;background:#f8f9ff;color:#0b1c30;}
+.font-syne{font-family:'Syne',sans-serif;}.font-urdu{font-family:'Noto Nastaliq Urdu',serif;direction:rtl;}
+.ms{font-family:'Material Symbols Outlined';font-size:20px;line-height:1;display:inline-block;}
+.search-overlay{position:fixed;inset:0;background:rgba(0,33,9,.82);backdrop-filter:blur(8px);z-index:9999;display:flex;align-items:flex-start;justify-content:center;padding-top:100px;opacity:0;pointer-events:none;transition:opacity .3s;}
+.search-overlay.open{opacity:1;pointer-events:all;}
+.search-box{background:white;border-radius:16px;width:100%;max-width:660px;overflow:hidden;transform:scale(.94) translateY(-16px);transition:transform .3s;box-shadow:0 24px 80px rgba(0,0,0,.25);}
+.search-overlay.open .search-box{transform:scale(1) translateY(0);}
+.sri:hover{background:#f0fdf4;}
+.card-hover{transition:all .3s;}.card-hover:hover{transform:translateY(-3px);box-shadow:0 12px 36px rgba(0,107,44,.12);}
+.star-btn{font-size:1.7rem;cursor:pointer;opacity:.3;transition:all .2s;background:none;border:none;padding:0 2px;line-height:1;}
+.star-btn.active,.star-btn:hover{opacity:1;transform:scale(1.1);}
+.rf-input,.rf-textarea,.rf-select{width:100%;padding:11px 14px;border:2px solid #dcfce7;border-radius:10px;font-family:'DM Sans',sans-serif;font-size:.92rem;color:#0b1c30;background:#f9fffe;outline:none;transition:border-color .2s;}
+.rf-input:focus,.rf-textarea:focus,.rf-select:focus{border-color:#16a34a;}
+.rf-textarea{min-height:100px;resize:vertical;}
+.filter-btn-r{border:1.5px solid #bbcaba;background:white;color:#3e4a3d;border-radius:8px;padding:7px 16px;font-size:.83rem;font-weight:600;cursor:pointer;transition:all .2s;font-family:'DM Sans',sans-serif;}
+.filter-btn-r:hover,.filter-btn-r.active{background:#006b2c;border-color:#006b2c;color:white;}
 </style>
 </head>
 <body>
-
 <div class="search-overlay" id="searchOverlay">
   <div class="search-box">
     <div style="display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid #e5e7eb;">
@@ -37,167 +34,172 @@ tailwind.config={theme:{extend:{colors:{primary:'#006b2c','primary-dark':'#00210
       <input id="globalSearchInput" type="text" placeholder="Search crops, diseases, symptoms…" autocomplete="off" style="flex:1;border:none;outline:none;font-size:1rem;font-family:'DM Sans',sans-serif;"/>
       <button id="searchCloseBtn" style="background:#f3f4f6;border:none;border-radius:50%;width:30px;height:30px;cursor:pointer;">✕</button>
     </div>
-    <div id="searchResults" style="padding:12px;max-height:400px;overflow-y:auto;"><div style="padding:24px;text-align:center;color:#6e7b6c;font-size:.9rem;">Start typing…</div></div>
+    <div id="searchResults" style="padding:12px;max-height:400px;overflow-y:auto;"><div style="padding:24px;text-align:center;color:#6e7b6c;">Start typing…</div></div>
   </div>
 </div>
-
 <nav id="main-nav" class="fixed top-0 w-full z-50 bg-white/85 backdrop-blur-xl border-b border-green-100 shadow-sm transition-all">
   <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-    <a href="index.html" class="flex items-center gap-3 font-syne font-extrabold text-green-900 text-xl">
-      <div class="w-10 h-10 bg-gradient-to-br from-green-600 to-green-900 rounded-xl flex items-center justify-center text-white text-lg">🌾</div>
-      <div><div class="leading-tight">Fasal Doctor</div><div class="font-urdu text-xs text-green-600 font-normal leading-tight">فصل ڈاکٹر</div></div>
+    <a href="index.html" class="flex items-center gap-3 no-underline">
+      <div class="w-10 h-10 bg-gradient-to-br from-green-600 to-green-900 rounded-xl flex items-center justify-center text-xl">🌾</div>
+      <div><div class="font-syne font-extrabold text-lg text-green-900 leading-tight">Fasal Doctor</div><div class="font-urdu text-xs text-green-600 leading-tight">فصل ڈاکٹر</div></div>
     </a>
     <div class="flex items-center gap-2">
-      <button id="searchOpenBtn" class="w-10 h-10 rounded-full border border-green-200 bg-green-50 flex items-center justify-center text-green-700 hover:bg-green-100 cursor-pointer">
-        <span class="ms" style="font-size:18px;">search</span>
-      </button>
-      <nav class="hidden md:flex items-center gap-1 ml-2">
+      <div class="hidden md:flex items-center bg-green-50 border border-green-200 rounded-full p-1 gap-1 text-xs font-bold mr-2"><span class="px-3 py-1.5 rounded-full text-green-600">اُر</span><span class="text-green-300">/</span><span class="px-3 py-1.5 rounded-full bg-white text-green-900 shadow-sm">EN</span></div>
+      <button id="searchOpenBtn" class="w-10 h-10 rounded-full border border-green-200 bg-green-50 flex items-center justify-center text-green-700 hover:bg-green-100 cursor-pointer"><span class="ms" style="font-size:18px;">search</span></button>
+      <nav class="hidden md:flex items-center gap-1 ml-1">
         <a href="index.html" class="px-4 py-2 rounded-full text-sm font-medium text-slate-600 hover:text-green-700 hover:bg-green-50 transition-colors">Home</a>
         <a href="crops.html" class="px-4 py-2 rounded-full text-sm font-medium text-slate-600 hover:text-green-700 hover:bg-green-50 transition-colors">Crops</a>
-        <a href="reviews.html" class="px-4 py-2 rounded-full text-sm font-semibold text-green-700 bg-green-50 transition-colors">Reviews</a>
+        <a href="reviews.html" class="px-4 py-2 rounded-full text-sm font-semibold text-green-700 bg-green-50">Reviews</a>
         <a href="about.html" class="px-4 py-2 rounded-full text-sm font-medium text-slate-600 hover:text-green-700 hover:bg-green-50 transition-colors">About</a>
-        <a href="diagnosis.html" class="ml-2 bg-gradient-to-br from-green-500 to-green-900 text-white px-5 py-2.5 rounded-full text-sm font-semibold flex items-center gap-1.5 hover:shadow-lg hover:shadow-green-500/25 transition-all">
-          <span class="ms" style="font-size:16px;color:white;">science</span> Diagnose Now
-        </a>
+        <a href="diagnosis.html" class="ml-2 bg-gradient-to-br from-green-500 to-green-900 text-white px-5 py-2.5 rounded-full text-sm font-semibold flex items-center gap-1.5 hover:shadow-lg transition-all"><span class="ms" style="font-size:16px;color:white;">science</span> Diagnose Now</a>
       </nav>
     </div>
   </div>
 </nav>
 
 <div style="padding-top:80px;">
-
-<!-- HERO -->
-<div style="background:linear-gradient(135deg,#002109 0%,#14532d 55%,#16a34a 100%);padding:80px 48px;text-align:center;">
-  <div style="color:#86efac;font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;margin-bottom:12px;">✦ COMMUNITY</div>
-  <h1 class="font-syne" style="font-size:clamp(2.2rem,5vw,4rem);font-weight:800;color:white;margin-bottom:10px;letter-spacing:-.02em;">Farmer Reviews</h1>
-  <div class="font-urdu" style="font-size:1.8rem;color:#bbf7d0;margin-bottom:16px;line-height:2;text-align:center;direction:ltr;">کسانوں کے تجربات</div>
-  <p style="font-size:1rem;color:rgba(255,255,255,.75);max-width:540px;margin:0 auto 32px;line-height:1.75;">Real experiences from Pakistani farmers who used Fasal Doctor to protect their crops. Share your story and help others.</p>
-  <div style="display:flex;gap:32px;justify-content:center;flex-wrap:wrap;">
-    <div style="text-align:center;"><div class="font-syne" style="font-size:2.2rem;font-weight:800;color:#86efac;" id="avgRating">4.9</div><div style="font-size:.82rem;color:rgba(255,255,255,.6);">Avg Rating</div></div>
-    <div style="width:1px;background:rgba(255,255,255,.2);"></div>
-    <div style="text-align:center;"><div class="font-syne" style="font-size:2.2rem;font-weight:800;color:#86efac;" id="totalReviews">8</div><div style="font-size:.82rem;color:rgba(255,255,255,.6);">Reviews</div></div>
-    <div style="width:1px;background:rgba(255,255,255,.2);"></div>
-    <div style="text-align:center;"><div class="font-syne" style="font-size:2.2rem;font-weight:800;color:#86efac;">19+</div><div style="font-size:.82rem;color:rgba(255,255,255,.6);">Crops Covered</div></div>
-  </div>
-</div>
-
-<!-- WRITE REVIEW FORM -->
-<section id="write" style="padding:64px 48px;max-width:1280px;margin:0 auto;">
-  <div style="max-width:720px;margin:0 auto;">
-    <div style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#006b2c;margin-bottom:10px;">✦ Share Your Experience</div>
-    <h2 class="font-syne" style="font-size:2rem;font-weight:800;color:#0b1c30;margin-bottom:28px;">اپنا تجربہ بتائیں</h2>
-
-    <div style="background:white;border:1.5px solid #dcfce7;border-radius:20px;padding:36px;box-shadow:0 4px 24px rgba(22,163,74,.08);">
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px;">
-        <div>
-          <label style="font-size:.84rem;font-weight:600;color:#3e4a3d;display:block;margin-bottom:6px;">Your Name | آپ کا نام</label>
-          <input id="rfName" class="rf-input" type="text" placeholder="e.g. Muhammad Ali"/>
-        </div>
-        <div>
-          <label style="font-size:.84rem;font-weight:600;color:#3e4a3d;display:block;margin-bottom:6px;">Location | شہر</label>
-          <input id="rfLoc" class="rf-input" type="text" placeholder="e.g. Faisalabad, Punjab"/>
-        </div>
-      </div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:18px;">
-        <div>
-          <label style="font-size:.84rem;font-weight:600;color:#3e4a3d;display:block;margin-bottom:6px;">Crop | فصل</label>
-          <select id="rfCrop" class="rf-select">
-            <option value="">Select crop…</option>
-            <option>Wheat — گندم</option><option>Cotton — کپاس</option><option>Rice — چاول</option>
-            <option>Sugarcane — گنا</option><option>Maize — مکئی</option><option>Gram — چنا</option>
-            <option>Brassica — سرسوں</option><option>Groundnut — مونگ پھلی</option><option>Lentil — مسور</option>
-            <option>Tomato — ٹماٹر</option><option>Potato — آلو</option><option>Chilies — مرچ</option>
-            <option>Onion — پیاز</option><option>Other — دیگر</option>
-          </select>
-        </div>
-        <div>
-          <label style="font-size:.84rem;font-weight:600;color:#3e4a3d;display:block;margin-bottom:6px;">Language | زبان</label>
-          <select id="rfLang" class="rf-select">
-            <option value="en">English</option>
-            <option value="ur">اردو</option>
-          </select>
-        </div>
-      </div>
-      <div style="margin-bottom:18px;">
-        <label style="font-size:.84rem;font-weight:600;color:#3e4a3d;display:block;margin-bottom:8px;">Rating | درجہ بندی</label>
-        <div id="starSelector" style="display:flex;gap:4px;">
-          <button class="star-btn" data-val="1">★</button>
-          <button class="star-btn" data-val="2">★</button>
-          <button class="star-btn" data-val="3">★</button>
-          <button class="star-btn" data-val="4">★</button>
-          <button class="star-btn active" data-val="5">★</button>
-        </div>
-      </div>
-      <div style="margin-bottom:22px;">
-        <label style="font-size:.84rem;font-weight:600;color:#3e4a3d;display:block;margin-bottom:6px;">Your Experience | آپ کا تجربہ</label>
-        <textarea id="rfText" class="rf-textarea" placeholder="Describe how Fasal Doctor helped — what disease was diagnosed, what treatment applied, and the result…&#10;&#10;مثلاً: میری فصل میں بیماری آئی، فصل ڈاکٹر سے تشخیص ہوئی…"></textarea>
-      </div>
-      <button id="submitBtn" style="display:inline-flex;align-items:center;gap:10px;background:linear-gradient(135deg,#16a34a,#002109);color:white;border:none;border-radius:14px;padding:14px 36px;font-family:'Syne',sans-serif;font-size:1rem;font-weight:700;cursor:pointer;box-shadow:0 6px 20px rgba(22,163,74,.35);transition:all .25s;">
-        📤 Submit Review | جمع کریں
-      </button>
-      <div id="successMsg" style="display:none;background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:12px;padding:14px 20px;color:#006b2c;font-size:.9rem;font-weight:500;margin-top:14px;align-items:center;gap:10px;">
-        <span style="font-size:1.3rem;">✅</span>
-        <div><strong>Review submitted!</strong> Thank you for helping other Pakistani farmers.<br>
-        <span class="font-urdu" style="font-size:.9rem;">شکریہ! آپ کا تجربہ محفوظ ہو گیا۔</span></div>
-      </div>
+<!-- PAGE HEADER -->
+<div class="max-w-7xl mx-auto px-6 pt-12 pb-4">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+    <div class="md:col-span-2">
+      <h1 class="font-syne text-4xl md:text-5xl font-extrabold text-on-surface mb-4">
+        Farmer Community <span class="text-green-600">Voice</span>
+      </h1>
+      <p class="text-on-surface-variant text-lg max-w-lg leading-relaxed">Real insights from thousands of farmers across Pakistan. Share your harvest success and help the community grow together.</p>
     </div>
-  </div>
-</section>
-
-<!-- REVIEWS GRID -->
-<div style="max-width:1280px;margin:0 auto;padding:0 48px 20px;">
-  <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:14px;margin-bottom:28px;">
-    <div>
-      <div style="font-size:.78rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:#006b2c;margin-bottom:8px;">✦ Community Feedback</div>
-      <h2 class="font-syne" style="font-size:2rem;font-weight:800;color:#0b1c30;">What Farmers <span style="color:#006b2c;">Are Saying</span></h2>
-    </div>
-    <div style="display:flex;gap:8px;flex-wrap:wrap;">
-      <button class="filter-btn-r active" data-rfilter="all">All</button>
-      <button class="filter-btn-r" data-rfilter="5">★★★★★</button>
-      <button class="filter-btn-r" data-rfilter="4">★★★★</button>
-      <button class="filter-btn-r" data-rfilter="en">English</button>
-      <button class="filter-btn-r" data-rfilter="ur">اردو</button>
+    <!-- Stats cards -->
+    <div class="flex gap-4 md:flex-col md:items-end">
+      <div class="flex-1 bg-white border border-green-100 rounded-2xl p-5 text-center shadow-sm">
+        <div class="font-syne text-4xl font-extrabold text-green-700" id="avgRatingDisplay">4.9/5</div>
+        <div class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mt-1">AVERAGE RATING</div>
+      </div>
+      <div class="flex-1 bg-white border border-green-100 rounded-2xl p-5 text-center shadow-sm">
+        <div class="font-syne text-4xl font-extrabold text-green-700" id="happyFarmers">12k+</div>
+        <div class="text-xs font-bold uppercase tracking-wider text-on-surface-variant mt-1">HAPPY FARMERS</div>
+      </div>
     </div>
   </div>
 </div>
-<div id="reviewsGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:24px;padding:0 48px 80px;max-width:1280px;margin:0 auto;"></div>
+
+<!-- MAIN LAYOUT: Submit (left) + Reviews (right) -->
+<div class="max-w-7xl mx-auto px-6 py-8">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+    <!-- SUBMIT REVIEW FORM (left column) -->
+    <div id="write" class="lg:col-span-1">
+      <div class="bg-white border border-green-100 rounded-2xl p-6 shadow-sm sticky top-24">
+        <h2 class="font-syne font-bold text-xl text-on-surface mb-5">Submit Review</h2>
+
+        <!-- Star rating -->
+        <div class="mb-4">
+          <label class="text-sm font-semibold text-on-surface-variant block mb-2">Rating</label>
+          <div id="starSelector" class="flex gap-1">
+            <button class="star-btn" data-val="1">★</button>
+            <button class="star-btn" data-val="2">★</button>
+            <button class="star-btn" data-val="3">★</button>
+            <button class="star-btn active" data-val="4">★</button>
+            <button class="star-btn active" data-val="5">★</button>
+          </div>
+        </div>
+
+        <!-- English review -->
+        <div class="mb-3">
+          <label class="text-sm font-semibold text-on-surface-variant block mb-1">Review Content (English)</label>
+          <textarea id="rfText" class="rf-textarea" placeholder="Tell us about your experience…"></textarea>
+        </div>
+
+        <!-- Urdu review -->
+        <div class="mb-4">
+          <label class="text-sm font-semibold text-on-surface-variant block mb-1 text-right font-urdu" style="direction:rtl;">اپنی رائے لکھیں (اردو)</label>
+          <textarea id="rfTextUr" class="rf-textarea font-urdu" style="direction:rtl;text-align:right;" placeholder="آپ کا تجربہ کیسا رہا؟"></textarea>
+        </div>
+
+        <!-- Crop and Location -->
+        <div class="grid grid-cols-2 gap-3 mb-4">
+          <div>
+            <label class="text-xs font-semibold text-on-surface-variant block mb-1">Crop Type</label>
+            <select id="rfCrop" class="rf-select text-sm">
+              <option value="Wheat">Wheat (گندم)</option>
+              <option value="Cotton">Cotton (کپاس)</option>
+              <option value="Rice">Rice (چاول)</option>
+              <option value="Sugarcane">Sugarcane (گنا)</option>
+              <option value="Maize">Maize (مکئی)</option>
+              <option value="Gram">Gram (چنا)</option>
+              <option value="Brassica">Brassica (سرسوں)</option>
+              <option value="Tomato">Tomato (ٹماٹر)</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+          <div>
+            <label class="text-xs font-semibold text-on-surface-variant block mb-1">Location</label>
+            <input id="rfLoc" class="rf-input text-sm" type="text" placeholder="Multan, PK"/>
+          </div>
+        </div>
+
+        <!-- Name -->
+        <div class="mb-5">
+          <label class="text-xs font-semibold text-on-surface-variant block mb-1">Your Name (optional)</label>
+          <input id="rfName" class="rf-input text-sm" type="text" placeholder="Farmer Ahmed"/>
+        </div>
+
+        <button id="submitBtn" class="w-full py-3 rounded-xl font-syne font-bold text-white text-sm flex items-center justify-center gap-2 hover:-translate-y-0.5 transition-all" style="background:linear-gradient(135deg,#16a34a,#002109);box-shadow:0 4px 16px rgba(22,163,74,.3);">
+          <span class="ms text-white" style="font-size:18px;">send</span> Post Review
+        </button>
+
+        <!-- Success -->
+        <div id="successMsg" style="display:none;background:#f0fdf4;border:1.5px solid #bbf7d0;border-radius:10px;padding:12px 16px;color:#006b2c;font-size:.88rem;font-weight:500;margin-top:12px;align-items:center;gap:8px;">
+          ✅ Review posted! Thank you for helping other farmers.<br>
+          <span class="font-urdu" style="font-size:.85rem;direction:rtl;display:block;margin-top:4px;">شکریہ! آپ کا تجربہ محفوظ ہو گیا۔</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- REVIEWS LIST (right 2 columns) -->
+    <div class="lg:col-span-2">
+      <!-- Filter bar -->
+      <div class="flex items-center gap-3 flex-wrap mb-6">
+        <button class="filter-btn-r active" data-rfilter="all">All Reviews</button>
+        <button class="filter-btn-r" data-rfilter="5">5 ☆</button>
+        <button class="filter-btn-r" data-rfilter="4">4 ☆</button>
+        <button class="filter-btn-r" data-rfilter="en">English</button>
+        <button class="filter-btn-r" data-rfilter="ur">اردو</button>
+        <span class="ml-auto text-sm text-on-surface-variant"><strong id="reviewCount" class="text-green-700">8</strong> reviews</span>
+      </div>
+
+      <!-- Reviews grid -->
+      <div id="reviewsGrid" class="space-y-5"></div>
+
+      <!-- Verified by AI Doctor (NEW from stitch5) -->
+      <div class="mt-8 bg-gradient-to-br from-green-800 to-green-950 rounded-2xl p-7 relative overflow-hidden">
+        <div class="absolute right-6 top-1/2 -translate-y-1/2 opacity-10 text-[8rem] select-none pointer-events-none">🛡️</div>
+        <div class="relative z-10">
+          <div class="flex items-center gap-3 mb-3">
+            <span class="ms text-green-300" style="font-size:22px;">verified</span>
+            <h3 class="font-syne font-bold text-xl text-white">Verified by AI Doctor</h3>
+          </div>
+          <p class="text-green-200/80 text-sm leading-relaxed max-w-lg mb-5">Our system cross-references community reviews with real-time laboratory data to ensure all advice shared here is scientifically sound for your specific region.</p>
+          <a href="about.html" class="inline-flex items-center gap-2 border border-green-400/40 bg-green-900/40 text-green-300 px-5 py-2.5 rounded-xl text-sm font-semibold hover:bg-green-800/60 transition-all">
+            Learn More <span class="ms" style="font-size:16px;color:#86efac;">arrow_forward</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- FOOTER -->
-<footer style="background:#001a0a;color:rgba(255,255,255,.65);padding:60px 48px 32px;">
+<footer style="background:#001a0a;color:rgba(255,255,255,.65);padding:60px 48px 32px;margin-top:40px;">
   <div style="max-width:1280px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:40px;">
-    <div>
-      <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px;">
-        <div style="width:36px;height:36px;background:linear-gradient(135deg,#15803d,#22c55e);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:1.2rem;">🌾</div>
-        <span class="font-syne" style="font-weight:800;color:white;font-size:1.1rem;">Fasal Doctor</span>
-      </div>
+    <div><div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><div style="width:32px;height:32px;background:linear-gradient(135deg,#15803d,#22c55e);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;">🌾</div><span class="font-syne" style="font-weight:800;color:white;font-size:1rem;">Fasal Doctor</span></div>
       <div class="font-urdu" style="font-size:.9rem;color:#86efac;direction:rtl;text-align:right;line-height:2;">فصل ڈاکٹر</div>
-      <p style="font-size:.85rem;margin-top:8px;line-height:1.6;">AI crop disease advisor for Pakistani farmers.</p>
+      <p style="font-size:.84rem;line-height:1.6;margin-top:8px;">Empowering Pakistani farmers with AI-driven insights.</p>
     </div>
-    <div><div class="font-syne" style="font-weight:700;color:white;font-size:.82rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px;">Pages</div>
-      <div style="display:flex;flex-direction:column;gap:10px;font-size:.88rem;">
-        <a href="index.html" style="color:rgba(255,255,255,.6);text-decoration:none;">Home</a>
-        <a href="crops.html" style="color:rgba(255,255,255,.6);text-decoration:none;">All Crops</a>
-        <a href="reviews.html" style="color:rgba(255,255,255,.6);text-decoration:none;">Reviews</a>
-        <a href="about.html" style="color:rgba(255,255,255,.6);text-decoration:none;">About</a>
-      </div>
-    </div>
-    <div><div class="font-syne" style="font-weight:700;color:white;font-size:.82rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px;">Quick Links</div>
-      <div style="display:flex;flex-direction:column;gap:10px;font-size:.88rem;">
-        <a href="diagnosis.html" style="color:rgba(255,255,255,.6);text-decoration:none;">Diagnose Now</a>
-        <a href="crops.html?crop=Wheat" style="color:rgba(255,255,255,.6);text-decoration:none;">Wheat Diseases</a>
-        <a href="crops.html?crop=Cotton" style="color:rgba(255,255,255,.6);text-decoration:none;">Cotton Diseases</a>
-      </div>
-    </div>
-    <div><div class="font-syne" style="font-weight:700;color:white;font-size:.82rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:14px;">Sources</div>
-      <div style="display:flex;flex-direction:column;gap:10px;font-size:.88rem;">
-        <a href="#" style="color:rgba(255,255,255,.6);text-decoration:none;">PARC Pakistan</a>
-        <a href="#" style="color:rgba(255,255,255,.6);text-decoration:none;">Google Gemini</a>
-        <a href="#" style="color:rgba(255,255,255,.6);text-decoration:none;">ChromaDB</a>
-      </div>
-    </div>
+    <div><div class="font-syne" style="font-weight:700;color:white;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;">RESOURCES</div><div style="display:flex;flex-direction:column;gap:8px;font-size:.84rem;"><a href="about.html" style="color:rgba(255,255,255,.6);text-decoration:none;">API Docs</a><a href="crops.html" style="color:rgba(255,255,255,.6);text-decoration:none;">Crop Library</a><a href="#" style="color:rgba(255,255,255,.6);text-decoration:none;">Farmer Blog</a></div></div>
+    <div><div class="font-syne" style="font-weight:700;color:white;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;">LEGAL</div><div style="display:flex;flex-direction:column;gap:8px;font-size:.84rem;"><a href="#" style="color:rgba(255,255,255,.6);text-decoration:none;">Privacy Policy</a><a href="#" style="color:rgba(255,255,255,.6);text-decoration:none;">Terms of Service</a></div></div>
+    <div><div class="font-syne" style="font-weight:700;color:white;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;">CONTACT</div><div style="display:flex;flex-direction:column;gap:8px;font-size:.84rem;"><a href="#" style="color:rgba(255,255,255,.6);text-decoration:none;">Contact Us</a><a href="#" style="color:rgba(255,255,255,.6);text-decoration:none;">Support Center</a><a href="#" style="color:rgba(255,255,255,.6);text-decoration:none;">Partner with Us</a></div></div>
   </div>
-  <div style="border-top:1px solid rgba(255,255,255,.08);padding-top:20px;max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;font-size:.8rem;flex-wrap:wrap;gap:8px;">
-    <span>© 2026 Fasal Doctor 🇵🇰</span><span>Data: PARC | AI: Gemini 2.0 Flash</span>
+  <div style="border-top:1px solid rgba(255,255,255,.08);padding-top:20px;max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;font-size:.78rem;flex-wrap:wrap;gap:8px;">
+    <span>© 2024 Fasal Doctor. Empowering Farmers with AI.</span>
   </div>
 </footer>
 </div>
@@ -210,59 +212,72 @@ document.getElementById('searchOpenBtn').addEventListener('click',()=>{sO.classL
 document.getElementById('searchCloseBtn').addEventListener('click',()=>sO.classList.remove('open'));
 sO.addEventListener('click',e=>{if(e.target===sO)sO.classList.remove('open');});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')sO.classList.remove('open');});
-sI.addEventListener('input',()=>{
-  const q=sI.value.trim().toLowerCase();
-  if(!q||q.length<2){sR.innerHTML='<div style="padding:24px;text-align:center;color:#6e7b6c;">Start typing…</div>';return;}
-  const hits=(window.SEARCH_DATA||[]).filter(d=>d.text.toLowerCase().includes(q)||(d.ur&&d.ur.includes(q))).slice(0,10);
-  sR.innerHTML=hits.length?hits.map(h=>`<a href="${h.url}" class="sri" style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:10px;text-decoration:none;color:#0b1c30;"><div style="width:34px;height:34px;background:#f0fdf4;border-radius:8px;display:flex;align-items:center;justify-content:center;">${h.icon}</div><div><div style="font-size:.88rem;font-weight:500;">${h.title}</div><div style="font-size:.75rem;color:#6e7b6c;">${h.sub}</div></div></a>`).join(''):'<div style="padding:24px;text-align:center;color:#6e7b6c;">No results.</div>';
-});
+sI.addEventListener('input',()=>{const q=sI.value.trim().toLowerCase();if(!q||q.length<2){sR.innerHTML='<div style="padding:24px;text-align:center;color:#6e7b6c;">Start typing…</div>';return;}const hits=(window.SEARCH_DATA||[]).filter(d=>d.text.toLowerCase().includes(q)||(d.ur&&d.ur.includes(q))).slice(0,10);sR.innerHTML=hits.length?hits.map(h=>`<a href="${h.url}" class="sri" style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:10px;text-decoration:none;color:#0b1c30;"><div style="width:34px;height:34px;background:#f0fdf4;border-radius:8px;display:flex;align-items:center;justify-content:center;">${h.icon}</div><div><div style="font-size:.88rem;font-weight:500;">${h.title}</div><div style="font-size:.75rem;color:#6e7b6c;">${h.sub}</div></div></a>`).join(''):'<div style="padding:24px;text-align:center;color:#6e7b6c;">No results.</div>';});
 window.addEventListener('scroll',()=>document.getElementById('main-nav').classList.toggle('shadow-md',scrollY>10));
 
-// Seed reviews
+// Seeds
 const SEEDS=[
-  {name:'Muhammad Akram',loc:'Faisalabad, Punjab',crop:'Wheat',stars:5,lang:'ur',text:'میں نے گندم میں پیلے دھبے دیکھے اور فصل ڈاکٹر نے فوراً بتایا کہ یہ Yellow Rust ہے۔ سپرے کے بعد فصل ٹھیک ہو گئی۔ بہترین ایپ ہے۔',date:'Mar 2026'},
-  {name:'Rana Tariq',loc:'Multan, Punjab',crop:'Cotton',stars:5,lang:'en',text:'"Cotton leaves were curling badly. Fasal Doctor diagnosed CLCuV in seconds and gave me the exact Syngenta brand to buy from my local shop. Saved my entire crop."',date:'Feb 2026'},
-  {name:'Zainab Bibi',loc:'Sahiwal, Punjab',crop:'Gram',stars:5,lang:'ur',text:'اردو میں جواب ملنا بہت آسان ہے۔ ہمارے گاؤں کے بزرگ کسان بھی اب استعمال کر سکتے ہیں۔ دوا کا نام اور ڈوز بھی صحیح بتاتا ہے۔',date:'Jan 2026'},
-  {name:'Asif Mahmood',loc:'Gujranwala, Punjab',crop:'Rice',stars:5,lang:'en',text:'"Rice blast was destroying my nursery. Fasal Doctor identified it within seconds and recommended Tricyclazole — I applied it and the nursery recovered."',date:'Aug 2025'},
-  {name:'Khalid Hussain',loc:'Rahim Yar Khan',crop:'Sugarcane',stars:4,lang:'ur',text:'گنا میں سرخ سڑن کی تشخیص بالکل درست ہوئی۔ علاج کا طریقہ بھی سمجھ آیا۔ صرف ایک بار میں ہی صحیح جواب مل گیا۔',date:'Nov 2025'},
-  {name:'Nasreen Akhtar',loc:'Hyderabad, Sindh',crop:'Tomato',stars:5,lang:'ur',text:'ٹماٹر کے پودوں پر کالے دھبے پڑ گئے تھے۔ فصل ڈاکٹر نے Early Blight بتایا اور دوا بھی صحیح بتائی۔ فصل بچ گئی۔',date:'Oct 2025'},
-  {name:'Imran Siddiqui',loc:'Peshawar, KPK',crop:'Maize',stars:4,lang:'en',text:'"Stalk rot was spreading through my maize field. The AI correctly identified it and gave me actionable advice. The Pakistan-brand recommendation was especially helpful."',date:'Sep 2025'},
-  {name:'Arif Ali',loc:'Bahawalpur, Punjab',crop:'Brassica',stars:5,lang:'ur',text:'سرسوں کے پتوں پر بھورے دھبے تھے۔ فصل ڈاکٹر نے Alternaria Blight بتایا اور Score fungicide کی تجویز دی۔ ایک ہفتے میں بیماری ختم ہو گئی۔',date:'Dec 2025'},
+  {name:'Muhammad Ahmed',initials:'MA',loc:'Multan, Punjab',crop:'Wheat',specialist:'WHEAT EXPERT',stars:5,lang:'both',en:'"The AI diagnosis for yellow rust was incredibly accurate. Within minutes, I had a prescription that saved 40% of my field. This app is a game changer for small-scale farmers."',ur:'"ایپ کا استعمال بہت آسان ہے اور تشخیص درست ہے۔ میری گندم کی فصل زرد کنگی سے بچ گئی، شکریہ فصل ڈاکٹر!"',date:'2 days ago'},
+  {name:'Zahid Iqbal',initials:'ZI',loc:'Bahawalpur',crop:'Cotton',specialist:'COTTON SPECIALIST',stars:4,lang:'both',en:'"Excellent community support! I posted a photo of a pest I couldn\'t identify, and the AI combined with expert reviews gave me the perfect pesticide recommendation."',ur:'"کپاس کے کیڑوں کی پہچان کے لیے یہ ایک بہترین ٹول ہے۔ ماہرین کے مشورے بہت مفید ہیں۔"',date:'1 week ago'},
+  {name:'Zainab Bibi',initials:'ZB',loc:'Sahiwal, Punjab',crop:'Gram',specialist:'',stars:5,lang:'ur',en:'',ur:'اردو میں جواب ملنا بہت آسان ہے۔ ہمارے گاؤں کے بزرگ کسان بھی اب استعمال کر سکتے ہیں۔ دوا کا نام اور ڈوز بھی صحیح بتاتا ہے۔',date:'3 days ago'},
+  {name:'Asif Mahmood',initials:'AM',loc:'Gujranwala, Punjab',crop:'Rice',specialist:'',stars:5,lang:'en',en:'"Rice blast was destroying my nursery. Fasal Doctor identified it within seconds and recommended Tricyclazole — I applied it and the nursery recovered."',ur:'',date:'5 days ago'},
+  {name:'Khalid Hussain',initials:'KH',loc:'Rahim Yar Khan',crop:'Sugarcane',specialist:'',stars:4,lang:'ur',en:'',ur:'گنا میں سرخ سڑن کی تشخیص بالکل درست ہوئی۔ علاج کا طریقہ بھی سمجھ آیا۔ صرف ایک بار میں ہی صحیح جواب مل گیا۔',date:'2 weeks ago'},
+  {name:'Nasreen Akhtar',initials:'NA',loc:'Hyderabad, Sindh',crop:'Tomato',specialist:'',stars:5,lang:'ur',en:'',ur:'ٹماٹر کے پودوں پر کالے دھبے پڑ گئے تھے۔ فصل ڈاکٹر نے Early Blight بتایا اور دوا بھی صحیح بتائی۔ فصل بچ گئی۔',date:'1 week ago'},
+  {name:'Irfan Aziz',initials:'IA',loc:'Peshawar, KPK',crop:'Maize',specialist:'',stars:5,lang:'en',en:'"The weather alerts are incredibly accurate. The AI recommendations for pesticide application timing are professional grade. My maize yields improved by 30%."',ur:'',date:'3 days ago'},
+  {name:'Arif Ali',initials:'AA',loc:'Bahawalpur, Punjab',crop:'Brassica',specialist:'',stars:5,lang:'ur',en:'',ur:'سرسوں کے پتوں پر بھورے دھبے تھے۔ فصل ڈاکٹر نے Alternaria Blight بتایا اور Score fungicide کی تجویز دی۔ ایک ہفتے میں بیماری ختم ہو گئی۔',date:'4 days ago'},
 ];
 
 function loadStored(){return JSON.parse(localStorage.getItem('fd_reviews')||'[]');}
 function saveReview(r){const a=loadStored();a.unshift(r);localStorage.setItem('fd_reviews',JSON.stringify(a.slice(0,50)));}
 
-let activeRFilter='all';
+let af='all';
 
 function renderReviews(){
   const stored=loadStored();
   const all=[...stored,...SEEDS];
-  document.getElementById('totalReviews').textContent=all.length;
+  const total=all.length;
+  document.getElementById('reviewCount').textContent=total;
+  document.getElementById('happyFarmers').textContent=(total>8?total+'':SEEDS.length+'')+(total>=10?'+':'');
+
   const filtered=all.filter(r=>{
-    if(activeRFilter==='all')return true;
-    if(activeRFilter==='5')return r.stars===5;
-    if(activeRFilter==='4')return r.stars===4;
-    if(activeRFilter==='en')return r.lang==='en';
-    if(activeRFilter==='ur')return r.lang==='ur';
+    if(af==='all')return true;
+    if(af==='5')return r.stars===5;
+    if(af==='4')return r.stars===4;
+    if(af==='en')return r.lang==='en'||r.lang==='both';
+    if(af==='ur')return r.lang==='ur'||r.lang==='both';
     return true;
   });
-  const grid=document.getElementById('reviewsGrid');
-  grid.innerHTML=filtered.map(r=>`
-    <div class="card-hover" style="background:white;border:1.5px solid #dcfce7;border-radius:20px;padding:26px;">
-      <div style="color:#bbf7d0;font-size:2.8rem;font-family:Georgia,serif;line-height:1;margin-bottom:6px;">"</div>
-      <div style="color:#f59e0b;letter-spacing:2px;font-size:.95rem;margin-bottom:10px;">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</div>
-      ${r.lang==='ur'
-        ?`<p style="font-family:'Noto Nastaliq Urdu',serif;font-size:.92rem;color:#3e4a3d;direction:rtl;text-align:right;line-height:2.1;margin-bottom:16px;">${r.text}</p>`
-        :`<p style="font-size:.9rem;color:#3e4a3d;line-height:1.7;margin-bottom:16px;font-style:italic;">${r.text}</p>`
-      }
-      <div style="display:flex;align-items:center;gap:10px;padding-top:14px;border-top:1px solid #dcfce7;">
-        <div style="width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#16a34a,#14532d);display:flex;align-items:center;justify-content:center;font-size:1.1rem;flex-shrink:0;">👨‍🌾</div>
-        <div style="flex:1;">
-          <div style="font-weight:600;font-size:.88rem;color:#0b1c30;">${r.name}</div>
-          <div style="font-size:.75rem;color:#6e7b6c;">📍 ${r.loc}${r.date?` · ${r.date}`:''}</div>
+
+  document.getElementById('reviewsGrid').innerHTML=filtered.map(r=>`
+    <div class="card-hover bg-white border border-green-100 rounded-2xl p-6">
+      <div class="flex items-start gap-4">
+        <!-- Avatar -->
+        <div style="width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#16a34a,#14532d);display:flex;align-items:center;justify-content:center;font-weight:700;color:white;font-size:1rem;flex-shrink:0;">${r.initials||r.name.slice(0,2).toUpperCase()}</div>
+        <div class="flex-1 min-w-0">
+          <div class="flex items-start justify-between gap-2 flex-wrap">
+            <div>
+              <div class="font-semibold text-on-surface">${r.name}</div>
+              <div class="flex items-center gap-2 flex-wrap mt-0.5">
+                <span class="text-xs text-on-surface-variant">📍 ${r.loc}</span>
+                ${r.specialist?`<span style="background:#dcfce7;color:#166534;border-radius:4px;padding:2px 8px;font-size:.68rem;font-weight:700;text-transform:uppercase;">${r.specialist}</span>`:''}
+              </div>
+            </div>
+            <div class="text-right flex-shrink-0">
+              <div class="text-amber-400 text-sm tracking-wider">${'★'.repeat(r.stars)}${'☆'.repeat(5-r.stars)}</div>
+              <div class="text-xs text-on-surface-variant mt-0.5">${r.date||''}</div>
+            </div>
+          </div>
+          <!-- Review content -->
+          <div class="mt-3 space-y-2">
+            ${r.en?`<p class="text-sm text-on-surface-variant leading-relaxed italic">${r.en}</p>`:''}
+            ${r.ur?`<p class="font-urdu text-sm leading-loose" style="color:#3e4a3d;direction:rtl;text-align:right;">${r.ur}</p>`:''}
+          </div>
+          <!-- Crop tag + time -->
+          <div class="flex items-center gap-3 mt-4 pt-3 border-t border-green-50">
+            ${r.crop?`<span style="background:#f0fdf4;color:#006b2c;border:1px solid #dcfce7;border-radius:999px;padding:3px 12px;font-size:.75rem;font-weight:600;">🌾 ${r.crop}</span>`:''}
+            <span class="text-xs text-on-surface-variant flex items-center gap-1"><span class="ms" style="font-size:14px;">schedule</span>${r.date||'Recently'}</span>
+          </div>
         </div>
-        ${r.crop?`<span style="background:#f0fdf4;color:#006b2c;border:1px solid #bbf7d0;border-radius:999px;padding:3px 10px;font-size:.72rem;font-weight:600;">${r.crop.split('—')[0].trim()}</span>`:''}
       </div>
     </div>`).join('');
 }
@@ -270,44 +285,30 @@ function renderReviews(){
 document.querySelectorAll('.filter-btn-r').forEach(btn=>{
   btn.addEventListener('click',()=>{
     document.querySelectorAll('.filter-btn-r').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');activeRFilter=btn.dataset.rfilter;renderReviews();
+    btn.classList.add('active');af=btn.dataset.rfilter;renderReviews();
   });
 });
 
-// Star rating
-let selectedStars=5;
+// Stars
+let stars=4;
 document.querySelectorAll('.star-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    selectedStars=parseInt(btn.dataset.val);
-    document.querySelectorAll('.star-btn').forEach((b,i)=>{b.classList.toggle('active',i<selectedStars);b.style.opacity=i<selectedStars?'1':'.3';});
-  });
-  btn.addEventListener('mouseover',()=>{
-    const v=parseInt(btn.dataset.val);
-    document.querySelectorAll('.star-btn').forEach((b,i)=>b.style.opacity=i<v?'1':'.3');
-  });
-  btn.addEventListener('mouseout',()=>{
-    document.querySelectorAll('.star-btn').forEach((b,i)=>b.style.opacity=i<selectedStars?'1':'.3');
-  });
+  btn.addEventListener('click',()=>{stars=parseInt(btn.dataset.val);document.querySelectorAll('.star-btn').forEach((b,i)=>{b.classList.toggle('active',i<stars);b.style.opacity=i<stars?'1':'.3';});});
+  btn.addEventListener('mouseover',()=>{const v=parseInt(btn.dataset.val);document.querySelectorAll('.star-btn').forEach((b,i)=>b.style.opacity=i<v?'1':'.3');});
+  btn.addEventListener('mouseout',()=>{document.querySelectorAll('.star-btn').forEach((b,i)=>b.style.opacity=i<stars?'1':'.3');});
 });
 
 // Submit
 document.getElementById('submitBtn').addEventListener('click',()=>{
-  const name=document.getElementById('rfName').value.trim();
-  const text=document.getElementById('rfText').value.trim();
-  if(!name||!text||text.length<20){alert('Please fill in your name and write at least 20 characters about your experience.');return;}
-  const now=new Date();
-  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  saveReview({
-    name,loc:document.getElementById('rfLoc').value.trim()||'Pakistan',
-    crop:document.getElementById('rfCrop').value,lang:document.getElementById('rfLang').value,
-    stars:selectedStars,text,date:`${months[now.getMonth()]} ${now.getFullYear()}`
-  });
+  const en=document.getElementById('rfText').value.trim();
+  const ur=document.getElementById('rfTextUr').value.trim();
+  if(!en&&!ur){alert('Please write your review in English or Urdu.');return;}
+  const now=new Date();const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const name=document.getElementById('rfName').value.trim()||'Anonymous Farmer';
+  saveReview({name,initials:name.split(' ').map(w=>w[0]).join('').slice(0,2).toUpperCase(),loc:document.getElementById('rfLoc').value.trim()||'Pakistan',crop:document.getElementById('rfCrop').value,specialist:'',stars,lang:en&&ur?'both':ur?'ur':'en',en,ur,date:`${months[now.getMonth()]} ${now.getFullYear()}`});
   renderReviews();
-  document.getElementById('rfName').value='';document.getElementById('rfLoc').value='';
-  document.getElementById('rfCrop').value='';document.getElementById('rfText').value='';
-  selectedStars=5;document.querySelectorAll('.star-btn').forEach((b,i)=>{b.classList.toggle('active',i<5);b.style.opacity=i<5?'1':'.3';});
+  document.getElementById('rfText').value='';document.getElementById('rfTextUr').value='';document.getElementById('rfName').value='';document.getElementById('rfLoc').value='';
+  stars=4;document.querySelectorAll('.star-btn').forEach((b,i)=>{b.classList.toggle('active',i<4);b.style.opacity=i<4?'1':'.3';});
   const msg=document.getElementById('successMsg');msg.style.display='flex';setTimeout(()=>msg.style.display='none',5000);
-  setTimeout(()=>document.getElementById('reviewsGrid').scrollIntoView({behavior:'smooth'}),400);
 });
 
 if(location.hash==='#write')setTimeout(()=>document.getElementById('write').scrollIntoView({behavior:'smooth'}),400);

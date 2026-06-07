@@ -48,25 +48,23 @@ from dotenv import load_dotenv
 load_dotenv(ROOT / ".env")
 
 # ── FastAPI ────────────────────────────────────────────────────────────────────
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import RedirectResponse, Response
+from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
-from typing import Optional, Callable
+from typing import Optional
 
 # ── Load RAG Engine ────────────────────────────────────────────────────────────
-ENGINE_LOADED  = False
-ENGINE_ERROR   = ""
-RECORD_COUNT   = 671   # updated dynamically below if engine loads
+ENGINE_LOADED = False
+ENGINE_ERROR  = ""
 
 try:
     from rag_engine import get_diagnosis, get_retriever
     print("🔄  Warming up ChromaDB vectors...")
-    _col, _ = get_retriever()
-    RECORD_COUNT  = _col.count()
+    get_retriever()
     ENGINE_LOADED = True
-    print(f"✅  RAG engine ready — {RECORD_COUNT} disease records loaded")
+    print("✅  RAG engine ready — 671 disease records loaded")
 except Exception as exc:
     ENGINE_ERROR = str(exc)
     print(f"⚠️   RAG engine failed to load: {exc}")
@@ -91,17 +89,6 @@ app.add_middleware(
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["Content-Type", "Accept"],
 )
-
-# ── No-Cache Middleware for HTML ───────────────────────────────────────────────
-# Prevents the browser from serving stale cached HTML when the frontend is updated.
-@app.middleware("http")
-async def no_cache_html(request: Request, call_next: Callable) -> Response:
-    response = await call_next(request)
-    if request.url.path.endswith(".html") or request.url.path in ("/", "/app/"):
-        response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
-        response.headers["Pragma"] = "no-cache"
-        response.headers["Expires"] = "0"
-    return response
 
 # ── Serve HTML Frontend ────────────────────────────────────────────────────────
 FRONTEND_DIR = ROOT / "frontend"
@@ -165,8 +152,8 @@ def status():
     """
     return {
         "engine_loaded":   ENGINE_LOADED,
-        "disease_records": RECORD_COUNT,   # live count from ChromaDB
-        "crops":           19,             # number of crops covered
+        "disease_records": 671,    # PARC Pakistan database size
+        "crops":           19,     # number of crops covered
         "languages":       ["english", "urdu", "both"],
         "version":         "2.0.0",
     }

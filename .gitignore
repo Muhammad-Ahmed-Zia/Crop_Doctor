@@ -219,7 +219,12 @@ __marimo__/
 .streamlit/secrets.toml
 
 # Datasets and processed files
-data/processed/*.json
+data/processed/balance_report.json
+data/processed/dataset_map.json
+data/processed/organize_summary.json
+data/processed/parc_diseases.json
+data/processed/parc_diseases.csv
+data/processed/extracted.json
 data/processed/*.csv
 data/raw/
 data/output/*.xlsx
@@ -228,3 +233,11 @@ data/output/*.xlsx
 data/chroma_db/
 .env
 requirements.txt
+
+# Phase 2 — large binary / dataset files
+data/images/
+models/*.h5
+models/*.keras
+logs/tensorboard/
+data/_tmp_split/
+

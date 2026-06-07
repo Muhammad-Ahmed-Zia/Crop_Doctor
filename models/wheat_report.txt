@@ -1,0 +1,28 @@
+CROP: WHEAT
+Phase 1 best val_accuracy: 0.1381
+Phase 2 best val_accuracy: 0.1934
+Test accuracy : 0.1927
+Test loss     : 1.9425
+
+                precision    recall  f1-score   support
+
+         aphid       0.00      0.00      0.00        24
+    brown_rust       0.00      0.00      0.00        39
+   leaf_blight       0.19      1.00      0.32        37
+          mite       0.00      0.00      0.00        24
+powdery_mildew       0.00      0.00      0.00        26
+      stem_fly       0.00      0.00      0.00        27
+   yellow_rust       0.00      0.00      0.00        15
+
+      accuracy                           0.19       192
+     macro avg       0.03      0.14      0.05       192
+  weighted avg       0.04      0.19      0.06       192
+
+Confusion Matrix:
+[[ 0  0 24  0  0  0  0]
+ [ 0  0 39  0  0  0  0]
+ [ 0  0 37  0  0  0  0]
+ [ 0  0 24  0  0  0  0]
+ [ 0  0 26  0  0  0  0]
+ [ 0  0 27  0  0  0  0]
+ [ 0  0 15  0  0  0  0]]
