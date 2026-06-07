@@ -32,6 +32,7 @@ URLs after startup:
 import sys
 import os
 from pathlib import Path
+from contextlib import asynccontextmanager
 
 # ── Paths ──────────────────────────────────────────────────────────────────────
 ROOT = Path(__file__).resolve().parent   # project root: fasal-doctor/
@@ -55,20 +56,26 @@ from fastapi.responses import RedirectResponse
 from pydantic import BaseModel
 from typing import Optional
 
-# ── Load RAG Engine ────────────────────────────────────────────────────────────
+# ── Engine state (populated by lifespan startup) ───────────────────────────────
 ENGINE_LOADED = False
 ENGINE_ERROR  = ""
 
-try:
-    from rag_engine import get_diagnosis, get_retriever
-    print("🔄  Warming up ChromaDB vectors...")
-    get_retriever()
-    ENGINE_LOADED = True
-    print("✅  RAG engine ready — 671 disease records loaded")
-except Exception as exc:
-    ENGINE_ERROR = str(exc)
-    print(f"⚠️   RAG engine failed to load: {exc}")
-    print("     Server running in demo mode — HTML frontend still accessible")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Load the RAG engine once when the server worker starts (not the reloader)."""
+    global ENGINE_LOADED, ENGINE_ERROR
+    try:
+        from rag_engine import get_diagnosis, get_retriever
+        print("🔄  Warming up ChromaDB vectors...")
+        get_retriever()
+        ENGINE_LOADED = True
+        print("✅  RAG engine ready — 671 disease records loaded")
+    except Exception as exc:
+        ENGINE_ERROR = str(exc)
+        print(f"⚠️   RAG engine failed to load: {exc}")
+        print("     Server running in demo mode — HTML frontend still accessible")
+    yield  # server runs here
+    # (cleanup if needed on shutdown)
 
 # ── Create App ─────────────────────────────────────────────────────────────────
 app = FastAPI(
@@ -77,14 +84,18 @@ app = FastAPI(
     version="2.0.0",
     docs_url="/api/docs",
     redoc_url="/api/redoc",
+    lifespan=lifespan,
 )
 
 # ── CORS ───────────────────────────────────────────────────────────────────────
-# Allows the HTML frontend (any origin) to call this API.
-# For production, replace ["*"] with your actual domain.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:8000",
+        "http://localhost:3000",
+        "https://ahmed-zia-fasal-doctor.hf.space",
+        "*",   # fallback — remove in production if you want strict CORS
+    ],
     allow_credentials=False,
     allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["Content-Type", "Accept"],
@@ -102,6 +113,7 @@ if FRONTEND_DIR.is_dir():
 else:
     print(f"⚠️   No frontend/ folder found at {FRONTEND_DIR}")
     print("     Copy your HTML files into fasal-doctor/frontend/")
+
 
 # ── Request / Response Models ──────────────────────────────────────────────────
 class DiagnosisRequest(BaseModel):

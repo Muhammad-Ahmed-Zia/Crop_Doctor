@@ -286,7 +286,15 @@ def load_retriever():
 
     client     = chromadb.PersistentClient(path=str(chroma_path))
     collection = client.get_collection(COLLECTION)
-    embedder   = SentenceTransformer(EMBED_MODEL)
+
+    # Try loading from local cache first (avoids network call to HuggingFace hub).
+    # Falls back to downloading if the model isn't cached yet.
+    try:
+        embedder = SentenceTransformer(EMBED_MODEL, local_files_only=True)
+        print(f"  {Fore.GREEN}✓ Embedder loaded from local cache (offline mode){Style.RESET_ALL}")
+    except Exception:
+        print(f"  {Fore.YELLOW}⬇  Embedder not cached — downloading {EMBED_MODEL}...{Style.RESET_ALL}")
+        embedder = SentenceTransformer(EMBED_MODEL)
 
     total = collection.count()
     print(f"  {Fore.GREEN}✓ ChromaDB loaded — {total} disease vectors{Style.RESET_ALL}")
