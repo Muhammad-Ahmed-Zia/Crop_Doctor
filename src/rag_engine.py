@@ -274,15 +274,15 @@ def load_retriever():
         import chromadb
         from sentence_transformers import SentenceTransformer
     except ImportError as e:
-        print(f"{Fore.RED}Missing: {e}{Style.RESET_ALL}")
-        print("Run: pip install chromadb sentence-transformers")
-        sys.exit(1)
+        msg = f"Missing dependency: {e}. Run 'pip install chromadb sentence-transformers'"
+        print(f"{Fore.RED}{msg}{Style.RESET_ALL}")
+        raise ImportError(msg)
 
     chroma_path = Path(CHROMA_DIR)
     if not chroma_path.exists():
-        print(f"{Fore.RED}ChromaDB not found at {CHROMA_DIR}{Style.RESET_ALL}")
-        print("Run: python src/embedder.py   first")
-        sys.exit(1)
+        msg = f"ChromaDB directory not found at {CHROMA_DIR}. Run 'python src/embedder.py' to build it."
+        print(f"{Fore.RED}{msg}{Style.RESET_ALL}")
+        raise FileNotFoundError(msg)
 
     client     = chromadb.PersistentClient(path=str(chroma_path))
     collection = client.get_collection(COLLECTION)

@@ -64,6 +64,24 @@ ENGINE_ERROR  = ""
 async def lifespan(app: FastAPI):
     """Load the RAG engine once when the server worker starts (not the reloader)."""
     global ENGINE_LOADED, ENGINE_ERROR
+    
+    # Auto-embed ChromaDB if it doesn't exist (e.g. first deploy on cloud)
+    from pathlib import Path
+    import subprocess
+    import sys
+    
+    chroma_path = Path("data/chroma_db")
+    if not chroma_path.exists():
+        print("🔄 ChromaDB database not found. Running embedder.py to build it (takes ~3 minutes)...")
+        try:
+            subprocess.run(
+                [sys.executable, "src/embedder.py"],
+                check=True
+            )
+            print("✅ ChromaDB database built successfully!")
+        except Exception as embed_err:
+            print(f"❌ Failed to run embedder.py: {embed_err}")
+            
     try:
         from rag_engine import get_diagnosis, get_retriever
         print("🔄  Warming up ChromaDB vectors...")
