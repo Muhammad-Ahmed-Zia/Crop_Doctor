@@ -232,7 +232,7 @@ data/output/*.xlsx
 
 data/chroma_db/
 .env
-requirements.txt
+# requirements.txt is intentionally committed — needed by Railway and HuggingFace Spaces
 
 # Phase 2 — large binary / dataset files
 data/images/

@@ -1,42 +1,25 @@
-# Core AI — NEW SDK (use 'from google import genai')
+# ─── Fasal Doctor — Deployment Requirements ───────────────────────────────────
+# Used by Railway and HuggingFace Spaces.
+# Excludes Phase 2 CNN packages (TensorFlow, scikit-learn etc.) — too large for
+# cloud build limits and not needed for the RAG / Streamlit / FastAPI deployment.
+
+# Core AI
 google-genai
-
-# PDF extraction
-pdfplumber
-PyMuPDF
-
-# Data processing
-pandas
-openpyxl
-
-# Web scraping
-requests
-beautifulsoup4
 
 # RAG pipeline
 chromadb
 sentence-transformers
 
-# Web UI (Streamlit — alternative interface)
+# Web UI
 streamlit>=1.32.0
 
-# FastAPI server (HTML frontend backend)
+# FastAPI server
 fastapi>=0.110.0
 uvicorn[standard]>=0.29.0
 python-multipart>=0.0.9
 
 # Utilities
-tqdm
 python-dotenv
 colorama
-fastapi
-uvicorn[standard]
-python-dotenv
 requests
-
-# Phase 2 — CNN / Image classification
-tensorflow>=2.13.0
-scikit-learn>=1.3.0
-matplotlib>=3.7.0
-seaborn>=0.12.0
-pillow>=10.0.0
+tqdm
