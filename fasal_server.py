@@ -71,8 +71,8 @@ async def lifespan(app: FastAPI):
     import sys
     
     chroma_path = Path("data/chroma_db")
-    if not chroma_path.exists():
-        print("🔄 ChromaDB database not found. Running embedder.py to build it (takes ~3 minutes)...")
+    if not (chroma_path / "chroma.sqlite3").exists():
+        print("🔄 ChromaDB database not found or incomplete. Running embedder.py to build it (takes ~3 minutes)...")
         try:
             subprocess.run(
                 [sys.executable, "src/embedder.py"],
