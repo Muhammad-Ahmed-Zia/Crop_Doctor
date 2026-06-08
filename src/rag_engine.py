@@ -272,9 +272,8 @@ Respond in this exact format:
 def load_retriever():
     try:
         import chromadb
-        from sentence_transformers import SentenceTransformer
     except ImportError as e:
-        msg = f"Missing dependency: {e}. Run 'pip install chromadb sentence-transformers'"
+        msg = f"Missing dependency: {e}. Run 'pip install chromadb'"
         print(f"{Fore.RED}{msg}{Style.RESET_ALL}")
         raise ImportError(msg)
 
@@ -287,21 +286,45 @@ def load_retriever():
     client     = chromadb.PersistentClient(path=str(chroma_path))
     collection = client.get_collection(COLLECTION)
 
-    # Try loading from local cache first (avoids network call to HuggingFace hub).
-    # Load in float16 (half precision) to cut memory: 1.64GB → ~0.8GB (fits Railway 1GB limit).
+    # Try fastembed first (extremely low memory, no PyTorch overhead, perfect for cloud RAM limits)
     try:
-        embedder = SentenceTransformer(EMBED_MODEL, local_files_only=True)
-        embedder.half()   # float16 — halves RAM, quality unchanged for cosine similarity
-        print(f"  {Fore.GREEN}✓ Embedder loaded from local cache (float16 — low-memory mode){Style.RESET_ALL}")
-    except Exception:
-        print(f"  {Fore.YELLOW}⬇  Embedder not cached — downloading {EMBED_MODEL}...{Style.RESET_ALL}")
-        embedder = SentenceTransformer(EMBED_MODEL)
-        embedder.half()   # float16 after download too
+        from fastembed import TextEmbedding
+        print(f"  {Fore.CYAN}⚡ Loading fastembed model...{Style.RESET_ALL}")
+        embedder = TextEmbedding(model_name="sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2")
+        
+        class FastEmbedWrapper:
+            def __init__(self, model):
+                self.model = model
+            def encode(self, sentences, **kwargs):
+                return list(self.model.embed(sentences))
+        
+        embedder_wrapped = FastEmbedWrapper(embedder)
+        print(f"  {Fore.GREEN}✓ Embedder loaded using fastembed (ONNX runtime, no PyTorch){Style.RESET_ALL}")
+        total = collection.count()
+        print(f"  {Fore.GREEN}✓ ChromaDB loaded — {total} disease vectors{Style.RESET_ALL}")
+        return collection, embedder_wrapped
+    except ImportError:
+        # Fallback to sentence-transformers if fastembed is not installed (e.g. locally)
+        print(f"  {Fore.YELLOW}⚠️  fastembed not installed. Falling back to sentence-transformers (requires PyTorch)...{Style.RESET_ALL}")
+        try:
+            from sentence_transformers import SentenceTransformer
+        except ImportError as e:
+            msg = "Missing dependency: fastembed or sentence-transformers. Run 'pip install fastembed'"
+            print(f"{Fore.RED}{msg}{Style.RESET_ALL}")
+            raise ImportError(msg)
 
-    total = collection.count()
-    print(f"  {Fore.GREEN}✓ ChromaDB loaded — {total} disease vectors{Style.RESET_ALL}")
+        try:
+            embedder = SentenceTransformer(EMBED_MODEL, local_files_only=True)
+            embedder.half()
+            print(f"  {Fore.GREEN}✓ Embedder loaded from local cache (float16 mode){Style.RESET_ALL}")
+        except Exception:
+            print(f"  {Fore.YELLOW}⬇  Embedder not cached — downloading {EMBED_MODEL}...{Style.RESET_ALL}")
+            embedder = SentenceTransformer(EMBED_MODEL)
+            embedder.half()
 
-    return collection, embedder
+        total = collection.count()
+        print(f"  {Fore.GREEN}✓ ChromaDB loaded — {total} disease vectors{Style.RESET_ALL}")
+        return collection, embedder
 
 
 def retrieve(query: str, collection, embedder, top_k: int = TOP_K,

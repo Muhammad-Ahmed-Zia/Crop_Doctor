@@ -61,16 +61,29 @@ ENGINE_LOADED    = False
 ENGINE_ERROR     = ""
 _get_diagnosis   = None   # set during lifespan startup
 
+def load_engine_background():
+    global ENGINE_LOADED, ENGINE_ERROR, _get_diagnosis
+    try:
+        from rag_engine import get_diagnosis, get_retriever
+        print("🔄  Warming up ChromaDB vectors...")
+        get_retriever()
+        _get_diagnosis = get_diagnosis   # store at module level for route handlers
+        ENGINE_LOADED = True
+        print("✅  RAG engine ready — 671 disease records loaded")
+    except Exception as exc:
+        ENGINE_ERROR = str(exc)
+        print(f"⚠️   RAG engine failed to load: {exc}")
+        print("     Server running in demo mode — HTML frontend still accessible")
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Load the RAG engine once when the server worker starts (not the reloader)."""
-    global ENGINE_LOADED, ENGINE_ERROR, _get_diagnosis
-    
-    # Auto-embed ChromaDB if it doesn't exist (e.g. first deploy on cloud)
+    import threading
     from pathlib import Path
     import subprocess
     import sys
     
+    # Auto-embed ChromaDB if it doesn't exist (e.g. first deploy on cloud)
     chroma_path = Path("data/chroma_db")
     if not (chroma_path / "chroma.sqlite3").exists():
         print("🔄 ChromaDB database not found or incomplete. Running embedder.py to build it (takes ~3 minutes)...")
@@ -83,17 +96,9 @@ async def lifespan(app: FastAPI):
         except Exception as embed_err:
             print(f"❌ Failed to run embedder.py: {embed_err}")
             
-    try:
-        from rag_engine import get_diagnosis, get_retriever
-        print("🔄  Warming up ChromaDB vectors...")
-        get_retriever()
-        _get_diagnosis = get_diagnosis   # store at module level for route handlers
-        ENGINE_LOADED = True
-        print("✅  RAG engine ready — 671 disease records loaded")
-    except Exception as exc:
-        ENGINE_ERROR = str(exc)
-        print(f"⚠️   RAG engine failed to load: {exc}")
-        print("     Server running in demo mode — HTML frontend still accessible")
+    # Start engine loading in a background thread so the server binds to port immediately
+    threading.Thread(target=load_engine_background, daemon=True).start()
+    print("🚀 Background engine loader thread started. FastAPI server starting up...")
     yield  # server runs here
     # (cleanup if needed on shutdown)
 

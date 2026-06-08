@@ -8,7 +8,7 @@ google-genai
 
 # RAG pipeline
 chromadb
-sentence-transformers
+fastembed
 
 # Web UI
 streamlit>=1.32.0
