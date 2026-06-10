@@ -1,308 +1,492 @@
 <!DOCTYPE html>
 <html lang="en" class="scroll-smooth">
+
 <head>
-<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-<title>About | Fasal Doctor</title>
-<link rel="icon" type="image/png" href="images/logo.png" />
-<script src="https://cdn.tailwindcss.com?plugins=forms"></script>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&family=Noto+Nastaliq+Urdu:wght@400;600;700&display=swap" rel="stylesheet"/>
-<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@400,0&display=swap" rel="stylesheet"/>
-<script>tailwind.config={theme:{extend:{colors:{primary:'#006b2c','primary-dark':'#002109',surface:'#f8f9ff','on-surface':'#0b1c30','on-surface-variant':'#3e4a3d'},fontFamily:{syne:['Syne'],dm:['DM Sans'],urdu:['Noto Nastaliq Urdu']}}}};</script>
-<style>
-*{box-sizing:border-box;}body{font-family:'DM Sans',sans-serif;background:#f8f9ff;color:#0b1c30;}
-.font-syne{font-family:'Syne',sans-serif;}.font-urdu{font-family:'Noto Nastaliq Urdu',serif;direction:rtl;}
-.ms{font-family:'Material Symbols Outlined';font-size:20px;line-height:1;display:inline-block;}
-.search-overlay{position:fixed;inset:0;background:rgba(0,33,9,.82);backdrop-filter:blur(8px);z-index:9999;display:flex;align-items:flex-start;justify-content:center;padding-top:100px;opacity:0;pointer-events:none;transition:opacity .3s;}
-.search-overlay.open{opacity:1;pointer-events:all;}
-.search-box{background:white;border-radius:16px;width:100%;max-width:660px;overflow:hidden;transform:scale(.94) translateY(-16px);transition:transform .3s;box-shadow:0 24px 80px rgba(0,0,0,.25);}
-.search-overlay.open .search-box{transform:scale(1) translateY(0);}
-.sri:hover{background:#f0fdf4;}
-.card-hover{transition:all .3s;}.card-hover:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(0,107,44,.12);}
-.hero-about{background-image:url('images/hero-bg.jpg');background-size:cover;background-position:center;}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>About | Fasal Doctor</title>
+  <link rel="icon" type="image/png" href="images/logo.png" />
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Syne:wght@500;600;700;800&family=DM+Sans:wght@400;500;600;700&family=Noto+Nastaliq+Urdu:wght@400;600;700&display=swap"
+    rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@400,0&display=swap"
+    rel="stylesheet" />
+  <script>tailwind.config = { theme: { extend: { colors: { primary: '#006b2c', 'primary-dark': '#002109', surface: '#f8f9ff', 'on-surface': '#0b1c30', 'on-surface-variant': '#3e4a3d' }, fontFamily: { syne: ['Syne'], dm: ['DM Sans'], urdu: ['Noto Nastaliq Urdu'] } } } };</script>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: #f8f9ff;
+      color: #0b1c30;
+    }
+
+    .font-syne {
+      font-family: 'Syne', sans-serif;
+    }
+
+    .font-urdu {
+      font-family: 'Noto Nastaliq Urdu', serif;
+      direction: rtl;
+    }
+
+    .ms {
+      font-family: 'Material Symbols Outlined';
+      font-size: 20px;
+      line-height: 1;
+      display: inline-block;
+    }
+
+    .search-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 33, 9, .82);
+      backdrop-filter: blur(8px);
+      z-index: 9999;
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      padding-top: 100px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .3s;
+    }
+
+    .search-overlay.open {
+      opacity: 1;
+      pointer-events: all;
+    }
+
+    .search-box {
+      background: white;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 660px;
+      overflow: hidden;
+      transform: scale(.94) translateY(-16px);
+      transition: transform .3s;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, .25);
+    }
+
+    .search-overlay.open .search-box {
+      transform: scale(1) translateY(0);
+    }
+
+    .sri:hover {
+      background: #f0fdf4;
+    }
+
+    .card-hover {
+      transition: all .3s;
+    }
+
+    .card-hover:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 36px rgba(0, 107, 44, .12);
+    }
+
+    .hero-about {
+      background-image: url('images/hero-bg.jpg');
+      background-size: cover;
+      background-position: center;
+    }
+  </style>
 </head>
+
 <body>
-<div class="search-overlay" id="searchOverlay">
-  <div class="search-box">
-    <div style="display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid #e5e7eb;">
-      <span class="ms" style="color:#006b2c;">search</span>
-      <input id="globalSearchInput" type="text" placeholder="Search crops, diseases, symptoms…" autocomplete="off" style="flex:1;border:none;outline:none;font-size:1rem;font-family:'DM Sans',sans-serif;"/>
-      <button id="searchCloseBtn" style="background:#f3f4f6;border:none;border-radius:50%;width:30px;height:30px;cursor:pointer;">✕</button>
-    </div>
-    <div id="searchResults" style="padding:12px;max-height:400px;overflow-y:auto;"><div style="padding:24px;text-align:center;color:#6e7b6c;">Start typing…</div></div>
-  </div>
-</div>
-
-<nav id="main-nav" class="fixed top-0 w-full z-50 bg-white/85 backdrop-blur-xl border-b border-green-100 shadow-sm transition-all">
-  <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-    <a href="index.html" class="flex items-center gap-3 no-underline">
-      <img src="images/logo.png" class="w-10 h-10 object-contain flex-shrink-0" alt="Fasal Doctor Logo">
-      <div><div class="font-syne font-extrabold text-lg text-green-900 leading-tight">Fasal Doctor</div><div class="font-urdu text-xs text-green-600 leading-tight">فصل ڈاکٹر</div></div>
-    </a>
-    <div class="flex items-center gap-2">
-      <button id="searchOpenBtn" class="w-10 h-10 rounded-full border border-green-200 bg-green-50 flex items-center justify-center text-green-700 hover:bg-green-100 cursor-pointer"><span class="ms" style="font-size:18px;">search</span></button>
-      <nav class="hidden md:flex items-center gap-1 ml-1">
-        <a href="index.html" class="px-4 py-2 rounded-full text-sm font-medium text-slate-600 hover:text-green-700 hover:bg-green-50 transition-colors">Home</a>
-        <a href="crops.html" class="px-4 py-2 rounded-full text-sm font-medium text-slate-600 hover:text-green-700 hover:bg-green-50 transition-colors">Crops</a>
-        <a href="reviews.html" class="px-4 py-2 rounded-full text-sm font-medium text-slate-600 hover:text-green-700 hover:bg-green-50 transition-colors">Reviews</a>
-        <a href="about.html" class="px-4 py-2 rounded-full text-sm font-semibold text-green-700 bg-green-50">About</a>
-        <a href="diagnosis.html" class="ml-2 bg-gradient-to-br from-green-500 to-green-900 text-white px-5 py-2.5 rounded-full text-sm font-semibold flex items-center gap-1.5 hover:shadow-lg transition-all"><span class="ms" style="font-size:16px;color:white;">science</span> Diagnose Now</a>
-      </nav>
-    </div>
-  </div>
-</nav>
-
-<div style="padding-top:80px;">
-
-<!-- ── HERO with background image ──────────────────────── -->
-<div class="hero-about relative" style="min-height:420px;display:flex;align-items:center;">
-  <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/60"></div>
-  <div class="relative z-10 max-w-3xl mx-auto px-6 py-24 text-center w-full">
-    <span class="inline-block bg-green-600/80 text-white text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-6">OUR MISSION</span>
-    <h1 class="font-syne text-4xl md:text-6xl font-extrabold text-white leading-tight mb-6">
-      Bridging Generational Wisdom<br>with <em class="text-green-300 not-italic">Precision AI</em>
-    </h1>
-    <p class="text-white/78 text-lg leading-relaxed mb-4">Empowering farmers with instant, laboratory-grade crop diagnostics through advanced RAG-based intelligence.</p>
-    <p class="font-urdu text-lg text-green-200 leading-loose" style="direction:rtl;text-align:center;">نسل در نسل کسانوں کی مہارت کو مصنوعی ذہانت کے ذریعے جدید اور قابل رسائی بنانا۔</p>
-  </div>
-</div>
-
-<!-- ── VISION & COMMITMENT (NEW from stitch5) ────────────── -->
-<section class="py-16 bg-white">
-  <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-
-    <!-- Vision card -->
-    <div class="card-hover bg-white border border-green-100 rounded-2xl p-8">
-      <div class="flex items-center gap-3 mb-5">
-        <div class="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center"><span class="ms text-green-700" style="font-size:22px;">visibility</span></div>
-        <h2 class="font-syne text-2xl font-extrabold text-on-surface">Vision</h2>
+  <div class="search-overlay" id="searchOverlay">
+    <div class="search-box">
+      <div style="display:flex;align-items:center;gap:12px;padding:16px 20px;border-bottom:1px solid #e5e7eb;">
+        <span class="ms" style="color:#006b2c;">search</span>
+        <input id="globalSearchInput" type="text" placeholder="Search crops, diseases, symptoms…" autocomplete="off"
+          style="flex:1;border:none;outline:none;font-size:1rem;font-family:'DM Sans',sans-serif;" />
+        <button id="searchCloseBtn"
+          style="background:#f3f4f6;border:none;border-radius:50%;width:30px;height:30px;cursor:pointer;">✕</button>
       </div>
-      <p class="text-on-surface-variant leading-relaxed mb-4">To become the global standard for localized agricultural intelligence, ensuring food security through hyper-local data analysis and preventative AI monitoring.</p>
-      <p class="font-urdu text-base leading-loose text-on-surface-variant" style="direction:rtl;text-align:right;">مقامی زرعی ذہانت کا عالمی معیار بننا، تا کہ ہر کسان کو ڈیجیٹل اطلاع اور بہتر فصل کا حل مل سکے۔</p>
-    </div>
-
-    <!-- Commitment card -->
-    <div class="card-hover bg-white border border-green-100 rounded-2xl p-8">
-      <div class="flex items-center gap-3 mb-5">
-        <div class="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center"><span class="ms text-green-700" style="font-size:22px;">verified_user</span></div>
-        <h2 class="font-syne text-2xl font-extrabold text-on-surface">Commitment</h2>
-      </div>
-      <p class="text-on-surface-variant leading-relaxed mb-4">Fasal Doctor commits to providing 99% accurate diagnostics by leveraging validated agronomic research and real-time field data processing from PARC Pakistan.</p>
-      <p class="font-urdu text-base leading-loose text-on-surface-variant" style="direction:rtl;text-align:right;">ہم کسانوں کو 99 فیصد درست تشخیص دیتے ہیں جو جدید تحقیق اور حقیقی ڈیٹا پر مبنی ہے۔</p>
-    </div>
-  </div>
-</section>
-
-<!-- ── STATS ──────────────────────────────────────────────── -->
-<section class="py-16 bg-surface">
-  <div class="max-w-7xl mx-auto px-6">
-    <div class="text-green-600 font-bold text-xs tracking-widest uppercase mb-3 text-center">✦ By the Numbers</div>
-    <h2 class="font-syne text-3xl md:text-4xl font-extrabold text-center text-on-surface mb-12">The Scale of <span class="text-green-600">Our Database</span></h2>
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
-      <div class="card-hover bg-white border border-green-100 rounded-2xl p-6 text-center"><div class="font-syne text-4xl font-extrabold text-green-700">671+</div><div class="text-sm text-on-surface-variant mt-2">Disease records verified by PARC</div></div>
-      <div class="card-hover bg-white border border-green-100 rounded-2xl p-6 text-center"><div class="font-syne text-4xl font-extrabold text-green-700">19+</div><div class="text-sm text-on-surface-variant mt-2">Major Pakistani crops covered</div></div>
-      <div class="card-hover bg-white border border-green-100 rounded-2xl p-6 text-center"><div class="font-syne text-4xl font-extrabold text-green-700">2</div><div class="text-sm text-on-surface-variant mt-2">Languages: Urdu + English</div></div>
-      <div class="card-hover bg-white border border-green-100 rounded-2xl p-6 text-center"><div class="font-syne text-4xl font-extrabold text-green-700">99%</div><div class="text-sm text-on-surface-variant mt-2">Diagnosis accuracy commitment</div></div>
-    </div>
-  </div>
-</section>
-
-<!-- ── TECHNICAL CORE (NEW from stitch5) ─────────────────── -->
-<section class="py-16 bg-white">
-  <div class="max-w-7xl mx-auto px-6">
-    <div class="text-center mb-3"><span class="text-green-600 font-bold text-xs tracking-widest uppercase">Our Technical Core</span></div>
-    <h2 class="font-syne text-3xl md:text-4xl font-extrabold text-center text-on-surface mb-3">Built on cutting-edge LLMs and<br>specialized agricultural databases.</h2>
-    <p class="text-center text-on-surface-variant max-w-xl mx-auto mb-12">A carefully assembled stack of state-of-the-art AI technologies working in concert.</p>
-
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-      <!-- Gemini -->
-      <div class="card-hover bg-white border border-green-100 rounded-2xl p-6">
-        <div class="flex items-start justify-between mb-4">
-          <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center text-2xl">🤖</div>
-          <span class="bg-green-50 border border-green-200 text-green-700 text-xs font-bold px-3 py-1 rounded-full">Language Model</span>
-        </div>
-        <h3 class="font-syne font-bold text-lg text-on-surface mb-2">Gemini Pro 1.5</h3>
-        <p class="text-on-surface-variant text-sm leading-relaxed mb-4">The reasoning engine of Fasal Doctor, capable of complex multimodal analysis of leaf photos and sensor logs.</p>
-        <!-- Mini bar chart (visual) -->
-        <div class="flex items-end gap-1 h-12">
-          <div class="flex-1 bg-green-100 rounded-t" style="height:40%;"></div>
-          <div class="flex-1 bg-green-200 rounded-t" style="height:60%;"></div>
-          <div class="flex-1 bg-green-400 rounded-t" style="height:80%;"></div>
-          <div class="flex-1 bg-green-600 rounded-t" style="height:100%;"></div>
-          <div class="flex-1 bg-green-700 rounded-t" style="height:85%;"></div>
-        </div>
-      </div>
-
-      <!-- ChromaDB -->
-      <div class="card-hover bg-white border border-green-100 rounded-2xl p-6">
-        <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center text-2xl mb-4">🗄️</div>
-        <h3 class="font-syne font-bold text-lg text-on-surface mb-2">ChromaDB</h3>
-        <p class="text-on-surface-variant text-sm leading-relaxed">Vector embedding storage for lightning-fast retrieval of relevant agricultural research papers and disease records.</p>
-      </div>
-
-      <!-- FastAPI -->
-      <div class="card-hover bg-white border border-green-100 rounded-2xl p-6">
-        <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center text-2xl mb-4">⚡</div>
-        <h3 class="font-syne font-bold text-lg text-on-surface mb-2">FastAPI</h3>
-        <p class="text-on-surface-variant text-sm leading-relaxed">High-performance asynchronous backend providing sub-100ms API response times for global deployments.</p>
-      </div>
-    </div>
-
-    <!-- PARC Verified Data (full width, NEW from stitch5) -->
-    <div class="bg-green-50 border border-green-200 rounded-2xl p-6 grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
-      <div>
-        <div class="flex items-center gap-3 mb-3">
-          <span class="ms text-green-600" style="font-size:22px;">verified</span>
-          <h3 class="font-syne font-bold text-lg text-on-surface">PARC Verified Data</h3>
-        </div>
-        <p class="text-on-surface-variant text-sm leading-relaxed mb-4">Our proprietary knowledge base is synchronized with the Pakistan Agricultural Research Council, ensuring every AI diagnosis is backed by local scientific consensus.</p>
-        <div class="flex gap-3 flex-wrap">
-          <span class="bg-white border border-green-200 text-green-700 rounded-full px-4 py-1.5 text-xs font-bold">50,000+ Research Papers</span>
-          <span class="bg-white border border-green-200 text-green-700 rounded-full px-4 py-1.5 text-xs font-bold">Real-time Soil Data</span>
-        </div>
-      </div>
-      <div>
-        <p class="font-urdu text-base leading-loose text-on-surface-variant" style="direction:rtl;text-align:right;">پاکستان زرعی تحقیقاتی کونسل (PARC) کے تصدیق شدہ ڈیٹا سے جڑا ہوا، تا کہ ہر مشورہ سائنسی بنیادوں پر ہو۔</p>
+      <div id="searchResults" style="padding:12px;max-height:400px;overflow-y:auto;">
+        <div style="padding:24px;text-align:center;color:#6e7b6c;">Start typing…</div>
       </div>
     </div>
   </div>
-</section>
 
-<!-- ── RAG INTELLIGENCE PIPELINE (NEW horizontal from stitch5) ── -->
-<section class="py-16 bg-surface">
-  <div class="max-w-7xl mx-auto px-6">
-    <h2 class="font-syne text-3xl md:text-4xl font-extrabold text-center text-on-surface mb-3">The RAG Intelligence Pipeline</h2>
-    <p class="text-center text-on-surface-variant max-w-xl mx-auto mb-12">How we process your crop photos through Retrieval Augmented Generation to ensure factual accuracy without hallucination.</p>
-
-    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
-      <!-- Connector line -->
-      <div class="hidden lg:block absolute top-9 left-[12.5%] right-[12.5%] h-px bg-gradient-to-r from-green-200 via-green-400 to-green-200"></div>
-
-      <div class="text-center">
-        <div class="w-16 h-16 bg-green-600 rounded-full flex flex-col items-center justify-center mx-auto mb-5 relative z-10 shadow-lg shadow-green-500/25">
-          <span class="font-syne font-black text-white text-xl">1</span>
-          <span class="ms text-white" style="font-size:14px;">photo_camera</span>
+  <nav id="main-nav"
+    class="fixed top-0 w-full z-50 bg-white/85 backdrop-blur-xl border-b border-green-100 shadow-sm transition-all">
+    <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+      <a href="index.html" class="flex items-center gap-3 no-underline">
+        <img src="images/logo.png" class="w-10 h-10 object-contain flex-shrink-0" alt="Fasal Doctor Logo">
+        <div>
+          <div class="font-syne font-extrabold text-lg text-green-900 leading-tight">Fasal Doctor</div>
+          <div class="font-urdu text-xs text-green-600 leading-tight">فصل ڈاکٹر</div>
         </div>
-        <h3 class="font-syne font-bold text-on-surface mb-2">Upload Image</h3>
-        <p class="text-on-surface-variant text-sm leading-relaxed">Farmer snaps a high-res photo of a distressed leaf or plant area.</p>
-      </div>
-
-      <div class="text-center">
-        <div class="w-16 h-16 bg-green-600 rounded-full flex flex-col items-center justify-center mx-auto mb-5 relative z-10 shadow-lg shadow-green-500/25">
-          <span class="font-syne font-black text-white text-xl">2</span>
-          <span class="ms text-white" style="font-size:14px;">manage_search</span>
-        </div>
-        <h3 class="font-syne font-bold text-on-surface mb-2">Vector Retrieval</h3>
-        <p class="text-on-surface-variant text-sm leading-relaxed">ChromaDB finds matching scientific papers and disease records from 671+ entries.</p>
-      </div>
-
-      <div class="text-center">
-        <div class="w-16 h-16 bg-green-600 rounded-full flex flex-col items-center justify-center mx-auto mb-5 relative z-10 shadow-lg shadow-green-500/25">
-          <span class="font-syne font-black text-white text-xl">3</span>
-          <span class="ms text-white" style="font-size:14px;">location_on</span>
-        </div>
-        <h3 class="font-syne font-bold text-on-surface mb-2">Contextual Synth</h3>
-        <p class="text-on-surface-variant text-sm leading-relaxed">Gemini AI synthesizes retrieved findings into actionable advice grounded in evidence.</p>
-      </div>
-
-      <div class="text-center">
-        <div class="w-16 h-16 bg-green-600 rounded-full flex flex-col items-center justify-center mx-auto mb-5 relative z-10 shadow-lg shadow-green-500/25">
-          <span class="font-syne font-black text-white text-xl">4</span>
-          <span class="ms text-white" style="font-size:14px;">description</span>
-        </div>
-        <h3 class="font-syne font-bold text-on-surface mb-2">Bilingual Advice</h3>
-        <p class="text-on-surface-variant text-sm leading-relaxed">Instant diagnosis delivered in both English and Urdu with Pakistan brand recommendations.</p>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- ── DIAGNOSIS OUTPUT REFERENCE ────────────────────────── -->
-<section class="py-16 bg-white">
-  <div class="max-w-7xl mx-auto px-6">
-    <div class="text-green-600 font-bold text-xs tracking-widest uppercase mb-3 text-center">✦ Every Diagnosis Includes</div>
-    <h2 class="font-syne text-3xl font-extrabold text-center text-on-surface mb-10">Complete Structured Output</h2>
-    <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
-      <div class="bg-green-50 border border-green-100 border-l-4 border-l-green-500 rounded-xl p-5"><div class="text-xl mb-2">🦠</div><div class="font-syne font-bold text-sm mb-1">Disease Name</div><div class="text-xs text-on-surface-variant">English + Urdu bilingual ID</div></div>
-      <div class="bg-green-50 border border-green-100 border-l-4 border-l-green-500 rounded-xl p-5"><div class="text-xl mb-2">🔍</div><div class="font-syne font-bold text-sm mb-1">Symptom ID</div><div class="text-xs text-on-surface-variant">Foliar pustules, chlorotic halos etc.</div></div>
-      <div class="bg-green-50 border border-green-100 border-l-4 border-l-green-500 rounded-xl p-5"><div class="text-xl mb-2">💊</div><div class="font-syne font-bold text-sm mb-1">Treatment Plan</div><div class="text-xs text-on-surface-variant">Chemical + Pakistan brand + dose + timing</div></div>
-      <div class="bg-green-50 border border-green-100 border-l-4 border-l-green-500 rounded-xl p-5"><div class="text-xl mb-2">⚠️</div><div class="font-syne font-bold text-sm mb-1">Safety Warnings</div><div class="text-xs text-on-surface-variant">Pesticide safety in Urdu</div></div>
-      <div class="bg-green-50 border border-green-100 border-l-4 border-l-green-500 rounded-xl p-5"><div class="text-xl mb-2">📊</div><div class="font-syne font-bold text-sm mb-1">Severity &amp; Yield Loss</div><div class="text-xs text-on-surface-variant">Critical/High/Medium/Low + % loss</div></div>
-      <div class="bg-green-50 border border-green-100 border-l-4 border-l-green-500 rounded-xl p-5"><div class="text-xl mb-2">🌿</div><div class="font-syne font-bold text-sm mb-1">Biological Control</div><div class="text-xs text-on-surface-variant">Eco-friendly alternatives</div></div>
-    </div>
-  </div>
-</section>
-
-<!-- ── CTA (NEW from stitch5 — "Revolutionizing Agriculture") ── -->
-<section class="py-24" style="background:linear-gradient(160deg,#002109 0%,#14532d 60%,#166534 100%);">
-  <div class="max-w-3xl mx-auto px-6 text-center">
-    <h2 class="font-syne text-4xl md:text-5xl font-extrabold text-white mb-6 leading-tight">
-      Revolutionizing Agriculture,<br>One Scan at a Time
-    </h2>
-    <p class="text-white/70 text-lg mb-10">Join thousands of Pakistani farmers who use precision AI to protect their crops, improve yields, and secure their livelihoods.</p>
-    <div class="flex gap-4 justify-center flex-wrap">
-      <a href="diagnosis.html" class="bg-white text-green-900 px-8 py-4 rounded-2xl font-syne font-bold text-base flex items-center gap-2 hover:-translate-y-1 hover:shadow-xl transition-all">
-        🔬 Join the Network
       </a>
-      <a href="#" class="border border-white/30 bg-white/10 text-white px-8 py-4 rounded-2xl font-medium text-base hover:bg-white/20 transition-all">
-        📄 Read Technical Papers
-      </a>
+      <div class="flex items-center gap-2">
+        <button id="searchOpenBtn"
+          class="w-10 h-10 rounded-full border border-green-200 bg-green-50 flex items-center justify-center text-green-700 hover:bg-green-100 cursor-pointer"><span
+            class="ms" style="font-size:18px;">search</span></button>
+        <nav class="hidden md:flex items-center gap-1 ml-1">
+          <a href="index.html"
+            class="px-4 py-2 rounded-full text-sm font-medium text-slate-600 hover:text-green-700 hover:bg-green-50 transition-colors">Home</a>
+          <a href="crops.html"
+            class="px-4 py-2 rounded-full text-sm font-medium text-slate-600 hover:text-green-700 hover:bg-green-50 transition-colors">Crops</a>
+          <a href="reviews.html"
+            class="px-4 py-2 rounded-full text-sm font-medium text-slate-600 hover:text-green-700 hover:bg-green-50 transition-colors">Reviews</a>
+          <a href="about.html" class="px-4 py-2 rounded-full text-sm font-semibold text-green-700 bg-green-50">About</a>
+          <a href="diagnosis.html"
+            class="ml-2 bg-gradient-to-br from-green-500 to-green-900 text-white px-5 py-2.5 rounded-full text-sm font-semibold flex items-center gap-1.5 hover:shadow-lg transition-all"><span
+              class="ms" style="font-size:16px;color:white;">science</span> Diagnose Now</a>
+        </nav>
+      </div>
     </div>
-  </div>
-</section>
+  </nav>
 
-<!-- FOOTER -->
-<footer style="background:#001a0a;color:rgba(255,255,255,.65);padding:60px 48px 32px;">
-  <div style="max-width:1280px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:40px;">
-    <div>
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
-        <img src="images/logo.png" style="width:32px;height:32px;object-fit:contain;flex-shrink:0;" alt="Fasal Doctor Logo">
-        <span class="font-syne" style="font-weight:800;color:white;font-size:1rem;">Fasal Doctor</span>
-      </div>
-      <div class="font-urdu" style="font-size:.9rem;color:#86efac;direction:rtl;text-align:right;line-height:2;">فصل ڈاکٹر</div>
-      <p style="font-size:.84rem;line-height:1.6;margin-top:8px;">Empowering Pakistani farmers with AI-driven insights for a sustainable agricultural future.</p>
-    </div>
-    <div>
-      <div class="font-syne" style="font-weight:700;color:white;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;">Resources</div>
-      <div style="display:flex;flex-direction:column;gap:8px;font-size:.84rem;">
-        <a href="#" style="color:rgba(255,255,255,.6);text-decoration:none;">API Docs</a>
-        <a href="crops.html" style="color:rgba(255,255,255,.6);text-decoration:none;">Crops Library</a>
-        <a href="#" style="color:rgba(255,255,255,.6);text-decoration:none;">Farmer Blog</a>
-      </div>
-    </div>
-    <div>
-      <div class="font-syne" style="font-weight:700;color:white;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;">Legal</div>
-      <div style="display:flex;flex-direction:column;gap:8px;font-size:.84rem;">
-        <a href="#" style="color:rgba(255,255,255,.6);text-decoration:none;">Privacy Policy</a>
-        <a href="#" style="color:rgba(255,255,255,.6);text-decoration:none;">Terms of Service</a>
-      </div>
-    </div>
-    <div>
-      <div class="font-syne" style="font-weight:700;color:white;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;">Contact</div>
-      <div style="display:flex;flex-direction:column;gap:8px;font-size:.84rem;">
-        <a href="#" style="color:rgba(255,255,255,.6);text-decoration:none;">Contact Us</a>
-        <a href="#" style="color:rgba(255,255,255,.6);text-decoration:none;">Support</a>
-      </div>
-    </div>
-  </div>
-  <div style="border-top:1px solid rgba(255,255,255,.08);padding-top:20px;max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;font-size:.78rem;flex-wrap:wrap;gap:8px;">
-    <span>© 2024 Fasal Doctor. Empowering Farmers with AI.</span>
-    <span>Data: PARC Pakistan | AI: Gemini 2.0 Flash</span>
-  </div>
-</footer>
-</div>
+  <div style="padding-top:80px;">
 
-<script src="search-data.js"></script>
-<script>
-const sO=document.getElementById('searchOverlay'),sI=document.getElementById('globalSearchInput'),sR=document.getElementById('searchResults');
-document.getElementById('searchOpenBtn').addEventListener('click',()=>{sO.classList.add('open');setTimeout(()=>sI.focus(),100);});
-document.getElementById('searchCloseBtn').addEventListener('click',()=>sO.classList.remove('open'));
-sO.addEventListener('click',e=>{if(e.target===sO)sO.classList.remove('open');});
-document.addEventListener('keydown',e=>{if(e.key==='Escape')sO.classList.remove('open');});
-sI.addEventListener('input',()=>{const q=sI.value.trim().toLowerCase();if(!q||q.length<2){sR.innerHTML='<div style="padding:24px;text-align:center;color:#6e7b6c;">Start typing…</div>';return;}const hits=(window.SEARCH_DATA||[]).filter(d=>d.text.toLowerCase().includes(q)||(d.ur&&d.ur.includes(q))).slice(0,10);sR.innerHTML=hits.length?hits.map(h=>`<a href="${h.url}" class="sri" style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:10px;text-decoration:none;color:#0b1c30;"><div style="width:34px;height:34px;background:#f0fdf4;border-radius:8px;display:flex;align-items:center;justify-content:center;">${h.icon}</div><div><div style="font-size:.88rem;font-weight:500;">${h.title}</div><div style="font-size:.75rem;color:#6e7b6c;">${h.sub}</div></div></a>`).join(''):'<div style="padding:24px;text-align:center;color:#6e7b6c;">No results.</div>';});
-window.addEventListener('scroll',()=>document.getElementById('main-nav').classList.toggle('shadow-md',scrollY>10));
+    <!-- ── HERO with background image ──────────────────────── -->
+    <div class="hero-about relative" style="min-height:420px;display:flex;align-items:center;">
+      <div class="absolute inset-0 bg-gradient-to-b from-black/50 via-black/40 to-black/60"></div>
+      <div class="relative z-10 max-w-3xl mx-auto px-6 py-24 text-center w-full">
+        <span
+          class="inline-block bg-green-600/80 text-white text-xs font-bold uppercase tracking-widest px-4 py-2 rounded-full mb-6">OUR
+          MISSION</span>
+        <h1 class="font-syne text-4xl md:text-6xl font-extrabold text-white leading-tight mb-6">
+          Bridging Generational Wisdom<br>with <em class="text-green-300 not-italic">Precision AI</em>
+        </h1>
+        <p class="text-lg leading-relaxed mb-4" style="color:#ffffff;">Empowering farmers with instant, laboratory-grade crop diagnostics through advanced RAG-based intelligence.</p>
+        <p class="font-urdu text-lg text-green-200 leading-loose" style="direction:rtl;text-align:center;">نسل در نسل
+          کسانوں کی مہارت کو مصنوعی ذہانت کے ذریعے جدید اور قابل رسائی بنانا۔</p>
+      </div>
+    </div>
 
-// Global language switcher (not used on header anymore)
-</script>
+    <!-- ── VISION & COMMITMENT (NEW from stitch5) ────────────── -->
+    <section class="py-16 bg-white">
+      <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        <!-- Vision card -->
+        <div class="card-hover bg-white border border-green-100 rounded-2xl p-8">
+          <div class="flex items-center gap-3 mb-5">
+            <div class="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center"><span
+                class="ms text-green-700" style="font-size:22px;">visibility</span></div>
+            <h2 class="font-syne text-2xl font-extrabold text-on-surface">Vision</h2>
+          </div>
+          <p class="text-on-surface-variant leading-relaxed mb-4">To become the global standard for localized
+            agricultural intelligence, ensuring food security through hyper-local data analysis and preventative AI
+            monitoring.</p>
+          <p class="font-urdu text-base leading-loose text-on-surface-variant" style="direction:rtl;text-align:right;">
+            مقامی زرعی ذہانت کا عالمی معیار بننا، تا کہ ہر کسان کو ڈیجیٹل اطلاع اور بہتر فصل کا حل مل سکے۔</p>
+        </div>
+
+        <!-- Commitment card -->
+        <div class="card-hover bg-white border border-green-100 rounded-2xl p-8">
+          <div class="flex items-center gap-3 mb-5">
+            <div class="w-10 h-10 bg-green-100 rounded-xl flex items-center justify-center"><span
+                class="ms text-green-700" style="font-size:22px;">verified_user</span></div>
+            <h2 class="font-syne text-2xl font-extrabold text-on-surface">Commitment</h2>
+          </div>
+          <p class="text-on-surface-variant leading-relaxed mb-4">Fasal Doctor commits to providing 99% accurate
+            diagnostics by leveraging validated agronomic research and real-time field data processing from PARC
+            Pakistan.</p>
+          <p class="font-urdu text-base leading-loose text-on-surface-variant" style="direction:rtl;text-align:right;">
+            ہم کسانوں کو 99 فیصد درست تشخیص دیتے ہیں جو جدید تحقیق اور حقیقی ڈیٹا پر مبنی ہے۔</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── STATS ──────────────────────────────────────────────── -->
+    <section class="py-16 bg-surface">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="text-green-600 font-bold text-xs tracking-widest uppercase mb-3 text-center">✦ By the Numbers</div>
+        <h2 class="font-syne text-3xl md:text-4xl font-extrabold text-center text-on-surface mb-12">The Scale of <span
+            class="text-green-600">Our Database</span></h2>
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+          <div class="card-hover bg-white border border-green-100 rounded-2xl p-6 text-center">
+            <div class="font-syne text-4xl font-extrabold text-green-700">671+</div>
+            <div class="text-sm text-on-surface-variant mt-2">Disease records verified by PARC</div>
+          </div>
+          <div class="card-hover bg-white border border-green-100 rounded-2xl p-6 text-center">
+            <div class="font-syne text-4xl font-extrabold text-green-700">19+</div>
+            <div class="text-sm text-on-surface-variant mt-2">Major Pakistani crops covered</div>
+          </div>
+          <div class="card-hover bg-white border border-green-100 rounded-2xl p-6 text-center">
+            <div class="font-syne text-4xl font-extrabold text-green-700">2</div>
+            <div class="text-sm text-on-surface-variant mt-2">Languages: Urdu + English</div>
+          </div>
+          <div class="card-hover bg-white border border-green-100 rounded-2xl p-6 text-center">
+            <div class="font-syne text-4xl font-extrabold text-green-700">99%</div>
+            <div class="text-sm text-on-surface-variant mt-2">Diagnosis accuracy commitment</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── TECHNICAL CORE (NEW from stitch5) ─────────────────── -->
+    <section class="py-16 bg-white">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="text-center mb-3"><span class="text-green-600 font-bold text-xs tracking-widest uppercase">Our
+            Technical Core</span></div>
+        <h2 class="font-syne text-3xl md:text-4xl font-extrabold text-center text-on-surface mb-3">Built on cutting-edge
+          LLMs and<br>specialized agricultural databases.</h2>
+        <p class="text-center text-on-surface-variant max-w-xl mx-auto mb-12">A carefully assembled stack of
+          state-of-the-art AI technologies working in concert.</p>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+          <!-- Gemini -->
+          <div class="card-hover bg-white border border-green-100 rounded-2xl p-6">
+            <div class="flex items-start justify-between mb-4">
+              <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center text-2xl">🤖</div>
+              <span
+                class="bg-green-50 border border-green-200 text-green-700 text-xs font-bold px-3 py-1 rounded-full">Language
+                Model</span>
+            </div>
+            <h3 class="font-syne font-bold text-lg text-on-surface mb-2">Gemini Pro 1.5</h3>
+            <p class="text-on-surface-variant text-sm leading-relaxed mb-4">The reasoning engine of Fasal Doctor,
+              capable of complex multimodal analysis of leaf photos and sensor logs.</p>
+            <!-- Mini bar chart (visual) -->
+            <div class="flex items-end gap-1 h-12">
+              <div class="flex-1 bg-green-100 rounded-t" style="height:40%;"></div>
+              <div class="flex-1 bg-green-200 rounded-t" style="height:60%;"></div>
+              <div class="flex-1 bg-green-400 rounded-t" style="height:80%;"></div>
+              <div class="flex-1 bg-green-600 rounded-t" style="height:100%;"></div>
+              <div class="flex-1 bg-green-700 rounded-t" style="height:85%;"></div>
+            </div>
+          </div>
+
+          <!-- ChromaDB -->
+          <div class="card-hover bg-white border border-green-100 rounded-2xl p-6">
+            <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center text-2xl mb-4">🗄️</div>
+            <h3 class="font-syne font-bold text-lg text-on-surface mb-2">ChromaDB</h3>
+            <p class="text-on-surface-variant text-sm leading-relaxed">Vector embedding storage for lightning-fast
+              retrieval of relevant agricultural research papers and disease records.</p>
+          </div>
+
+          <!-- FastAPI -->
+          <div class="card-hover bg-white border border-green-100 rounded-2xl p-6">
+            <div class="w-12 h-12 bg-green-100 rounded-xl flex items-center justify-center text-2xl mb-4">⚡</div>
+            <h3 class="font-syne font-bold text-lg text-on-surface mb-2">FastAPI</h3>
+            <p class="text-on-surface-variant text-sm leading-relaxed">High-performance asynchronous backend providing
+              sub-100ms API response times for global deployments.</p>
+          </div>
+        </div>
+
+        <!-- PARC Verified Data (full width, NEW from stitch5) -->
+        <div
+          class="bg-green-50 border border-green-200 rounded-2xl p-6 grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+          <div>
+            <div class="flex items-center gap-3 mb-3">
+              <span class="ms text-green-600" style="font-size:22px;">verified</span>
+              <h3 class="font-syne font-bold text-lg text-on-surface">PARC Verified Data</h3>
+            </div>
+            <p class="text-on-surface-variant text-sm leading-relaxed mb-4">Our proprietary knowledge base is
+              synchronized with the Pakistan Agricultural Research Council, ensuring every AI diagnosis is backed by
+              local scientific consensus.</p>
+            <div class="flex gap-3 flex-wrap">
+              <span
+                class="bg-white border border-green-200 text-green-700 rounded-full px-4 py-1.5 text-xs font-bold">50,000+
+                Research Papers</span>
+              <span
+                class="bg-white border border-green-200 text-green-700 rounded-full px-4 py-1.5 text-xs font-bold">Real-time
+                Soil Data</span>
+            </div>
+          </div>
+          <div>
+            <p class="font-urdu text-base leading-loose text-on-surface-variant"
+              style="direction:rtl;text-align:right;">پاکستان زرعی تحقیقاتی کونسل (PARC) کے تصدیق شدہ ڈیٹا سے جڑا ہوا،
+              تا کہ ہر مشورہ سائنسی بنیادوں پر ہو۔</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── RAG INTELLIGENCE PIPELINE (NEW horizontal from stitch5) ── -->
+    <section class="py-16 bg-surface">
+      <div class="max-w-7xl mx-auto px-6">
+        <h2 class="font-syne text-3xl md:text-4xl font-extrabold text-center text-on-surface mb-3">The RAG Intelligence
+          Pipeline</h2>
+        <p class="text-center text-on-surface-variant max-w-xl mx-auto mb-12">How we process your crop photos through
+          Retrieval Augmented Generation to ensure factual accuracy without hallucination.</p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
+          <!-- Connector line -->
+          <div
+            class="hidden lg:block absolute top-9 left-[12.5%] right-[12.5%] h-px bg-gradient-to-r from-green-200 via-green-400 to-green-200">
+          </div>
+
+          <div class="text-center">
+            <div
+              class="w-16 h-16 bg-green-600 rounded-full flex flex-col items-center justify-center mx-auto mb-5 relative z-10 shadow-lg shadow-green-500/25">
+              <span class="font-syne font-black text-white text-xl">1</span>
+              <span class="ms text-white" style="font-size:14px;">photo_camera</span>
+            </div>
+            <h3 class="font-syne font-bold text-on-surface mb-2">Upload Image</h3>
+            <p class="text-on-surface-variant text-sm leading-relaxed">Farmer snaps a high-res photo of a distressed
+              leaf or plant area.</p>
+          </div>
+
+          <div class="text-center">
+            <div
+              class="w-16 h-16 bg-green-600 rounded-full flex flex-col items-center justify-center mx-auto mb-5 relative z-10 shadow-lg shadow-green-500/25">
+              <span class="font-syne font-black text-white text-xl">2</span>
+              <span class="ms text-white" style="font-size:14px;">manage_search</span>
+            </div>
+            <h3 class="font-syne font-bold text-on-surface mb-2">Vector Retrieval</h3>
+            <p class="text-on-surface-variant text-sm leading-relaxed">ChromaDB finds matching scientific papers and
+              disease records from 671+ entries.</p>
+          </div>
+
+          <div class="text-center">
+            <div
+              class="w-16 h-16 bg-green-600 rounded-full flex flex-col items-center justify-center mx-auto mb-5 relative z-10 shadow-lg shadow-green-500/25">
+              <span class="font-syne font-black text-white text-xl">3</span>
+              <span class="ms text-white" style="font-size:14px;">location_on</span>
+            </div>
+            <h3 class="font-syne font-bold text-on-surface mb-2">Contextual Synth</h3>
+            <p class="text-on-surface-variant text-sm leading-relaxed">Gemini AI synthesizes retrieved findings into
+              actionable advice grounded in evidence.</p>
+          </div>
+
+          <div class="text-center">
+            <div
+              class="w-16 h-16 bg-green-600 rounded-full flex flex-col items-center justify-center mx-auto mb-5 relative z-10 shadow-lg shadow-green-500/25">
+              <span class="font-syne font-black text-white text-xl">4</span>
+              <span class="ms text-white" style="font-size:14px;">description</span>
+            </div>
+            <h3 class="font-syne font-bold text-on-surface mb-2">Bilingual Advice</h3>
+            <p class="text-on-surface-variant text-sm leading-relaxed">Instant diagnosis delivered in both English and
+              Urdu with Pakistan brand recommendations.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── DIAGNOSIS OUTPUT REFERENCE ────────────────────────── -->
+    <section class="py-16 bg-white">
+      <div class="max-w-7xl mx-auto px-6">
+        <div class="text-green-600 font-bold text-xs tracking-widest uppercase mb-3 text-center">✦ Every Diagnosis
+          Includes</div>
+        <h2 class="font-syne text-3xl font-extrabold text-center text-on-surface mb-10">Complete Structured Output</h2>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-4">
+          <div class="bg-green-50 border border-green-100 border-l-4 border-l-green-500 rounded-xl p-5">
+            <div class="text-xl mb-2">🦠</div>
+            <div class="font-syne font-bold text-sm mb-1">Disease Name</div>
+            <div class="text-xs text-on-surface-variant">English + Urdu bilingual ID</div>
+          </div>
+          <div class="bg-green-50 border border-green-100 border-l-4 border-l-green-500 rounded-xl p-5">
+            <div class="text-xl mb-2">🔍</div>
+            <div class="font-syne font-bold text-sm mb-1">Symptom ID</div>
+            <div class="text-xs text-on-surface-variant">Foliar pustules, chlorotic halos etc.</div>
+          </div>
+          <div class="bg-green-50 border border-green-100 border-l-4 border-l-green-500 rounded-xl p-5">
+            <div class="text-xl mb-2">💊</div>
+            <div class="font-syne font-bold text-sm mb-1">Treatment Plan</div>
+            <div class="text-xs text-on-surface-variant">Chemical + Pakistan brand + dose + timing</div>
+          </div>
+          <div class="bg-green-50 border border-green-100 border-l-4 border-l-green-500 rounded-xl p-5">
+            <div class="text-xl mb-2">⚠️</div>
+            <div class="font-syne font-bold text-sm mb-1">Safety Warnings</div>
+            <div class="text-xs text-on-surface-variant">Pesticide safety in Urdu</div>
+          </div>
+          <div class="bg-green-50 border border-green-100 border-l-4 border-l-green-500 rounded-xl p-5">
+            <div class="text-xl mb-2">📊</div>
+            <div class="font-syne font-bold text-sm mb-1">Severity &amp; Yield Loss</div>
+            <div class="text-xs text-on-surface-variant">Critical/High/Medium/Low + % loss</div>
+          </div>
+          <div class="bg-green-50 border border-green-100 border-l-4 border-l-green-500 rounded-xl p-5">
+            <div class="text-xl mb-2">🌿</div>
+            <div class="font-syne font-bold text-sm mb-1">Biological Control</div>
+            <div class="text-xs text-on-surface-variant">Eco-friendly alternatives</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── CTA (NEW from stitch5 — "Revolutionizing Agriculture") ── -->
+    <section class="py-24" style="background:linear-gradient(160deg,#002109 0%,#14532d 60%,#166534 100%);">
+      <div class="max-w-3xl mx-auto px-6 text-center">
+        <h2 class="font-syne text-4xl md:text-5xl font-extrabold text-white mb-6 leading-tight">
+          Revolutionizing Agriculture,<br>One Scan at a Time
+        </h2>
+        <p class="text-white/70 text-lg mb-10">Join thousands of Pakistani farmers who use precision AI to protect their
+          crops, improve yields, and secure their livelihoods.</p>
+        <div class="flex gap-4 justify-center flex-wrap">
+          <a href="diagnosis.html"
+            class="bg-white text-green-900 px-8 py-4 rounded-2xl font-syne font-bold text-base flex items-center gap-2 hover:-translate-y-1 hover:shadow-xl transition-all">
+            🔬 Join the Network
+          </a>
+          <a href="#"
+            class="border border-white/30 bg-white/10 text-white px-8 py-4 rounded-2xl font-medium text-base hover:bg-white/20 transition-all">
+            📄 Read Technical Papers
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer style="background:#001a0a;color:rgba(255,255,255,.65);padding:60px 48px 32px;">
+      <div
+        style="max-width:1280px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:40px;">
+        <div>
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+            <img src="images/logo.png" style="width:32px;height:32px;object-fit:contain;flex-shrink:0;"
+              alt="Fasal Doctor Logo">
+            <span class="font-syne" style="font-weight:800;color:white;font-size:1rem;">Fasal Doctor</span>
+          </div>
+          <div class="font-urdu" style="font-size:.9rem;color:#86efac;direction:rtl;text-align:right;line-height:2;">فصل
+            ڈاکٹر</div>
+          <p style="font-size:.84rem;line-height:1.6;margin-top:8px;color:#ffffff;">Empowering Pakistani farmers with
+            AI-driven
+            insights for a sustainable agricultural future.</p>
+        </div>
+        <div>
+          <div class="font-syne"
+            style="font-weight:700;color:white;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;">
+            Resources</div>
+          <div style="display:flex;flex-direction:column;gap:8px;font-size:.84rem;">
+            <a href="#" style="color:rgba(255,255,255,.6);text-decoration:none;">API Docs</a>
+            <a href="crops.html" style="color:rgba(255,255,255,.6);text-decoration:none;">Crops Library</a>
+            <a href="#" style="color:rgba(255,255,255,.6);text-decoration:none;">Farmer Blog</a>
+          </div>
+        </div>
+        <div>
+          <div class="font-syne"
+            style="font-weight:700;color:white;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;">
+            Legal</div>
+          <div style="display:flex;flex-direction:column;gap:8px;font-size:.84rem;">
+            <a href="#" style="color:rgba(255,255,255,.6);text-decoration:none;">Privacy Policy</a>
+            <a href="#" style="color:rgba(255,255,255,.6);text-decoration:none;">Terms of Service</a>
+          </div>
+        </div>
+        <div>
+          <div class="font-syne"
+            style="font-weight:700;color:white;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;margin-bottom:12px;">
+            Contact</div>
+          <div style="display:flex;flex-direction:column;gap:8px;font-size:.84rem;">
+            <a href="#" style="color:rgba(255,255,255,.6);text-decoration:none;">Contact Us</a>
+            <a href="#" style="color:rgba(255,255,255,.6);text-decoration:none;">Support</a>
+          </div>
+        </div>
+      </div>
+      <div
+        style="border-top:1px solid rgba(255,255,255,.08);padding-top:20px;max-width:1280px;margin:0 auto;display:flex;justify-content:space-between;font-size:.78rem;flex-wrap:wrap;gap:8px;">
+        <span>© 2024 Fasal Doctor. Empowering Farmers with AI.</span>
+        <span>Data: PARC Pakistan | AI: Gemini 2.0 Flash</span>
+      </div>
+    </footer>
+  </div>
+
+  <script src="search-data.js"></script>
+  <script>
+    const sO = document.getElementById('searchOverlay'), sI = document.getElementById('globalSearchInput'), sR = document.getElementById('searchResults');
+    document.getElementById('searchOpenBtn').addEventListener('click', () => { sO.classList.add('open'); setTimeout(() => sI.focus(), 100); });
+    document.getElementById('searchCloseBtn').addEventListener('click', () => sO.classList.remove('open'));
+    sO.addEventListener('click', e => { if (e.target === sO) sO.classList.remove('open'); });
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') sO.classList.remove('open'); });
+    sI.addEventListener('input', () => { const q = sI.value.trim().toLowerCase(); if (!q || q.length < 2) { sR.innerHTML = '<div style="padding:24px;text-align:center;color:#6e7b6c;">Start typing…</div>'; return; } const hits = (window.SEARCH_DATA || []).filter(d => d.text.toLowerCase().includes(q) || (d.ur && d.ur.includes(q))).slice(0, 10); sR.innerHTML = hits.length ? hits.map(h => `<a href="${h.url}" class="sri" style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:10px;text-decoration:none;color:#0b1c30;"><div style="width:34px;height:34px;background:#f0fdf4;border-radius:8px;display:flex;align-items:center;justify-content:center;">${h.icon}</div><div><div style="font-size:.88rem;font-weight:500;">${h.title}</div><div style="font-size:.75rem;color:#6e7b6c;">${h.sub}</div></div></a>`).join('') : '<div style="padding:24px;text-align:center;color:#6e7b6c;">No results.</div>'; });
+    window.addEventListener('scroll', () => document.getElementById('main-nav').classList.toggle('shadow-md', scrollY > 10));
+
+    // Global language switcher (not used on header anymore)
+  </script>
 </body>
+
 </html>
