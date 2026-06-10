@@ -35,11 +35,10 @@
 <nav id="main-nav" class="fixed top-0 w-full z-50 bg-white/85 backdrop-blur-xl border-b border-green-100 shadow-sm transition-all">
   <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
     <a href="index.html" class="flex items-center gap-3 no-underline">
-      <div class="w-10 h-10 bg-gradient-to-br from-green-600 to-green-900 rounded-xl flex items-center justify-center text-xl">🌾</div>
+      <img src="images/logo.png" class="w-10 h-10 object-contain flex-shrink-0" alt="Fasal Doctor Logo">
       <div><div class="font-syne font-extrabold text-lg text-green-900 leading-tight">Fasal Doctor</div><div class="font-urdu text-xs text-green-600 leading-tight">فصل ڈاکٹر</div></div>
     </a>
     <div class="flex items-center gap-2">
-      <div class="hidden md:flex items-center bg-green-50 border border-green-200 rounded-full p-1 gap-1 text-xs font-bold mr-2"><span class="px-3 py-1.5 rounded-full text-green-600">اُر</span><span class="text-green-300">/</span><span class="px-3 py-1.5 rounded-full bg-white text-green-900 shadow-sm">EN</span></div>
       <button id="searchOpenBtn" class="w-10 h-10 rounded-full border border-green-200 bg-green-50 flex items-center justify-center text-green-700 hover:bg-green-100 cursor-pointer"><span class="ms" style="font-size:18px;">search</span></button>
       <nav class="hidden md:flex items-center gap-1 ml-1">
         <a href="index.html" class="px-4 py-2 rounded-full text-sm font-medium text-slate-600 hover:text-green-700 hover:bg-green-50 transition-colors">Home</a>
@@ -255,7 +254,10 @@
 <footer style="background:#001a0a;color:rgba(255,255,255,.65);padding:60px 48px 32px;">
   <div style="max-width:1280px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:48px;margin-bottom:40px;">
     <div>
-      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;"><div style="width:32px;height:32px;background:linear-gradient(135deg,#15803d,#22c55e);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:1.1rem;">🌾</div><span class="font-syne" style="font-weight:800;color:white;font-size:1rem;">Fasal Doctor</span></div>
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;">
+        <img src="images/logo.png" style="width:32px;height:32px;object-fit:contain;flex-shrink:0;" alt="Fasal Doctor Logo">
+        <span class="font-syne" style="font-weight:800;color:white;font-size:1rem;">Fasal Doctor</span>
+      </div>
       <div class="font-urdu" style="font-size:.9rem;color:#86efac;direction:rtl;text-align:right;line-height:2;">فصل ڈاکٹر</div>
       <p style="font-size:.84rem;line-height:1.6;margin-top:8px;">Empowering Pakistani farmers with AI-driven insights for a sustainable agricultural future.</p>
     </div>
@@ -298,6 +300,8 @@ sO.addEventListener('click',e=>{if(e.target===sO)sO.classList.remove('open');});
 document.addEventListener('keydown',e=>{if(e.key==='Escape')sO.classList.remove('open');});
 sI.addEventListener('input',()=>{const q=sI.value.trim().toLowerCase();if(!q||q.length<2){sR.innerHTML='<div style="padding:24px;text-align:center;color:#6e7b6c;">Start typing…</div>';return;}const hits=(window.SEARCH_DATA||[]).filter(d=>d.text.toLowerCase().includes(q)||(d.ur&&d.ur.includes(q))).slice(0,10);sR.innerHTML=hits.length?hits.map(h=>`<a href="${h.url}" class="sri" style="display:flex;align-items:center;gap:12px;padding:10px 14px;border-radius:10px;text-decoration:none;color:#0b1c30;"><div style="width:34px;height:34px;background:#f0fdf4;border-radius:8px;display:flex;align-items:center;justify-content:center;">${h.icon}</div><div><div style="font-size:.88rem;font-weight:500;">${h.title}</div><div style="font-size:.75rem;color:#6e7b6c;">${h.sub}</div></div></a>`).join(''):'<div style="padding:24px;text-align:center;color:#6e7b6c;">No results.</div>';});
 window.addEventListener('scroll',()=>document.getElementById('main-nav').classList.toggle('shadow-md',scrollY>10));
+
+// Global language switcher (not used on header anymore)
 </script>
 </body>
 </html>

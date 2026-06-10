@@ -1,0 +1,9 @@
+CWD: D:\MObile App Project\fasal-doctor
+logo_path: D:\MObile App Project\fasal-doctor\frontend\images\logo.jpg (exists=True)
+square_path: D:\MObile App Project\fasal-doctor\frontend\images\logo_square.jpg
+Pillow is installed.
+Image size: 1536x1024, Mode: RGB
+Sample pixel at (384,512): R=0, G=0, B=0
+Found green bounding box: left=467, top=161, right=1191, bottom=827
+After inward trim: left=475, top=169, right=1183, bottom=819 (size: 708x650)
+✓ Successfully cropped and saved logo_square.jpg!

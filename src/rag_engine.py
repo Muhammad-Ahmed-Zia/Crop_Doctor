@@ -243,8 +243,10 @@ Respond in this exact format:
 
 **Spray Chemical:** [chemical name]
 **Pakistan Brand:** [brand name — must be available in Pakistan]
-**Dose per Acre:** [dose]
-**Spray Timing:** [when to spray]
+**Dose per Acre (English):** [dose in English]
+**ڈوز فی ایکڑ (اردو):** [dose in Urdu script]
+**Spray Timing (English):** [when to spray in English]
+**سپرے کا وقت (اردو):** [when to spray in Urdu script]
 
 ---
 ⚠️ SAFETY WARNING | حفاظتی ہدایات
@@ -404,9 +406,30 @@ def build_context(records: list[dict]) -> str:
     return "\n\n".join(parts)
 
 
-def ask_gemini(query: str, context: str, _unused_client=None) -> str:
+def ask_gemini(query: str, context: str, _unused_client=None, language: str = "both", crop_filter: str = "") -> str:
     """Send the query + retrieved context to Gemini. Auto-retries on rate limits."""
-    full_prompt = SYSTEM_PROMPT + "\n\n" + RAG_PROMPT_TEMPLATE.format(
+    
+    # Build language instruction
+    if language == "urdu":
+        lang_instruction = """
+IMPORTANT: Respond ENTIRELY in Urdu script only. Every heading, label, medicine name, brand name, chemical name, and instruction must be written in Urdu. Even chemical names like Propiconazole should be written phonetically in Urdu script (پروپیکونازول). Do NOT use any English words in your response."""
+    elif language == "english":
+        lang_instruction = """
+IMPORTANT: Respond in English ONLY. Do not include any Urdu text. All headings, labels, instructions, medicine names, and brand names should be in English only."""
+    else:  # both (default)
+        lang_instruction = """
+Respond in BOTH English and Urdu as instructed in the format below."""
+
+    # Build crop enforcement instruction
+    crop_instruction = ""
+    if crop_filter:
+        crop_instruction = f"""
+CROP FILTER ACTIVE: The farmer has selected "{crop_filter}" as their crop. If the query is about a DIFFERENT crop (not {crop_filter}), do NOT give a diagnosis. Instead, politely respond:
+- In English: "You have selected {crop_filter} as your crop. Your question seems to be about a different crop. Please change the crop selection in the sidebar and try again."
+- In Urdu: "آپ نے {crop_filter} کا انتخاب کیا ہے۔ آپ کا سوال کسی اور فصل کے بارے میں لگتا ہے۔ براہ کرم سائیڈ بار میں فصل تبدیل کریں اور دوبارہ کوشش کریں۔"
+"""
+
+    full_prompt = lang_instruction + crop_instruction + "\n\n" + SYSTEM_PROMPT + "\n\n" + RAG_PROMPT_TEMPLATE.format(
         query=query, context=context
     )
 
@@ -596,6 +619,62 @@ def is_off_topic(query: str) -> bool:
     return False
 
 
+def check_crop_scoping(query: str, crop_filter: str | None) -> str | None:
+    """
+    Checks if the query matches the selected crop filter.
+    Returns the refusal string if there's a mismatch or if the query is off-topic, otherwise None.
+    """
+    q_lower = query.lower()
+    
+    # Supported crops list with their localized/romanized names (all 19 crops)
+    crop_keywords = {
+        "Wheat": ["wheat", "gandum", "گندم"],
+        "Cotton": ["cotton", "kapas", "کپاس"],
+        "Rice": ["rice", "chawal", "چاول", "paddy", "dhan", "دھان"],
+        "Sugarcane": ["sugarcane", "ganna", "گنا"],
+        "Maize": ["maize", "corn", "makai", "مکئی"],
+        "Brassica": ["brassica", "mustard", "sarson", "سرسوں"],
+        "Gram": ["gram", "chana", "چنا"],
+        "Groundnut": ["groundnut", "peanut", "mungphali", "مونگ پھلی"],
+        "Barley": ["barley", "jo", "جو", "جَو"],
+        "Lentil": ["lentil", "masoor", "مسور"],
+        "Sorghum": ["sorghum", "jowar", "جوار"],
+        "Millet": ["millet", "bajra", "باجرہ"],
+        "Coriander": ["coriander", "dhaniya", "دھنیا"],
+        "Paddy": ["paddy", "dhan", "دھان", "rice", "chawal", "چاول"],
+        "Vegetables": ["vegetables", "sabzi", "sabziyan", "سبزیاں", "سبزی"],
+        "Tomato": ["tomato", "timatar", "ٹماٹر"],
+        "Potato": ["potato", "aloo", "آلو"],
+        "Onion": ["onion", "pyaz", "پیاز"],
+        "Chilies": ["chilies", "chili", "chilli", "mirch", "mirchi", "مرچ"],
+    }
+    
+    if crop_filter:
+        cf = crop_filter.capitalize()
+        # Find if query mentions any other crop
+        for crop_name, keywords in crop_keywords.items():
+            if crop_name != cf:
+                # If the query mentions keywords for another crop, reject
+                if any(re.search(r'\b' + re.escape(kw) + r'\b' if kw.isalnum() else re.escape(kw), q_lower) for kw in keywords):
+                    return "Please select the appropriate crop filter for this query / برائے مہربانی اس سوال کے لیے موزوں فصل کا انتخاب کریں۔"
+        
+        # Also, check if it's off-topic
+        if is_off_topic(query) or any(w in q_lower for w in ["recipe", "pakistan", "who are you", "who is", "weather", "forecast", "news", "music", "song", "joke"]):
+            return "Please select the appropriate crop filter for this query / برائے مہربانی اس سوال کے لیے موزوں فصل کا انتخاب کریں۔"
+            
+    else:
+        # General off-topic check for "All Crops"
+        if is_off_topic(query):
+            return (
+                "I'm sorry, I can only help with crop disease diagnosis and treatment for Pakistani farmers.\n"
+                "Please describe your crop problem — mention the crop name, affected part (leaves/stem/roots), "
+                "and symptom (color, spots, wilting, etc.).\n\n"
+                "میں صرف فصلوں کی بیماریوں کی تشخیص میں مدد کر سکتا ہوں۔ براہ کرم فصل کا نام، متاثرہ حصہ اور علامت بتائیں۔"
+            )
+            
+    return None
+
+
 def get_diagnosis(query: str,
                   crop_filter: str | None = None,
                   language: str = "both",
@@ -612,9 +691,10 @@ def get_diagnosis(query: str,
     Returns:
         Full diagnosis text from Gemini (markdown-formatted).
     """
-    # ── Off-topic guard: reject clearly non-agricultural queries immediately ──
-    if is_off_topic(query):
-        return _OFF_TOPIC_RESPONSE
+    # Check crop scoping first
+    refusal = check_crop_scoping(query, crop_filter)
+    if refusal:
+        return refusal
 
     collection, embedder = get_retriever()
     records = retrieve(query, collection, embedder,
@@ -626,7 +706,7 @@ def get_diagnosis(query: str,
             "براہ کرم علامات کو مختلف الفاظ میں بیان کریں۔"
         )
     context = build_context(records)
-    return ask_gemini(query, context)
+    return ask_gemini(query, context, language=language, crop_filter=crop_filter or "")
 
 
 if __name__ == "__main__":

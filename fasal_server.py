@@ -83,6 +83,76 @@ async def lifespan(app: FastAPI):
     import subprocess
     import sys
     
+    # Auto-process logo_square.jpg into transparent logo.png
+    try:
+        from PIL import Image, ImageDraw
+        base_dir = Path(__file__).resolve().parent
+        img_path = base_dir / "frontend" / "images" / "logo_square.jpg"
+        output_path = base_dir / "frontend" / "images" / "logo.png"
+        
+        if img_path.exists():
+            print(f"🔄 Processing logo from {img_path} to produce transparent PNG...")
+            img = Image.open(img_path).convert("RGBA")
+            width, height = img.size
+            pixels = img.load()
+            
+            # Inspect corner pixels to detect JPEG background noise level
+            corners = [pixels[0, 0], pixels[width - 1, 0], pixels[0, height - 1], pixels[width - 1, height - 1]]
+            max_bg = max(max(c[0], c[1], c[2]) for c in corners)
+            threshold = max(max_bg + 20, 50)  # Dynamic threshold: noise + margin, min 50
+            print(f"🔍 Logo processor: max corner noise={max_bg}, using threshold={threshold}")
+            
+            # Find bounding box of foreground pixels using threshold
+            left, top, right, bottom = width, height, 0, 0
+            for y in range(height):
+                for x in range(width):
+                    r, g, b, a = pixels[x, y]
+                    if r > threshold or g > threshold or b > threshold:
+                        if x < left: left = x
+                        if y < top: top = y
+                        if x > right: right = x
+                        if y > bottom: bottom = y
+            
+            if left < right and top < bottom:
+                # Shave off 4 pixels on each side to completely eliminate any black border transition line
+                shave = 4
+                left_cropped = left + shave
+                top_cropped = top + shave
+                right_cropped = right - shave
+                bottom_cropped = bottom - shave
+                
+                # Double check bounds
+                if left_cropped < right_cropped and top_cropped < bottom_cropped:
+                    cropped = img.crop((left_cropped, top_cropped, right_cropped + 1, bottom_cropped + 1))
+                else:
+                    cropped = img.crop((left, top, right + 1, bottom + 1))
+                
+                # Make it a perfect square
+                w, h = cropped.size
+                size = max(w, h)
+                square_img = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+                square_img.paste(cropped, ((size - w) // 2, (size - h) // 2))
+                
+                # Apply rounded rectangle mask
+                radius = int(size * 0.22)
+                mask = Image.new("L", (size, size), 0)
+                draw = ImageDraw.Draw(mask)
+                draw.rounded_rectangle((0, 0, size - 1, size - 1), radius, fill=255)
+                
+                # Combine mask
+                final_img = Image.new("RGBA", (size, size), (0, 0, 0, 0))
+                final_img.paste(square_img, (0, 0), mask=mask)
+                
+                # Save as PNG
+                final_img.save(output_path, "PNG")
+                print(f"✅ Transparent logo saved to: {output_path} (size={size}x{size})")
+            else:
+                print("⚠️ Failed to detect logo boundaries inside logo_square.jpg.")
+        else:
+            print(f"⚠️ logo_square.jpg not found at {img_path}")
+    except Exception as e:
+        print(f"⚠️ Error processing logo image: {e}")
+
     # Auto-embed ChromaDB if it doesn't exist (e.g. first deploy on cloud)
     chroma_path = Path("data/chroma_db")
     if not (chroma_path / "chroma.sqlite3").exists():
