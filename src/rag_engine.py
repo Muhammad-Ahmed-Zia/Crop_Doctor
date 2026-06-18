@@ -11,12 +11,13 @@ Usage:
     python src/rag_engine.py --top-k 5
 """
 
-import os, sys, json, argparse, re, time
+import os, sys, json, argparse, re, time, hashlib
 from pathlib import Path
 from dotenv import load_dotenv
 from colorama import Fore, Style, init
 
 from google import genai
+from google.genai import types
 
 init(autoreset=True)
 load_dotenv()
@@ -70,7 +71,7 @@ CHROMA_DIR  = "data/chroma_db"
 COLLECTION  = "fasal_doctor_diseases"
 EMBED_MODEL = "paraphrase-multilingual-MiniLM-L12-v2"
 GEMINI_MODEL= "gemini-2.5-flash-lite"
-TOP_K       = 3        # number of records to retrieve
+TOP_K       = 5        # fixed — never change at runtime
 
 # ── Romanized Urdu → English expansion map ────────────────────────────────
 # Covers the most common Romanized Urdu agricultural terms so the multilingual
@@ -362,11 +363,19 @@ def retrieve(query: str, collection, embedder, top_k: int = TOP_K,
             include=["documents", "metadatas", "distances"],
         )
 
+    # Zip results and sort by distance ascending (closest match first, always)
+    raw = list(zip(
+        results["documents"][0],
+        results["metadatas"][0],
+        results["distances"][0],
+    ))
+    raw.sort(key=lambda x: x[2])
+
     records = []
-    for i, meta in enumerate(results["metadatas"][0]):
+    for doc, meta, dist in raw:
         rec = dict(meta)
-        rec["_distance"] = results["distances"][0][i]
-        rec["_document"] = results["documents"][0][i]
+        rec["_distance"] = dist
+        rec["_document"] = doc
         records.append(rec)
 
     return records
@@ -438,6 +447,12 @@ CROP FILTER ACTIVE: The farmer has selected "{crop_filter}" as their crop. If th
             response = _get_client().models.generate_content(
                 model=GEMINI_MODEL,
                 contents=full_prompt,
+                config=types.GenerateContentConfig(
+                    temperature=0.0,   # deterministic — same input = same output
+                    top_p=1.0,         # disable nucleus sampling variation
+                    top_k=1,           # always pick highest-probability token
+                    max_output_tokens=2048,
+                ),
             )
             return response.text
 
@@ -570,6 +585,12 @@ def main():
 # ── Public API (used by Streamlit and any other importer) ─────────────────────
 _retriever_cache: dict = {}
 
+# ── In-memory diagnosis cache ─────────────────────────────────────────────────
+# Key: MD5 of "query|crop_filter|language" → Value: diagnosis response string
+# Persists for the lifetime of the server process. Resets on restart (acceptable).
+_DIAGNOSIS_CACHE: dict[str, str] = {}
+MAX_CACHE_SIZE = 500
+
 
 def get_retriever():
     """Load and cache the ChromaDB collection + sentence embedder (heavy — once only)."""
@@ -691,11 +712,20 @@ def get_diagnosis(query: str,
     Returns:
         Full diagnosis text from Gemini (markdown-formatted).
     """
-    # Check crop scoping first
+    # ── Cache lookup ──────────────────────────────────────────────────────────
+    cache_key = hashlib.md5(
+        f"{query.strip().lower()}|{crop_filter}|{language}".encode()
+    ).hexdigest()
+    if cache_key in _DIAGNOSIS_CACHE:
+        print(f"  {Fore.CYAN}✓ Cache hit — returning stored result{Style.RESET_ALL}")
+        return _DIAGNOSIS_CACHE[cache_key]
+
+    # ── Crop scoping check ────────────────────────────────────────────────────
     refusal = check_crop_scoping(query, crop_filter)
     if refusal:
         return refusal
 
+    # ── Retrieval + generation ────────────────────────────────────────────────
     collection, embedder = get_retriever()
     records = retrieve(query, collection, embedder,
                        top_k=top_k, crop_filter=crop_filter or "")
@@ -706,7 +736,15 @@ def get_diagnosis(query: str,
             "براہ کرم علامات کو مختلف الفاظ میں بیان کریں۔"
         )
     context = build_context(records)
-    return ask_gemini(query, context, language=language, crop_filter=crop_filter or "")
+    result = ask_gemini(query, context, language=language, crop_filter=crop_filter or "")
+
+    # ── Store in cache ────────────────────────────────────────────────────────
+    if len(_DIAGNOSIS_CACHE) >= MAX_CACHE_SIZE:
+        _DIAGNOSIS_CACHE.clear()   # simple full-eviction when ceiling hit
+        print(f"  {Fore.YELLOW}  Cache cleared (hit {MAX_CACHE_SIZE} entry limit){Style.RESET_ALL}")
+    _DIAGNOSIS_CACHE[cache_key] = result
+
+    return result
 
 
 if __name__ == "__main__":

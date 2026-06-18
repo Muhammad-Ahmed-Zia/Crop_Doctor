@@ -18,6 +18,11 @@ const FASAL_API = window.location.hostname === "localhost"
   : "https://web-production-f5842.up.railway.app";
 
 
+// ─── Frontend session cache ───────────────────────────────────────────────────
+// Key: "query|cropFilter|language"  →  Value: full { success, response } object
+// Lives in JS memory (cleared when the tab closes). Never persists stale data.
+const _frontendCache = {};
+
 /**
  * POST /diagnose
  * @param {string} query        - symptom description (Urdu or English)
@@ -26,6 +31,14 @@ const FASAL_API = window.location.hostname === "localhost"
  * @returns {Promise<{success:boolean, response:string, error?:string}>}
  */
 async function callDiagnose(query, cropFilter = "", language = "both") {
+  // ── Cache lookup ────────────────────────────────────────────────────────────
+  const cacheKey = `${query.trim().toLowerCase()}|${cropFilter}|${language}`;
+  if (_frontendCache[cacheKey]) {
+    console.log("Fasal cache hit — returning stored result:", cacheKey);
+    return _frontendCache[cacheKey];
+  }
+
+  // ── API call ────────────────────────────────────────────────────────────────
   try {
     const res = await fetch(`${FASAL_API}/diagnose`, {
       method: "POST",
@@ -43,7 +56,12 @@ async function callDiagnose(query, cropFilter = "", language = "both") {
     }
 
     const data = await res.json();
-    return { success: true, response: data.response };
+    const result = { success: true, response: data.response };
+
+    // ── Store in cache ──────────────────────────────────────────────────────
+    _frontendCache[cacheKey] = result;
+
+    return result;
 
   } catch (err) {
     console.warn("Fasal API unreachable, using demo response:", err.message);

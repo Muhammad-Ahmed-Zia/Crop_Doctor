@@ -197,7 +197,7 @@ EXAMPLES = ["Yellow spots on wheat leaves","Cotton leaves curling upward",
             "Rice plants turning brown","Maize stem rotting at base",
             "میری گندم کے پتوں پر پیلے دھبے ہیں","کپاس کے پتے اوپر مڑ رہے ہیں"]
 
-for k,v in [("chat_history",[]),("query_input",""),("last_response",None),("trigger_query",None)]:
+for k,v in [("chat_history",[]),("query_input",""),("last_response",None),("trigger_query",None),("diagnosis_cache",{})]:
     if k not in st.session_state: st.session_state[k] = v
 
 # ── SIDEBAR ───────────────────────────────────────────────────────────────────
@@ -313,8 +313,15 @@ with col_main:
               <div style='font-family:Noto Nastaliq Urdu,serif;direction:rtl;color:#6b7280;margin-top:6px;font-size:1rem;'>بیماری کی تشخیص جاری ہے...</div>
             </div>""", unsafe_allow_html=True)
             try:
-                fn = load_engine()
-                result = fn(query=active, crop_filter=crop_filter, language=lang_code)
+                # ── Session-state cache lookup ──────────────────────────────
+                cache_key = f"{active.strip().lower()}|{crop_filter}|{lang_code}"
+                if cache_key in st.session_state.diagnosis_cache:
+                    result = st.session_state.diagnosis_cache[cache_key]
+                else:
+                    fn = load_engine()
+                    result = fn(query=active, crop_filter=crop_filter, language=lang_code)
+                    st.session_state.diagnosis_cache[cache_key] = result
+                # ── Store result ────────────────────────────────────────────
                 st.session_state.last_response = (active, result)
                 hist = st.session_state.chat_history
                 if active not in hist: hist.insert(0, active)
